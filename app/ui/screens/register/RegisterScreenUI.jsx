@@ -3,9 +3,31 @@ import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
 
 export default RegisterScreenUI = () => {
     const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repeatPass, setRepeatPass] = useState('');
+    const [realstateName, setRealstateName] = useState('');
+
+    const handleRegister = () => {
+        console.log(email);
+        console.log(password);
+        console.log(repeatPass);
+        console.log(realstateName);
+        if(password === repeatPass){
+            if (true){
+                navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
+            }else{
+                alert('Hubo un error. Intente nuevamente mas tarde.');
+            }
+        } else{
+            alert('Las contraseñas no coinciden.');
+        }
+    };
+    
 
     return (
         <ImageBackground source={Login} style={styles.background}>
@@ -16,29 +38,47 @@ export default RegisterScreenUI = () => {
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Email</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Contraseña</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Repetir Contraseña</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            secureTextEntry={true}
+                            value={repeatPass}
+                            onChangeText={(text) => setRepeatPass(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Nombre de la Inmobiliaria</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            value={realstateName}
+                            onChangeText={(text) => setRealstateName(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.buttons}>
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN)}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleRegister}>
                             <Text style={[styles.realStateText]}>Registrarse</Text>
                         </TouchableOpacity>
                     </View>
@@ -47,10 +87,6 @@ export default RegisterScreenUI = () => {
             </View>
         </ImageBackground>
     )
-};
-
-const handleLogin = () => {
-    // Implementa la lógica para iniciar sesión con Google aquí
 };
 
 const styles = StyleSheet.create({

@@ -25,9 +25,6 @@ export default MailSentScreenUI = () => {
     )
 };
 
-const handleHome = () => {
-    
-};
 
 const styles = StyleSheet.create({
     background: {

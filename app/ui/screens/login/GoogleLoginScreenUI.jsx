@@ -4,9 +4,22 @@ import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
 import {useNavigation} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
+import React, { useState } from 'react';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = () => {
+        console.log(email);
+        console.log(password);
+        if (true) {
+          navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+        } else {
+          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        }
+      };
 
     return (
         <ImageBackground source={Login} style={styles.background}>
@@ -23,19 +36,28 @@ export default LoginScreenUI = () => {
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Email</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.input_container}> 
                         <Text style={styles.inputText}>Contraseña</Text>
-                        <TextInput style={styles.input}></TextInput>
+                        <TextInput 
+                            style={styles.input}
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.buttons}>
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE)}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => {handleLogin}}>
                             <Text style={[styles.realStateText]}>Continuar</Text>
                         </TouchableOpacity>
                     </View>
@@ -43,10 +65,6 @@ export default LoginScreenUI = () => {
             </View>
         </ImageBackground>
     )
-};
-
-const handleLogin = () => {
-    // Implementa la lógica para iniciar sesión con Google aquí
 };
 
 const styles = StyleSheet.create({

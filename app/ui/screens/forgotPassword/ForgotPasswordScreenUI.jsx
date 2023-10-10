@@ -1,11 +1,22 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 
 export default ForgotPasswordScreenUI = () => {
     const navigation = useNavigation();
-    
+    const [email, setEmail] = useState('');
+
+    const handlePasswordRecovery = () => {
+        console.log(email);
+        if (true) {
+            navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
+        } else {
+          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        }
+      };
+
     return (
         <View style={styles.container}>
 
@@ -17,20 +28,20 @@ export default ForgotPasswordScreenUI = () => {
 
             <View style={styles.input_container}>
                 <Text style={styles.inputText}>Email</Text>
-                <TextInput style={styles.input}></TextInput>
+                <TextInput
+                    style={styles.input}
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}>
+                </TextInput>
             </View>
 
             <View style={styles.buttons}>
-                <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)}>
+                <TouchableOpacity style={[styles.blueButton]} onPress={handlePasswordRecovery}>
                     <Text style={[styles.realStateText]}>Enviar</Text>
                 </TouchableOpacity>
             </View>
         </View>
     )
-};
-
-const handleLogin = () => {
-    
 };
 
 const styles = StyleSheet.create({
