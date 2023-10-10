@@ -33,7 +33,7 @@ export default RealStateLoginScreenUI = () => {
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.NAVIGATOR.USER)}>
                             <Text style={[styles.realStateText]}>Iniciar Sesion</Text>
                         </TouchableOpacity>
                     </View>
