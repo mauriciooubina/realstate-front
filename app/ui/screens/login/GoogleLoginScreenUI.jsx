@@ -1,9 +1,13 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Image, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
+import {useNavigation} from '@react-navigation/native';
+import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 
 export default LoginScreenUI = () => {
+    const navigation = useNavigation();
+
     return (
         <ImageBackground source={Login} style={styles.background}>
             <View style={styles.container}>
@@ -28,10 +32,10 @@ export default LoginScreenUI = () => {
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE)}>
                             <Text style={[styles.realStateText]}>Continuar</Text>
                         </TouchableOpacity>
                     </View>

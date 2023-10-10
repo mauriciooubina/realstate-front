@@ -1,8 +1,12 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Image, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
+import {useNavigation} from '@react-navigation/native';
+import NavigatorConstants from '../../../navigation/NavigatorConstants';
 
 export default RealStateLoginScreenUI = () => {
+    const navigation = useNavigation();
+
     return (
         <ImageBackground source={Login} style={styles.background}>
             <View style={styles.container}>
@@ -20,23 +24,23 @@ export default RealStateLoginScreenUI = () => {
                         <TextInput style={styles.input}></TextInput>
                     </View>
                     <View style={styles.forgotPasswordContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.PASSWORD_RECOVERY)}>
                             <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.NAVIGATOR.USER)}>
                             <Text style={[styles.realStateText]}>Iniciar Sesion</Text>
                         </TouchableOpacity>
                     </View>
 
                     <View style={styles.accountContainer}>
                         <Text style={styles.accountText}>¿No tienes una cuenta?</Text>
-                        <TouchableOpacity >
+                        <TouchableOpacity onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.REGISTER)}>
                             <Text style={styles.registerButton}>REGISTRATE</Text>
                         </TouchableOpacity>
                     </View>
