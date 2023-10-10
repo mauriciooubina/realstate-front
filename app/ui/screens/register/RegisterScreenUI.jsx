@@ -1,8 +1,12 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Image, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
+import NavigatorConstants from '../../../navigation/NavigatorConstants';
+import {useNavigation} from '@react-navigation/native';
 
-export default CreateAccountScreenUI = () => {
+export default RegisterScreenUI = () => {
+    const navigation = useNavigation();
+
     return (
         <ImageBackground source={Login} style={styles.background}>
             <View style={styles.container}>
@@ -31,10 +35,10 @@ export default CreateAccountScreenUI = () => {
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.pop()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN)}>
                             <Text style={[styles.realStateText]}>Registrarse</Text>
                         </TouchableOpacity>
                     </View>
