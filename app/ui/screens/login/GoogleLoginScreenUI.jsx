@@ -31,7 +31,7 @@ export default LoginScreenUI = () => {
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.pop()}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.blueButton]}>

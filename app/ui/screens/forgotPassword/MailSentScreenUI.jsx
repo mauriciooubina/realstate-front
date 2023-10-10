@@ -1,8 +1,12 @@
 import { Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Theme from '../../styles/Theme';
 import Mail from '../../../../assets/images/mail.png';
+import {useNavigation} from '@react-navigation/native';
+import NavigatorConstants from '../../../navigation/NavigatorConstants';
 
 export default MailSentScreenUI = () => {
+    const navigation = useNavigation();
+
     return (
         <View style={styles.container}>
 
@@ -13,7 +17,7 @@ export default MailSentScreenUI = () => {
             </View>
 
             <View style={styles.buttons}>
-                <TouchableOpacity style={[styles.blueButton]}>
+                <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN)}>
                     <Text style={[styles.realStateText]}>Inicio</Text>
                 </TouchableOpacity>
             </View>

@@ -5,7 +5,8 @@ import RegisterScreen from "../ui/screens/register/RegisterScreen";
 import RealStateLoginScreen from "../ui/screens/login/RealStateLoginScreen";
 import GoogleLoginScreen from "../ui/screens/login/GoogleLoginScreen";
 import ForgotPasswordScreen from "../ui/screens/forgotPassword/ForgotPasswordScreen";
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MailSentScreen from "../ui/screens/forgotPassword/MailSentScreen";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,7 @@ export default LoginStackNavigator = () => {
         name={NavigatorConstant.LOGIN_STACK.LOGIN}
         component={LoginScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
 
@@ -24,7 +25,7 @@ export default LoginStackNavigator = () => {
         name={NavigatorConstant.LOGIN_STACK.GOOGLE_LOGIN}
         component={GoogleLoginScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
 
@@ -32,7 +33,7 @@ export default LoginStackNavigator = () => {
         name={NavigatorConstant.LOGIN_STACK.REALSTATE_LOGIN}
         component={RealStateLoginScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
 
@@ -40,17 +41,41 @@ export default LoginStackNavigator = () => {
         name={NavigatorConstant.LOGIN_STACK.PASSWORD_RECOVERY}
         component={ForgotPasswordScreen}
         options={{
-          headerTitle: 'My Home',
-          statusBarColor: Theme.colors.SECONDARY,
-          headerTitleAlign: 'center',
+          headerTitle: "My Home",
+          headerTitleAlign: "center",
           presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
         }}
       />
+
+      <Stack.Screen
+        name={NavigatorConstant.LOGIN_STACK.EMAIL_SENT}
+        component={MailSentScreen}
+        options={{
+          headerTitle: "My Home",
+          headerTitleAlign: "center",
+          presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
+        }}
+      />
+
       <Stack.Screen
         name={NavigatorConstant.LOGIN_STACK.REGISTER}
         component={RegisterScreen}
         options={{
-          headerShown: false
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

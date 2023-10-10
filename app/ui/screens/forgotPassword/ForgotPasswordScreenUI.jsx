@@ -1,7 +1,11 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, SafeAreaView, Image, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Theme from '../../styles/Theme';
+import NavigatorConstants from '../../../navigation/NavigatorConstants';
+import {useNavigation} from '@react-navigation/native';
 
 export default ForgotPasswordScreenUI = () => {
+    const navigation = useNavigation();
+    
     return (
         <View style={styles.container}>
 
@@ -17,7 +21,7 @@ export default ForgotPasswordScreenUI = () => {
             </View>
 
             <View style={styles.buttons}>
-                <TouchableOpacity style={[styles.blueButton]}>
+                <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)}>
                     <Text style={[styles.realStateText]}>Enviar</Text>
                 </TouchableOpacity>
             </View>
