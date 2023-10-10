@@ -9,6 +9,7 @@ export default ForgotPasswordScreenUI = () => {
     const [email, setEmail] = useState('');
 
     const handlePasswordRecovery = () => {
+        console.log(email);
         if (true) {
             navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
         } else {
@@ -35,7 +36,7 @@ export default ForgotPasswordScreenUI = () => {
             </View>
 
             <View style={styles.buttons}>
-                <TouchableOpacity style={[styles.blueButton]} onPress={() => {handlePasswordRecovery}}>
+                <TouchableOpacity style={[styles.blueButton]} onPress={handlePasswordRecovery}>
                     <Text style={[styles.realStateText]}>Enviar</Text>
                 </TouchableOpacity>
             </View>

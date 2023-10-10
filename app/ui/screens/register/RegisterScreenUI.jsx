@@ -13,6 +13,10 @@ export default RegisterScreenUI = () => {
     const [realstateName, setRealstateName] = useState('');
 
     const handleRegister = () => {
+        console.log(email);
+        console.log(password);
+        console.log(repeatPass);
+        console.log(realstateName);
         if(password === repeatPass){
             if (true){
                 navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
@@ -74,7 +78,7 @@ export default RegisterScreenUI = () => {
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => {handleRegister}}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleRegister}>
                             <Text style={[styles.realStateText]}>Registrarse</Text>
                         </TouchableOpacity>
                     </View>

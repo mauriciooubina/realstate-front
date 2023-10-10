@@ -14,10 +14,6 @@ export default UserHomeScreenUI = () => {
     )
 };
 
-const handleHome = () => {
-    
-};
-
 const styles = StyleSheet.create({
     background: {
         flex: 1,

@@ -11,6 +11,8 @@ export default RealStateLoginScreenUI = () => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
+        console.log(email);
+        console.log(password);
         if (true) {
           navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } else {
@@ -53,7 +55,7 @@ export default RealStateLoginScreenUI = () => {
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => {handleLogin}}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleLogin}>
                             <Text style={[styles.realStateText]}>Iniciar Sesion</Text>
                         </TouchableOpacity>
                     </View>

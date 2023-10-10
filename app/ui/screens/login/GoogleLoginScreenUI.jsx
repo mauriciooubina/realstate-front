@@ -12,6 +12,8 @@ export default LoginScreenUI = () => {
     const [password, setPassword] = useState('');
 
     const handleLogin = () => {
+        console.log(email);
+        console.log(password);
         if (true) {
           navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } else {
