@@ -2,13 +2,14 @@ import NavigatorConstant from "./NavigatorConstants";
 import Theme from "../ui/styles/Theme";
 import CreateRealStateScreen from "../ui/screens/createRealstate/CreateRealstateScreen";
 import EditRealStateScreen from "../ui/screens/editRealstate/EditRealstateScreen";
+import RealStateHomeScreen from "../ui/screens/realstate/RealStateHomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 
 export default RealStateStackNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName={NavigatorConstant.REALSTATE_STACK.EDIT}>
+    <Stack.Navigator initialRouteName={NavigatorConstant.REALSTATE_STACK.HOME}>
       <Stack.Screen
         name={NavigatorConstant.REALSTATE_STACK.HOME}
         component={RealStateHomeScreen}

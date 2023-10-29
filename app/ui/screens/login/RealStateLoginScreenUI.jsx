@@ -24,6 +24,7 @@ export default RealStateLoginScreenUI = () => {
         setShowError(false);
         try {
             const response = await loginWS.login(email, password, null);
+            console.log(response.data.token);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
             console.log(error);
