@@ -1,4 +1,4 @@
-export const config = {
+export default config = {
     BASE_URL: 'https://backend-myhome.onrender.com/myhome',
-    TIME_OUT: 5000,
+    TIME_OUT: 10000,
 }

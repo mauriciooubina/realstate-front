@@ -2,7 +2,7 @@ import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} f
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import React, { useState } from 'react';
 import registerWS from '../../../networking/api/endpoints/registerWS';
 
@@ -12,27 +12,32 @@ export default RegisterScreenUI = () => {
     const [password, setPassword] = useState('');
     const [repeatPass, setRepeatPass] = useState('');
     const [realstateName, setRealstateName] = useState('');
+    const [passError, setPassError] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+
+    useFocusEffect(
+        React.useCallback(() => {
+          setEmail('');
+          setPassword('');
+          setRepeatPass('');
+          setRealstateName('');
+          setPassError(false);
+          setEmailError(false);
+        }, [])
+      );
 
     const handleRegister = async () => {
-        console.log(email);
-        console.log(password);
-        console.log(repeatPass);
-        console.log(realstateName);
+        setPassError(false);
+        setEmailError(false);
         if(password === repeatPass){
             try {
                 const response = await registerWS.register(email, password, realstateName, email);
-                console.log(response.data);
-                if (response.data.success) {
-                    navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
-                } else {
-                    alert('El email ya se encuentra registrado.');
-                }
+                navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
             } catch (error) {
-                console.error(error);
-                alert('Error al intentar registrarse.');
+                setEmailError(true);
             }
         } else{
-            alert('Las contraseñas no coinciden.');
+            setPassError(true);
         }
     };
     
@@ -51,6 +56,7 @@ export default RegisterScreenUI = () => {
                             value={email}
                             onChangeText={(text) => setEmail(text)}>
                         </TextInput>
+                        {emailError && (<Text style={styles.redText}>El email ya se encuentra registrado</Text>)}
                     </View>
 
                     <View style={styles.input_container}> 
@@ -61,6 +67,7 @@ export default RegisterScreenUI = () => {
                             value={password}
                             onChangeText={(text) => setPassword(text)}>
                         </TextInput>
+                        {passError && (<Text style={styles.redText}>Las contraseñas no coinciden</Text>)}
                     </View>
 
                     <View style={styles.input_container}> 
@@ -71,6 +78,7 @@ export default RegisterScreenUI = () => {
                             value={repeatPass}
                             onChangeText={(text) => setRepeatPass(text)}>
                         </TextInput>
+                        {passError && (<Text style={styles.redText}>Las contraseñas no coinciden</Text>)}
                     </View>
 
                     <View style={styles.input_container}> 
@@ -155,5 +163,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginBottom: 30,
         marginTop: 20,
+    },
+    redText: {
+        color: Theme.colors.clear.ALERT,
+        fontWeight: 'bold',
+        fontSize: 12,
     },
   });

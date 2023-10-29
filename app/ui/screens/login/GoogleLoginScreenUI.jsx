@@ -2,7 +2,7 @@ import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextI
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
@@ -11,21 +11,24 @@ export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showError, setShowError] = useState(false);
+
+    useFocusEffect(
+        React.useCallback(() => {
+          setEmail('');
+          setPassword('');
+          setShowError(false);
+        }, [])
+      );
 
     const handleLogin = async () => {
         console.log(email);
         console.log(password);
         try {
             const response = await loginWS.login(email, password, 'token');
-            console.log(response.data);
-            if (response.data.success) {
-                navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
-            } else {
-                alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
-            }
+            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
-            console.error(error);
-            alert('Error al intentar iniciar sesion.');
+            alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
         }
       };
 
@@ -49,6 +52,7 @@ export default LoginScreenUI = () => {
                             value={email}
                             onChangeText={(text) => setEmail(text)}>
                         </TextInput>
+                        {showError && (<Text style={styles.redText}>Email o contraseña incorrecto</Text>)}
                     </View>
 
                     <View style={styles.input_container}> 
@@ -59,6 +63,7 @@ export default LoginScreenUI = () => {
                             value={password}
                             onChangeText={(text) => setPassword(text)}>
                         </TextInput>
+                        {showError && (<Text style={styles.redText}>Email o contraseña incorrecto</Text>)}
                     </View>
 
                     <View style={styles.buttons}>
@@ -155,5 +160,10 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         width: '100%',
         opacity: 0.3,
+    },
+    redText: {
+        color: Theme.colors.clear.ALERT,
+        fontWeight: 'bold',
+        fontSize: 12,
     },
   });
