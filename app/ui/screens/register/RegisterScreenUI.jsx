@@ -4,6 +4,7 @@ import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import {useNavigation} from '@react-navigation/native';
 import React, { useState } from 'react';
+import registerWS from '../../../networking/api/endpoints/registerWS';
 
 export default RegisterScreenUI = () => {
     const navigation = useNavigation();
@@ -12,16 +13,23 @@ export default RegisterScreenUI = () => {
     const [repeatPass, setRepeatPass] = useState('');
     const [realstateName, setRealstateName] = useState('');
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         console.log(email);
         console.log(password);
         console.log(repeatPass);
         console.log(realstateName);
         if(password === repeatPass){
-            if (true){
-                navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
-            }else{
-                alert('Hubo un error. Intente nuevamente mas tarde.');
+            try {
+                const response = await registerWS.register(email, password, realstateName, email);
+                console.log(response.data);
+                if (response.data.success) {
+                    navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
+                } else {
+                    alert('El email ya se encuentra registrado.');
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Error al intentar registrarse.');
             }
         } else{
             alert('Las contraseñas no coinciden.');

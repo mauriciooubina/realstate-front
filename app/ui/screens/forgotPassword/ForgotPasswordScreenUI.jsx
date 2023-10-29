@@ -3,17 +3,25 @@ import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
+import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecoveryWS';
 
 export default ForgotPasswordScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
 
-    const handlePasswordRecovery = () => {
+    const handlePasswordRecovery = async () => {
         console.log(email);
-        if (true) {
-            navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
-        } else {
-          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        try {
+            const response = await passwordRecoveryWS.passwordRecover(email);
+            console.log(response.data);
+            if (response.data.success) {
+                navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
+            } else {
+                alert('El email es incorrecto.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al intentar recuperar la contraseña.');
         }
       };
 

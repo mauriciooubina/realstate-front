@@ -1,22 +1,30 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
+import loginWS from '../../../networking/api/endpoints/loginWS';
 
 export default RealStateLoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         console.log(email);
         console.log(password);
-        if (true) {
-          navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
-        } else {
-          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        try {
+            const response = await loginWS.login(email, password, null);
+            console.log(response.data);
+            if (response.data.success) {
+                navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            } else {
+                alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al intentar iniciar sesion.');
         }
       };
 
@@ -27,18 +35,18 @@ export default RealStateLoginScreenUI = () => {
 
                     <Text style={styles.title}>Iniciar sesion</Text>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Email</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             value={email}
                             onChangeText={(text) => setEmail(text)}>
                         </TextInput>
                     </View>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Contraseña</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             secureTextEntry={true}
                             value={password}
@@ -155,4 +163,4 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginRight: 35,
     },
-  });
+});

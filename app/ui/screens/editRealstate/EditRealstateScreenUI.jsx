@@ -20,10 +20,11 @@ import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
 import { Formik } from "formik";
+import Theme from '../../styles/Theme';
 
 import * as ImagePicker from "expo-image-picker";
 
-const RealstateHomeScreenUI = () => {
+const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [initialValues, setInitialValues] = useState({});
@@ -59,9 +60,13 @@ const RealstateHomeScreenUI = () => {
     }
   };
 
+  const handleDelete = () => {
+    log.info('delete property');
+  }
+
   return (
-    <Formik initialValues={initialValues} onSubmit={values => console.log({values})}>
-      {({handleChange, handleBlur, handleSubmit, values}) => (
+    <Formik initialValues={initialValues} onSubmit={values => console.log({ values })}>
+      {({ handleChange, handleBlur, handleSubmit, values }) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
             <Pressable onPress={() => selectImage(true)}>
@@ -203,17 +208,22 @@ const RealstateHomeScreenUI = () => {
                 <Text style={styles.titleText}>DESCRIPCION</Text>
               </View>
               <CustomTextInput
-                title="Descrippcion"
+                title="Descripcion"
                 placeholder="Ingrese la Descripcion"
               />
             </View>
-            <View style={styles.buttonContainer}>
-              <Button style={styles.buttonText} title="Cancelar" />
-              <Button
-                onPress={handleSubmit}
-                style={styles.buttonText}
-                title="Guardar"
-              />
+            <View style={styles.buttons}>
+              <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                <Text style={[styles.realStateText]}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.blueButton]} onPress={handleSubmit}>
+                <Text style={[styles.realStateText]}>Guardar</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.deleteButton}>
+              <TouchableOpacity style={[styles.redButton]} onPress={handleDelete}>
+                <Text style={[styles.realStateText]}>Eliminar publicacion</Text>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -222,7 +232,7 @@ const RealstateHomeScreenUI = () => {
   );
 };
 
-export default RealstateHomeScreenUI;
+export default EditRealstateScreenUI;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -292,5 +302,37 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: 20,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  blueButton: {
+    backgroundColor: '#F6F6F6',
+    padding: 10,
+    paddingHorizontal: 30,
+    marginHorizontal: 20,
+    backgroundColor: Theme.colors.clear.PRIMARY,
+    borderRadius: 40,
+  },
+  deleteButton: {
+    flexDirection: 'row',
+    marginBottom: 200,
+    marginTop: 20,
+    justifyContent: "center",
+  },
+  redButton: {
+    backgroundColor: '#F6F6F6',
+    padding: 10,
+    paddingHorizontal: 30,
+    marginHorizontal: 20,
+    backgroundColor: Theme.colors.clear.ALERT,
+    borderRadius: 40,
+  },
+  realStateText: {
+    color: 'white',
+    fontSize: 14,
   },
 });

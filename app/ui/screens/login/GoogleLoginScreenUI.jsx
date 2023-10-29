@@ -5,19 +5,27 @@ import Google from '../../../../assets/images/google.png';
 import {useNavigation} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
+import loginWS from '../../../networking/api/endpoints/loginWS';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         console.log(email);
         console.log(password);
-        if (true) {
-          navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
-        } else {
-          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        try {
+            const response = await loginWS.login(email, password, 'token');
+            console.log(response.data);
+            if (response.data.success) {
+                navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            } else {
+                alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Error al intentar iniciar sesion.');
         }
       };
 
