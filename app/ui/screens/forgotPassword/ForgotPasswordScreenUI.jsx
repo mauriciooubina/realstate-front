@@ -1,19 +1,27 @@
 import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
+import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecoveryWS';
 
 export default ForgotPasswordScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
 
-    const handlePasswordRecovery = () => {
+    useFocusEffect(
+        React.useCallback(() => {
+          setEmail('');
+        }, [])
+      );
+
+    const handlePasswordRecovery = async () => {
         console.log(email);
-        if (true) {
+        try {
+            const response = await passwordRecoveryWS.passwordRecover(email);
             navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
-        } else {
-          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        } catch (error) {
+            alert('El email es incorrecto.');
         }
       };
 
@@ -102,5 +110,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '400',
         justifyContent: 'center',
+    },
+    redText: {
+        color: Theme.colors.clear.ALERT,
+        fontWeight: 'bold',
+        fontSize: 12,
     },
 });

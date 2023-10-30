@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "expoDemo",
-    "slug": "expoDemo",
+    "name": "MyHome",
+    "slug": "MyHome",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/splash-2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": [
       "**/*"

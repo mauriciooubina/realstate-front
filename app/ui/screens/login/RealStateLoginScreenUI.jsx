@@ -1,22 +1,34 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import loginWS from '../../../networking/api/endpoints/loginWS';
 
 export default RealStateLoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showError, setShowError] = useState(false);
 
-    const handleLogin = () => {
-        console.log(email);
-        console.log(password);
-        if (true) {
-          navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
-        } else {
-          alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+    useFocusEffect(
+        React.useCallback(() => {
+          setEmail('');
+          setPassword('');
+          setShowError(false);
+        }, [])
+      );
+
+    const handleLogin = async () => {
+        setShowError(false);
+        try {
+            const response = await loginWS.login(email, password, null);
+            console.log(response.data.token);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+        } catch (error) {
+            console.log(error);
+            setShowError(true);
         }
       };
 
@@ -27,23 +39,25 @@ export default RealStateLoginScreenUI = () => {
 
                     <Text style={styles.title}>Iniciar sesion</Text>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Email</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             value={email}
                             onChangeText={(text) => setEmail(text)}>
                         </TextInput>
+                        {showError && (<Text style={styles.redText}>Email o contraseña incorrecto</Text>)}
                     </View>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Contraseña</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             secureTextEntry={true}
                             value={password}
                             onChangeText={(text) => setPassword(text)}>
                         </TextInput>
+                        {showError && (<Text style={styles.redText}>Email o contraseña incorrecto</Text>)}
                     </View>
                     <View style={styles.forgotPasswordContainer}>
                         <TouchableOpacity onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.PASSWORD_RECOVERY)}>
@@ -155,4 +169,9 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginRight: 35,
     },
-  });
+    redText: {
+        color: Theme.colors.clear.ALERT,
+        fontWeight: 'bold',
+        fontSize: 12,
+    },
+});

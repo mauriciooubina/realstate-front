@@ -1,4 +1,3 @@
-import SplashScreen from '../ui/screens/splash/SplashScreen';
 import LoginStackNavigator from './LoginStackNavigator';
 import NavigatorConstant from './NavigatorConstants';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,13 +11,9 @@ export default RootNavigator = () => {
  return (
    <NavigationContainer>
      <Stack.Navigator
-       initialRouteName={NavigatorConstant.NAVIGATOR.START}
+       initialRouteName={NavigatorConstant.NAVIGATOR.LOGIN}
        screenOptions={{headerShown: false}}
        headerMode="none">
-       <Stack.Screen
-         name={NavigatorConstant.NAVIGATOR.START}
-         component={SplashScreen}
-       />
        <Stack.Screen
          name={NavigatorConstant.NAVIGATOR.LOGIN}
          component={LoginStackNavigator}

@@ -20,10 +20,11 @@ import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
 import { Formik } from "formik";
+import Theme from '../../styles/Theme';
 
 import * as ImagePicker from "expo-image-picker";
 
-const RealstateHomeScreenUI = () => {
+const CreateRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [initialValues, setInitialValues] = useState({});
@@ -203,18 +204,18 @@ const RealstateHomeScreenUI = () => {
                 <Text style={styles.titleText}>DESCRIPCION</Text>
               </View>
               <CustomTextInput
-                title="Descrippcion"
+                title="Descripcion"
                 placeholder="Ingrese la Descripcion"
               />
             </View>
-            <View style={styles.buttonContainer}>
-              <Button style={styles.buttonText} title="Cancelar" />
-              <Button
-                onPress={handleSubmit}
-                style={styles.buttonText}
-                title="Guardar"
-              />
-            </View>
+            <View style={styles.buttons}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                            <Text style={[styles.realStateText]}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleSubmit}>
+                            <Text style={[styles.realStateText]}>Guardar</Text>
+                        </TouchableOpacity>
+              </View>
           </ScrollView>
         </SafeAreaView>
       )}
@@ -222,7 +223,7 @@ const RealstateHomeScreenUI = () => {
   );
 };
 
-export default RealstateHomeScreenUI;
+export default CreateRealstateScreenUI;
 
 const styles = StyleSheet.create({
   scrollView: {
@@ -252,28 +253,27 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: "flex",
     width: "100%",
-    marginBottom: 10, // Alinea a la izquierda
+    marginBottom: 10,
   },
   horizontalContainer: {
     display: "flex",
     flex: 2,
     flexDirection: "row",
-    alignItems: "center", // Alinea a la izquierda,
+    alignItems: "center",
     justifyContent: "space-between",
-    // width: "100%",
   },
   titleText: {
     color: "#365EEB",
     margin: 5,
-    textAlign: "left", // Alinea el texto a la izquierda
+    textAlign: "left",
     fontSize: 20,
   },
   itemTitleView: {
-    alignItems: "flex-start", // Alinea a la izquierda
+    alignItems: "flex-start",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", // Centra los botones horizontalmente
+    justifyContent: "space-between",
     margin: 10,
     paddingBottom: 20,
   },
@@ -286,11 +286,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 3,
     marginRight: 3,
-    // Añade margen entre los botones
   },
   buttonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  buttons: {
+    flexDirection: 'row',
+    marginBottom: 200,
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  blueButton: {
+    backgroundColor: '#F6F6F6',
+    padding: 10,
+    paddingHorizontal: 30,
+    marginHorizontal: 20,
+    backgroundColor: Theme.colors.clear.PRIMARY,
+    borderRadius: 40,
+  },
+  realStateText: {
+      color: 'white',
+      fontSize: 14,
   },
 });
