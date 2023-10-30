@@ -61,7 +61,7 @@ const EditRealstateScreenUI = () => {
   };
 
   const handleDelete = () => {
-    log.info('delete property');
+    console.log('delete property');
   }
 
   return (
