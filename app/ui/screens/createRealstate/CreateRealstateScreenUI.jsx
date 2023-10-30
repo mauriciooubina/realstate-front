@@ -253,28 +253,27 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: "flex",
     width: "100%",
-    marginBottom: 10, // Alinea a la izquierda
+    marginBottom: 10,
   },
   horizontalContainer: {
     display: "flex",
     flex: 2,
     flexDirection: "row",
-    alignItems: "center", // Alinea a la izquierda,
+    alignItems: "center",
     justifyContent: "space-between",
-    // width: "100%",
   },
   titleText: {
     color: "#365EEB",
     margin: 5,
-    textAlign: "left", // Alinea el texto a la izquierda
+    textAlign: "left",
     fontSize: 20,
   },
   itemTitleView: {
-    alignItems: "flex-start", // Alinea a la izquierda
+    alignItems: "flex-start",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", // Centra los botones horizontalmente
+    justifyContent: "space-between",
     margin: 10,
     paddingBottom: 20,
   },
@@ -287,7 +286,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 3,
     marginRight: 3,
-    // Añade margen entre los botones
   },
   buttonText: {
     color: "white",
