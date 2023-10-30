@@ -4,7 +4,7 @@ import Mail from '../../../../assets/images/mail.png';
 import {useNavigation} from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 
-export default MailSentScreenUI = () => {
+export default RealStateHomeScreenUI = () => {
     const navigation = useNavigation();
 
     return (

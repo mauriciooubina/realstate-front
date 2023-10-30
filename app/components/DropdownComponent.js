@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 const data = [
   { label: "Item 1", value: "1" },
@@ -66,13 +65,10 @@ const styles = StyleSheet.create({
   },
   itemTitleView: {
     display: "flex",
-    // alignItems: "flex-start", // Alinea a la izquierda
-    // width: "100%",
     flexGrow: 1,
-    //width: "100%",
   },
   itemTitleText: {
-    textAlign: "left", // Alinea el texto a la izquierda
+    textAlign: "left",
     fontSize: 15,
     margin: 5,
   },
