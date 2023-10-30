@@ -15,7 +15,6 @@ const data = [
 
 const DropdownComponent = ({ title }) => {
   const [value, setValue] = useState(null);
-  console.log({ title });
   return (
     <View style={styles.itemTitleView}>
       {title && <Text style={styles.itemTitleText}>{title}</Text>}
