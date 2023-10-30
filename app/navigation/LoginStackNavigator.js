@@ -7,6 +7,7 @@ import GoogleLoginScreen from "../ui/screens/login/GoogleLoginScreen";
 import ForgotPasswordScreen from "../ui/screens/forgotPassword/ForgotPasswordScreen";
 import MailSentScreen from "../ui/screens/forgotPassword/MailSentScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import InmobHomecreen from "../ui/screens/home/InmobHomeScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -78,6 +79,8 @@ export default LoginStackNavigator = () => {
           headerShown: false,
         }}
       />
+
+
     </Stack.Navigator>
   );
 };

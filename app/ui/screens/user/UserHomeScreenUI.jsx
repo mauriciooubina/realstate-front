@@ -9,7 +9,7 @@ export default UserHomeScreenUI = () => {
 
     return (
         <View style={styles.container}>
-
+                
         </View>
     )
 };
