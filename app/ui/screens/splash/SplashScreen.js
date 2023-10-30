@@ -13,8 +13,8 @@ export default function SplashScreen({navigation}) {
   }, []);
 
   return (
-    //<SplashScreenUI/>
-     <ComponentUI/>
+    <SplashScreenUI/>
+     //<ComponentUI/>
     //<InmobHomecreen/>
   );
 }
