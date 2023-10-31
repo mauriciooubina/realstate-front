@@ -1,12 +1,13 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { Image } from 'react-native'
+import { Text, View, StyleSheet, TouchableOpacity,Image, AsyncStorage } from 'react-native';
 import casa2 from '../../../../assets/images/casa2.webp';
 import casa3 from '../../../../assets/images/casa3.png';
 import edificio1 from '../../../../assets/images/edificio1.jpeg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
+import { useState } from 'react';
+import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 
 const propertyData = [
     {
@@ -34,7 +35,23 @@ const propertyData = [
 
 export default RealStateHomeScreenUI = () => {
     const navigation = useNavigation();
-    const handleEditProperty = () => {
+    const [properties, setProperties] = useState(null);
+
+    useEffect(() => {
+        const fetchProperties = async () => {
+          try {
+            const response = await propertiesWS.get(id);
+            setProperties(response.data);
+          } catch (error) {
+            console.log(error);
+          }
+        };
+    
+        fetchProperties();
+      }, []);
+
+    const handleEditProperty = async ({index}) => {
+        await AsyncStorage.setItem('propertyId', index);
         navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT);
     };
 
@@ -50,7 +67,7 @@ export default RealStateHomeScreenUI = () => {
                         <Text style={styles.subtext}>{property.price}</Text>
                     </View>
                     <View style={styles.wrenchbox}>
-                        <TouchableOpacity onPress={handleEditProperty}>
+                        <TouchableOpacity onPress={handleEditProperty(index)}>
                             <MaterialCommunityIcons name="wrench" size={15} color="white" />
                         </TouchableOpacity>
                     </View>

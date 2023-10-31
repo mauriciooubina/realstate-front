@@ -6,14 +6,17 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import realstateWS from '../networking/api/endpoints/realstateWS';
 import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecoveryWS';
+import {AsyncStorage} from 'react-native';
 
 export default EditProfileRealstateScreenUI = () => {
     const navigation = useNavigation();
-    const [realEstateData, setRealEstateData] = useState(null); 
+    const [realEstateData, setRealEstateData] = useState(null);
+    const [password, setPassword] = useState('*****'); 
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
           try {
+            const id = await AsyncStorage.getItem('id');
             const response = await realstateWS.get(id);
             setRealEstateData(response.data);
           } catch (error) {
@@ -28,6 +31,7 @@ export default EditProfileRealstateScreenUI = () => {
         console.log('save profile');
         try {
             await realstateWS.put(realEstateData);
+            const id = await AsyncStorage.getItem('id');
             await passwordRecoveryWS.passwordChange(id, password);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
@@ -50,7 +54,7 @@ export default EditProfileRealstateScreenUI = () => {
             <View style={{ height: '60%', width: '80%', alignContent: 'center' }}>
                 <Text style={styles.inputText}>Email</Text>
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)}>
+                    <TextInput style={styles.input} value={realEstateData.email} onChangeText={(text) => setEmail(text)}>
                     </TextInput>
                     <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
                 </View>
@@ -69,7 +73,7 @@ export default EditProfileRealstateScreenUI = () => {
                 <View style={{ display: 'flex', flexDirection: 'row' }}>
                     <TextInput
                         style={styles.input} 
-                        value={realEstateName}
+                        value={realEstateData.realEstateName}
                         onChangeText={(text) => setRealEstateName(text)}
                         >
                     </TextInput>

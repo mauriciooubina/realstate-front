@@ -2,12 +2,14 @@ import React from "react";
 import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
 import Theme from "../ui/styles/Theme";
 import realstateWS from '../networking/api/endpoints/realstateWS';
+import { AsyncStorage } from 'react-native';
 
 export default DeleteAccount = ({ closeDeleteAccount }) => {
   
   const handleDeleteAccount = async () => {
     console.log('Delete account');
     try {
+      const id = await AsyncStorage.getItem('id');
       const response = await realstateWS.delete(id);
       navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
     } catch (error) {

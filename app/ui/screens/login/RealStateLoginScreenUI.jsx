@@ -5,7 +5,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
-import api from '../../../networking/api/Api';
+import { AsyncStorage } from 'react-native';
 
 export default RealStateLoginScreenUI = () => {
     const navigation = useNavigation();
@@ -25,7 +25,8 @@ export default RealStateLoginScreenUI = () => {
         setShowError(false);
         try {
             const response = await loginWS.login(email, password, null);
-            console.log(response.data.token);
+            console.log(response.data);
+            await AsyncStorage.setItem('id', response.data.id);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
             console.log(error);

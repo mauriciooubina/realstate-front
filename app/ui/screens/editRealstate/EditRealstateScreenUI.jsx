@@ -1,28 +1,13 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Pressable,
-  ScrollView,
-  SafeAreaView,
-  Switch,
-  TextInput,
-  Button,
-} from "react-native";
-import Mail from "../../../../assets/images/mail.png";
+import { Text, View,StyleSheet,TouchableOpacity,Image,Pressable,ScrollView,SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import NavigatorConstants from "../../../navigation/NavigatorConstants";
-import SelectDropdown from "react-native-select-dropdown";
 import { useState } from "react";
 import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
 import { Formik } from "formik";
 import Theme from '../../styles/Theme';
-
 import * as ImagePicker from "expo-image-picker";
+import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 
 const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
@@ -59,6 +44,19 @@ const EditRealstateScreenUI = () => {
       setPictures([...pictures, result.assets[0].uri]);
     }
   };
+
+  useEffect(() => {
+    const fetchPropertyData = async () => {
+      try {
+        const response = await propertiesWS.get(id);
+        setProperties(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchPropertyData();
+  }, []);
 
   const handleDelete = () => {
     console.log('delete property');
