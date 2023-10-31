@@ -5,6 +5,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
+import api from '../../../networking/api/Api';
 
 export default RealStateLoginScreenUI = () => {
     const navigation = useNavigation();

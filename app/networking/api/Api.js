@@ -12,4 +12,10 @@ function setClientToken(token) {
     axios.defaults.headers.common = {Authorization: 'Bearer ' + {token}};
 }
 
+function cleanClientToken() {
+    axios.defaults.headers.common = {};
+}
+
+export {setClientToken, cleanClientToken};
+
 export default axios ;
