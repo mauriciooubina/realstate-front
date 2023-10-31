@@ -1,7 +1,6 @@
 import api, { setClientToken, cleanClientToken } from '../Api';
 import axios from 'axios';
 
-// Configura un interceptor de solicitud para ver la URL completa y el cuerpo antes de enviarla
 axios.interceptors.request.use(function (config) {
     console.log('URL de la solicitud:', config.url);
     console.log('Método de la solicitud:', config.method);
