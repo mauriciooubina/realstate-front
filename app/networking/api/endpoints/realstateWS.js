@@ -7,7 +7,8 @@ export default realstateWS = {
     get: async function (id) {
         return await api.get(`/real-state/${id}`);
     },
-    put: async function (id, fantasyName, emailRealState, comments, qualification) {
+    put: async function (data) {
+        const { id, fantasyName, emailRealState, comments, qualification } = data;
         return await api.put('/real-state', {
             id, 
             fantasyName, 

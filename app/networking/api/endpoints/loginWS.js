@@ -1,15 +1,22 @@
-import api from '../Api';
+import api, { setClientToken, cleanClientToken } from '../Api';
 import axios from 'axios';
 
-// Configura un interceptor de solicitud para ver la URL completa y el cuerpo antes de enviarla
 axios.interceptors.request.use(function (config) {
-    console.log('URL de la solicitud:', config.url);
+    console.log('URL de la solicitud:', config.baseURL + config.url);
     console.log('Método de la solicitud:', config.method);
     console.log('Cuerpo de la solicitud:', config.data);
+    console.log('Encabezados de la solicitud:', config.headers); 
     return config;
 }, function (error) {
     return Promise.reject(error);
 });
+
+axios.interceptors.response.use(function (response) {
+    console.log('Respuesta:', response.data);
+    return response;
+  }, function (error) {
+    return Promise.reject(error);
+  });
 
 export default loginWS = {
     login: async function (email, password, googleToken) {
@@ -18,12 +25,15 @@ export default loginWS = {
             password,
             googleToken,
         });
-        console.log('Solicitud de inicio de sesión:', response.config);
         console.log('Cuerpo de la solicitud de inicio de sesión:', (await response).config.data);
         console.log('Respuesta de inicio de sesión:', (await response).data);
+        setClientToken((await response).data.token);
         return response;
     },
     logout: async function () {
-        return await api.post('logout');
+        const response = api.post('/logout');
+        console.log(response.data);
+        cleanClientToken();
+        return response;
     }
 }

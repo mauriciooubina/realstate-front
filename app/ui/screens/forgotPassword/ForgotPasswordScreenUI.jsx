@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
@@ -8,22 +8,25 @@ import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecove
 export default ForgotPasswordScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
-          setEmail('');
+            setEmail('');
         }, [])
-      );
+    );
 
     const handlePasswordRecovery = async () => {
-        console.log(email);
+        setIsLoading(true);
         try {
             const response = await passwordRecoveryWS.passwordRecover(email);
             navigation.push(NavigatorConstants.LOGIN_STACK.EMAIL_SENT)
         } catch (error) {
             alert('El email es incorrecto.');
+        } finally {
+            setIsLoading(false);
         }
-      };
+    };
 
     return (
         <View style={styles.container}>
@@ -45,7 +48,11 @@ export default ForgotPasswordScreenUI = () => {
 
             <View style={styles.buttons}>
                 <TouchableOpacity style={[styles.blueButton]} onPress={handlePasswordRecovery}>
-                    <Text style={[styles.realStateText]}>Enviar</Text>
+                    {isLoading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={[styles.realStateText]}>Enviar</Text>
+                    )}
                 </TouchableOpacity>
             </View>
         </View>
