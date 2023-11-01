@@ -2,7 +2,7 @@ import api from '../Api';
 
 export default passwordRecoveryWS = {
     passwordRecover: async function (email) {
-        return await api.post('/real-states/password-recovery', {
+        return await api.post('/real-state/password-recovery', {
             email,
         });
     },

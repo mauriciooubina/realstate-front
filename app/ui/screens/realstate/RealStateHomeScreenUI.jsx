@@ -1,13 +1,14 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, StyleSheet, TouchableOpacity,Image, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity,Image } from 'react-native';
 import casa2 from '../../../../assets/images/casa2.webp';
 import casa3 from '../../../../assets/images/casa3.png';
 import edificio1 from '../../../../assets/images/edificio1.jpeg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const propertyData = [
     {
@@ -37,7 +38,7 @@ export default RealStateHomeScreenUI = () => {
     const navigation = useNavigation();
     const [properties, setProperties] = useState(null);
 
-    useEffect(() => {
+    {/*useEffect(() => {
         const fetchProperties = async () => {
           try {
             const response = await propertiesWS.get(id);
@@ -48,10 +49,10 @@ export default RealStateHomeScreenUI = () => {
         };
     
         fetchProperties();
-      }, []);
+      }, []);*/}
 
     const handleEditProperty = async ({index}) => {
-        await AsyncStorage.setItem('propertyId', index);
+        {/*await AsyncStorage.setItem('propertyId', index);*/}
         navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT);
     };
 

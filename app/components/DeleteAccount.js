@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
 import Theme from "../ui/styles/Theme";
 import realstateWS from '../networking/api/endpoints/realstateWS';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default DeleteAccount = ({ closeDeleteAccount }) => {
   

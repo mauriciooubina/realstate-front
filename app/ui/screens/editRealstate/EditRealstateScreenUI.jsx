@@ -1,6 +1,6 @@
-import { Text, View,StyleSheet,TouchableOpacity,Image,Pressable,ScrollView,SafeAreaView } from "react-native";
+import { Text, View,StyleSheet,TouchableOpacity,Image,Pressable,ScrollView,SafeAreaView, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
@@ -13,6 +13,7 @@ const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [initialValues, setInitialValues] = useState({});
+  const [loading, setLoading] = useState(true);
 
   //Switch
   const [isEnabled, setIsEnabled] = useState(false);
@@ -45,18 +46,20 @@ const EditRealstateScreenUI = () => {
     }
   };
 
-  useEffect(() => {
+  {/*useEffect(() => {
     const fetchPropertyData = async () => {
       try {
         const response = await propertiesWS.get(id);
         setProperties(response.data);
       } catch (error) {
         console.log(error);
+      } finally{
+        setLoading(false);
       }
     };
 
     fetchPropertyData();
-  }, []);
+  }, []);*/}
 
   const handleDelete = () => {
     console.log('delete property');

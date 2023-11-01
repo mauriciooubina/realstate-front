@@ -1,8 +1,8 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import React, { useState } from 'react';
 import registerWS from '../../../networking/api/endpoints/registerWS';
 
@@ -14,33 +14,38 @@ export default RegisterScreenUI = () => {
     const [realstateName, setRealstateName] = useState('');
     const [passError, setPassError] = useState(false);
     const [emailError, setEmailError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
-          setEmail('');
-          setPassword('');
-          setRepeatPass('');
-          setRealstateName('');
-          setPassError(false);
-          setEmailError(false);
+            setEmail('');
+            setPassword('');
+            setRepeatPass('');
+            setRealstateName('');
+            setPassError(false);
+            setEmailError(false);
         }, [])
-      );
+    );
 
     const handleRegister = async () => {
         setPassError(false);
         setEmailError(false);
-        if(password === repeatPass){
+        setIsLoading(true);
+        if (password === repeatPass) {
             try {
                 const response = await registerWS.register(email, password, realstateName, email);
                 navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN);
             } catch (error) {
                 setEmailError(true);
+            } finally {
+                setIsLoading(false);
             }
-        } else{
+        } else {
             setPassError(true);
         }
+        setIsLoading(false);
     };
-    
+
 
     return (
         <ImageBackground source={Login} style={styles.background}>
@@ -49,9 +54,9 @@ export default RegisterScreenUI = () => {
 
                     <Text style={styles.title}>Crear cuenta</Text>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Email</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             value={email}
                             onChangeText={(text) => setEmail(text)}>
@@ -59,9 +64,9 @@ export default RegisterScreenUI = () => {
                         {emailError && (<Text style={styles.redText}>El email ya se encuentra registrado</Text>)}
                     </View>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Contraseña</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             secureTextEntry={true}
                             value={password}
@@ -70,9 +75,9 @@ export default RegisterScreenUI = () => {
                         {passError && (<Text style={styles.redText}>Las contraseñas no coinciden</Text>)}
                     </View>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Repetir Contraseña</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             secureTextEntry={true}
                             value={repeatPass}
@@ -81,9 +86,9 @@ export default RegisterScreenUI = () => {
                         {passError && (<Text style={styles.redText}>Las contraseñas no coinciden</Text>)}
                     </View>
 
-                    <View style={styles.input_container}> 
+                    <View style={styles.input_container}>
                         <Text style={styles.inputText}>Nombre de la Inmobiliaria</Text>
-                        <TextInput 
+                        <TextInput
                             style={styles.input}
                             value={realstateName}
                             onChangeText={(text) => setRealstateName(text)}>
@@ -95,7 +100,11 @@ export default RegisterScreenUI = () => {
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.blueButton]} onPress={handleRegister}>
-                            <Text style={[styles.realStateText]}>Registrarse</Text>
+                            {isLoading ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.realStateText]}>Registrarse</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
 
@@ -169,4 +178,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 12,
     },
-  });
+});

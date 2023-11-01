@@ -1,37 +1,45 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import realstateWS from '../networking/api/endpoints/realstateWS';
+import realstateWS from '../../../networking/api/endpoints/realstateWS';
 import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecoveryWS';
-import {AsyncStorage} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default EditProfileRealstateScreenUI = () => {
     const navigation = useNavigation();
     const [realEstateData, setRealEstateData] = useState(null);
-    const [password, setPassword] = useState('*****'); 
+    const [password, setPassword] = useState('********');
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
-          try {
-            const id = await AsyncStorage.getItem('id');
-            const response = await realstateWS.get(id);
-            setRealEstateData(response.data);
-          } catch (error) {
-            console.log(error);
-          }
+            try {
+                {/*const id = await AsyncStorage.getItem('id');*/ }
+                const response = await realstateWS.get('2');
+                setRealEstateData(response.data[0]);
+                setLoading(false);
+                console.log(response.data);
+            } catch (error) {
+                console.log(error);
+                console.log('fallo');
+                setLoading(false);
+            }
         };
-    
+
         fetchRealEstateData();
-      }, []);
+    }, []);
 
     const handleSaveProfile = async () => {
         console.log('save profile');
         try {
             await realstateWS.put(realEstateData);
             const id = await AsyncStorage.getItem('id');
+            if (password !== ('********')) {
+                await passwordRecoveryWS.passwordChange(id, password);
+              }
             await passwordRecoveryWS.passwordChange(id, password);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
@@ -42,53 +50,68 @@ export default EditProfileRealstateScreenUI = () => {
 
     return (
         <View style={styles.container}>
-            <View style={{ width: '100%', height: '10%' }}>
-                <Text>  </Text>
-            </View>
-            <View>
-                <Text style={styles.title}>Editar Perfil</Text>
-            </View>
-            <View style={{ width: '100%', height: '8%' }}>
-                <Text>  </Text>
-            </View>
-            <View style={{ height: '60%', width: '80%', alignContent: 'center' }}>
-                <Text style={styles.inputText}>Email</Text>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextInput style={styles.input} value={realEstateData.email} onChangeText={(text) => setEmail(text)}>
-                    </TextInput>
-                    <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
-                </View>
-                <Text style={styles.inputText}>Contraseña</Text>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextInput
-                        style={styles.input}
-                        secureTextEntry={true}  
-                        value={password}
-                        onChangeText={(text) => setPassword(text)}
-                        >
-                    </TextInput>
-                    <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
-                </View>
-                <Text style={styles.inputText}>Nombre de la Inmobiliaria</Text>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TextInput
-                        style={styles.input} 
-                        value={realEstateData.realEstateName}
-                        onChangeText={(text) => setRealEstateName(text)}
-                        >
-                    </TextInput>
-                    <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
-                </View>
+            {loading ? (
+                <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+            ) : (
+                <View>
+                    <View style={{ width: '100%', height: '10%' }}>
+                    </View>
+                    <View>
+                        <Text style={styles.title}>Editar Perfil</Text>
+                    </View>
+                    <View style={{ width: '100%', height: '8%' }}>
+                    </View>
+                    <View style={{ height: '60%', width: '80%', alignContent: 'center' }}>
+                        <Text style={styles.inputText}>Email</Text>
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <TextInput style={styles.input}
+                                value={realEstateData.owner.email}
+                                onChangeText={(text) => setRealEstateData((prevData) => ({
+                                    ...prevData,
+                                    owner: {
+                                        ...prevData.owner,
+                                        email: text,
+                                    },
+                                }))}>
+                            </TextInput>
+                            <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
+                        </View>
+                        <Text style={styles.inputText}>Contraseña</Text>
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <TextInput
+                                style={styles.input}
+                                secureTextEntry={true}
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                            >
+                            </TextInput>
+                            <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
+                        </View>
+                        <Text style={styles.inputText}>Nombre de la Inmobiliaria</Text>
+                        <View style={{ display: 'flex', flexDirection: 'row' }}>
+                            <TextInput
+                                style={styles.input}
+                                value={realEstateData.fantasyName}
+                                onChangeText={(text) => setRealEstateData((prevData) => ({
+                                    ...prevData,
+                                    fantasyName: text,
+                                }))}
+                            >
+                            </TextInput>
+                            <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
+                        </View>
 
-                <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
-                        <Text style={[styles.realStateText]}>  Cancelar  </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
-                        <Text style={[styles.realStateText]}>  Guardar  </Text>
-                    </TouchableOpacity>
+                        <View style={styles.buttons}>
+                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                                <Text style={[styles.realStateText]}>  Cancelar  </Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
+                                <Text style={[styles.realStateText]}>  Guardar  </Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                 </View>
-            </View>
+            )}
         </View>
     );
 };

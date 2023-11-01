@@ -2,7 +2,7 @@ import api, { setClientToken, cleanClientToken } from '../Api';
 import axios from 'axios';
 
 axios.interceptors.request.use(function (config) {
-    console.log('URL de la solicitud:', config.url);
+    console.log('URL de la solicitud:', config.baseURL + config.url);
     console.log('Método de la solicitud:', config.method);
     console.log('Cuerpo de la solicitud:', config.data);
     console.log('Encabezados de la solicitud:', config.headers); 
@@ -10,6 +10,13 @@ axios.interceptors.request.use(function (config) {
 }, function (error) {
     return Promise.reject(error);
 });
+
+axios.interceptors.response.use(function (response) {
+    console.log('Respuesta:', response.data);
+    return response;
+  }, function (error) {
+    return Promise.reject(error);
+  });
 
 export default loginWS = {
     login: async function (email, password, googleToken) {

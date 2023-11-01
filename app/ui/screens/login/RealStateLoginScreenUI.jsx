@@ -1,38 +1,43 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import realstateWS from '../../../networking/api/endpoints/realstateWS';
 
 export default RealStateLoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showError, setShowError] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
-          setEmail('');
-          setPassword('');
-          setShowError(false);
+            setEmail('');
+            setPassword('');
+            setShowError(false);
         }, [])
-      );
+    );
 
     const handleLogin = async () => {
         setShowError(false);
+        setIsLoggingIn(true);
         try {
             const response = await loginWS.login(email, password, null);
             console.log(response.data);
-            await AsyncStorage.setItem('id', response.data.id);
+            await AsyncStorage.setItem('id', '2');
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
             console.log(error);
             setShowError(true);
+        } finally {
+            setIsLoggingIn(false);
         }
-      };
+    };
 
     return (
         <ImageBackground source={Login} style={styles.background}>
@@ -72,7 +77,11 @@ export default RealStateLoginScreenUI = () => {
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.blueButton]} onPress={handleLogin}>
-                            <Text style={[styles.realStateText]}>Iniciar Sesion</Text>
+                            {isLoggingIn ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.realStateText]}>Iniciar Sesión</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
 

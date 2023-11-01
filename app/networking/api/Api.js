@@ -9,7 +9,11 @@ axios.defaults.headers.common = {
 };
 
 function setClientToken(token) {
-    axios.defaults.headers.common = {Authorization: 'Bearer ' + {token}};
+    const existingHeaders = axios.defaults.headers.common;
+    axios.defaults.headers.common = {
+    ...existingHeaders,
+    Authorization: `Bearer ${token}`
+    }
 }
 
 function cleanClientToken() {
