@@ -1,80 +1,71 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
-import { Text, View, StyleSheet, TouchableOpacity,Image } from 'react-native';
-import casa2 from '../../../../assets/images/casa2.webp';
-import casa3 from '../../../../assets/images/casa3.png';
-import edificio1 from '../../../../assets/images/edificio1.jpeg';
+import { Text, View, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const propertyData = [
-    {
-        image: edificio1,
-        address: 'Av. Cramer 2589, 12C',
-        saleType: 'Venta - Belgrano',
-        rooms: '4 Amb',
-        price: 'u$d 385.000',
-    },
-    {
-        image: casa3,
-        address: 'Av. Cramer 2589, 12C',
-        saleType: 'Venta - Belgrano',
-        rooms: '4 Amb',
-        price: 'u$d 385.000',
-    },
-    {
-        image: casa2,
-        address: 'Av. Cabildo 1789, 3A',
-        saleType: 'Venta - Belgrano',
-        rooms: '3 Amb',
-        price: 'u$d 476.000',
-    },
-];
-
 export default RealStateHomeScreenUI = () => {
     const navigation = useNavigation();
     const [properties, setProperties] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    {/*useEffect(() => {
+    useEffect(() => {
         const fetchProperties = async () => {
-          try {
-            const response = await propertiesWS.get(id);
-            setProperties(response.data);
-          } catch (error) {
-            console.log(error);
-          }
+            try {
+                const id = await AsyncStorage.getItem('realstateId');
+                const response = await propertiesWS.getFromRealstate(id);
+                setProperties(response.data);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         };
-    
-        fetchProperties();
-      }, []);*/}
 
-    const handleEditProperty = async ({index}) => {
-        {/*await AsyncStorage.setItem('propertyId', index);*/}
+        fetchProperties();
+    }, []);
+
+    const handleEditProperty = async ({ index }) => {
+        await AsyncStorage.setItem('propertyId', `${index}`);
         navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT);
     };
 
     return (
         <View style={styles.container}>
-            {propertyData.map((property, index) => (
-                <View key={index} style={styles.box}>
-                    <Image source={property.image} style={styles.imageContainer} />
-                    <View style={styles.textContainer}>
-                        <Text style={styles.text}>{property.address}</Text>
-                        <Text style={styles.subtext}>{property.saleType}</Text>
-                        <Text style={styles.subtext}>{property.rooms}</Text>
-                        <Text style={styles.subtext}>{property.price}</Text>
+            {loading ? (
+                <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+            ) : properties ? (
+                properties === null ? (
+                    properties.map((property, index) => (
+                        <View key={index} style={styles.box}>
+                            <Image source={property.image} style={styles.imageContainer} />
+                            <View style={styles.textContainer}>
+                                <Text style={styles.text}>{property.address}</Text>
+                                <Text style={styles.subtext}>{property.saleType}</Text>
+                                <Text style={styles.subtext}>{property.rooms}</Text>
+                                <Text style={styles.subtext}>{property.price}</Text>
+                            </View>
+                            <View style={styles.wrenchbox}>
+                                <TouchableOpacity onPress={() => handleEditProperty({ index })}>
+                                    <MaterialCommunityIcons name="wrench" size={15} color="white" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    ))
+                ) : (
+                    <View style={styles.noPropertiesBox}>
+                        <View style={styles.noProperties}>
+                            <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
+                        </View>
                     </View>
-                    <View style={styles.wrenchbox}>
-                        <TouchableOpacity onPress={handleEditProperty(index)}>
-                            <MaterialCommunityIcons name="wrench" size={15} color="white" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            ))}
+                )
+            ) : null}
         </View>
+
+
     );
 };
 
@@ -85,6 +76,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         width: '100%',
         alignItems: 'center',
+        justifyContent: 'center',
     },
     box: {
         width: '88%',
@@ -95,7 +87,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginTop: '5%',
         height: '15%',
-
     },
     wrenchbox: {
         display: 'flex',
@@ -293,4 +284,16 @@ const styles = StyleSheet.create({
         color: Theme.colors.clear.PRIMARY,
         fontSize: 14,
     },
+    noPropertiesBox: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#c2c2c2',
+        borderRadius: 8,
+        flexDirection: 'row',
+        marginTop: '5%',
+    },
+    noProperties: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 });

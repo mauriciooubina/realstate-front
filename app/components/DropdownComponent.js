@@ -44,15 +44,17 @@ export default DropdownComponent;
 
 const styles = StyleSheet.create({
   dropdown: {
-    margin: 5,
-    borderBottomColor: "#365EEB",
-    borderBottomWidth: 0.6,
+    backgroundColor: "#F6F6F6",
+    marginBottom: 5,
+    borderRadius: 10,
+    borderWidth: 0.5,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: 13,
+    marginLeft: 8,
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: 13,
   },
   iconStyle: {
     width: 20,
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
   },
   inputSearchStyle: {
     height: 40,
-    fontSize: 16,
+    fontSize: 13,
   },
   itemTitleView: {
     display: "flex",

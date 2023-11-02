@@ -8,11 +8,11 @@ export default realstateWS = {
         return await api.get(`/real-state/${id}`);
     },
     put: async function (data) {
-        const { id, fantasyName, emailRealState, comments, qualification } = data;
+        const { id, fantasyName, realStateEmail, comments, qualification } = data;
         return await api.put('/real-state', {
             id, 
             fantasyName, 
-            emailRealState, 
+            emailRealState: realStateEmail, 
             comments, 
             qualification,
         });

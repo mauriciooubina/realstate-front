@@ -11,20 +11,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default EditProfileRealstateScreenUI = () => {
     const navigation = useNavigation();
     const [realEstateData, setRealEstateData] = useState(null);
-    const [password, setPassword] = useState('********');
+    const [password, setPassword] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [saveEdit, setSaveEdit] = useState(false);
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
             try {
-                {/*const id = await AsyncStorage.getItem('id');*/ }
-                const response = await realstateWS.get('2');
+                const id = await AsyncStorage.getItem('realstateId');
+                const response = await realstateWS.get(id);
                 setRealEstateData(response.data[0]);
-                setLoading(false);
-                console.log(response.data);
             } catch (error) {
                 console.log(error);
-                console.log('fallo');
+            } finally {
                 setLoading(false);
             }
         };
@@ -33,19 +32,20 @@ export default EditProfileRealstateScreenUI = () => {
     }, []);
 
     const handleSaveProfile = async () => {
-        console.log('save profile');
+        setSaveEdit(true);
         try {
+            console.log(password);
             await realstateWS.put(realEstateData);
-            const id = await AsyncStorage.getItem('id');
-            if (password !== ('********')) {
+            const id = await AsyncStorage.getItem('realstateId');
+            if (password !== null) {
                 await passwordRecoveryWS.passwordChange(id, password);
-              }
-            await passwordRecoveryWS.passwordChange(id, password);
-            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            }
+            navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
         } catch (error) {
             console.log(error);
+        } finally {
+            setSaveEdit(false);
         }
-        navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     }
 
     return (
@@ -65,13 +65,10 @@ export default EditProfileRealstateScreenUI = () => {
                         <Text style={styles.inputText}>Email</Text>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <TextInput style={styles.input}
-                                value={realEstateData.owner.email}
+                                value={realEstateData.realStateEmail}
                                 onChangeText={(text) => setRealEstateData((prevData) => ({
                                     ...prevData,
-                                    owner: {
-                                        ...prevData.owner,
-                                        email: text,
-                                    },
+                                    realStateEmail: text,
                                 }))}>
                             </TextInput>
                             <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
@@ -81,9 +78,8 @@ export default EditProfileRealstateScreenUI = () => {
                             <TextInput
                                 style={styles.input}
                                 secureTextEntry={true}
-                                value={password}
-                                onChangeText={(text) => setPassword(text)}
-                            >
+                                placeholder={'Ingrese una nueva contraseña, si desea cambiarla'}
+                                onChangeText={(text) => setPassword(text)}>
                             </TextInput>
                             <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
                         </View>
@@ -95,8 +91,7 @@ export default EditProfileRealstateScreenUI = () => {
                                 onChangeText={(text) => setRealEstateData((prevData) => ({
                                     ...prevData,
                                     fantasyName: text,
-                                }))}
-                            >
+                                }))}>
                             </TextInput>
                             <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
                         </View>
@@ -106,7 +101,11 @@ export default EditProfileRealstateScreenUI = () => {
                                 <Text style={[styles.realStateText]}>  Cancelar  </Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
-                                <Text style={[styles.realStateText]}>  Guardar  </Text>
+                                {saveEdit ? (
+                                    <ActivityIndicator color="#fff" />
+                                ) : (
+                                    <Text style={[styles.realStateText]}>  Guardar  </Text>
+                                )}
                             </TouchableOpacity>
                         </View>
                     </View>

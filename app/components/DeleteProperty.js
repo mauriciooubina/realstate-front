@@ -1,20 +1,22 @@
 import React from "react";
 import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
 import Theme from "../ui/styles/Theme";
-import realstateWS from '../networking/api/endpoints/realstateWS';
+import propertiesWS from '../networking/api/endpoints/propertiesWS';
 import { AsyncStorage } from 'react-native';
+import NavigatorConstants from '../navigation/NavigatorConstants';
 
-export default DeleteAccount = ({ closeDeleteAccount }) => {
+export default DeleteProperty = ({ closeDeleteProperty }) => {
   
-  const handleDeleteAccount = async () => {
-    console.log('Delete account');
+  const handleDeleteProperty = async () => {
     try {
-      const id = await AsyncStorage.getItem('realstateId');
-      const response = await realstateWS.delete(id);
-      navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
-    } catch (error) {
-      console.log(error);
-    }
+        const id = await AsyncStorage.getItem('propertyId');
+        await propertiesWS.delete(id);
+        navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
   }
 
   return (
@@ -25,16 +27,13 @@ export default DeleteAccount = ({ closeDeleteAccount }) => {
     <View style={styles.modalBackGround}>
       <View style={[styles.modalContainer]}>
         <Text style={styles.title}>
-          ¿Está seguro que desea borrar su cuenta?
-        </Text>
-        <Text style={styles.subtitle}>
-          Recuerde que se perderá toda información vinculada a dicha cuenta
+          ¿Está seguro que desea borrar la publicacion?
         </Text>
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteAccount}  >
+          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteProperty}  >
             <Text style={[styles.noText]}> NO </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.whiteButton]} onPress={handleDeleteAccount} >
+          <TouchableOpacity style={[styles.whiteButton]} onPress={handleDeleteProperty} >
             <Text style={[styles.siText]}> SI </Text>
           </TouchableOpacity>
         </View>
