@@ -28,8 +28,7 @@ export default RealStateLoginScreenUI = () => {
         setIsLoggingIn(true);
         try {
             const response = await loginWS.login(email, password, null);
-            console.log(response.data);
-            await AsyncStorage.setItem('id', '2');
+            await AsyncStorage.setItem('realstateId', `${response.data.id}`);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
             console.log(error);

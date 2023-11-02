@@ -1,4 +1,4 @@
-import { Text, View,StyleSheet,TouchableOpacity,Image,Pressable,ScrollView,SafeAreaView, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView, SafeAreaView, ActivityIndicator } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import CustomTextInput from "../../../components/TextInputComponent";
@@ -8,21 +8,18 @@ import { Formik } from "formik";
 import Theme from '../../styles/Theme';
 import * as ImagePicker from "expo-image-picker";
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
+import DeleteAccount from "../../../components/DeleteAccount";
 
 const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [initialValues, setInitialValues] = useState({});
   const [loading, setLoading] = useState(true);
-
-  //Switch
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  //TextInput
   const [number, onChangeNumber] = useState("");
+  const [showDeleteProperty, setShowDeleteProperty] = useState(false);
 
-  // Select image from library or camera
   const selectImage = async (useLibrary) => {
     let result;
     const options = {
@@ -39,31 +36,35 @@ const EditRealstateScreenUI = () => {
       result = await ImagePicker.launchCameraAsync(options);
     }
 
-    // Save image if not cancelled
     if (!result.canceled) {
       console.log(result.assets[0].uri);
       setPictures([...pictures, result.assets[0].uri]);
     }
   };
 
-  {/*useEffect(() => {
+  useEffect(() => {
     const fetchPropertyData = async () => {
       try {
+        const id = await AsyncStorage.getItem('realstateId');
         const response = await propertiesWS.get(id);
-        setProperties(response.data);
+        setInitialValues(response.data);
       } catch (error) {
         console.log(error);
-      } finally{
+      } finally {
         setLoading(false);
       }
     };
 
     fetchPropertyData();
-  }, []);*/}
+  }, []);
 
-  const handleDelete = () => {
-    console.log('delete property');
-  }
+  const openDeleteProperty = () => {
+    setShowDeleteProperty(true);
+  };
+
+  const closeDeleteProperty = () => {
+    setShowDeleteProperty(false);
+  };
 
   return (
     <Formik initialValues={initialValues} onSubmit={values => console.log({ values })}>
@@ -222,10 +223,13 @@ const EditRealstateScreenUI = () => {
               </TouchableOpacity>
             </View>
             <View style={styles.deleteButton}>
-              <TouchableOpacity style={[styles.redButton]} onPress={handleDelete}>
+              <TouchableOpacity style={[styles.redButton]} onPress={openDeleteProperty}>
                 <Text style={[styles.realStateText]}>Eliminar publicacion</Text>
               </TouchableOpacity>
             </View>
+            {showDeleteProperty && (
+              <DeleteAccount closeDeleteProperty={closeDeleteProperty} />
+            )}
           </ScrollView>
         </SafeAreaView>
       )}
@@ -263,28 +267,27 @@ const styles = StyleSheet.create({
   contentContainer: {
     display: "flex",
     width: "100%",
-    marginBottom: 10, // Alinea a la izquierda
+    marginBottom: 10,
   },
   horizontalContainer: {
     display: "flex",
     flex: 2,
     flexDirection: "row",
-    alignItems: "center", // Alinea a la izquierda,
+    alignItems: "center",
     justifyContent: "space-between",
-    // width: "100%",
   },
   titleText: {
     color: "#365EEB",
     margin: 5,
-    textAlign: "left", // Alinea el texto a la izquierda
+    textAlign: "left",
     fontSize: 20,
   },
   itemTitleView: {
-    alignItems: "flex-start", // Alinea a la izquierda
+    alignItems: "flex-start",
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "space-between", // Centra los botones horizontalmente
+    justifyContent: "space-between",
     margin: 10,
     paddingBottom: 20,
   },
