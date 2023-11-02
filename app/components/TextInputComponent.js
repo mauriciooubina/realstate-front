@@ -11,7 +11,6 @@ const CustomTextInput = ({ title, type, value, onChange, placeholder }) => {
         value={value}
         keyboardType={type}
         placeholder={placeholder}
-        underlineColorAndroid={"#365EEB"}
       />
     </View>
   );
@@ -23,14 +22,20 @@ const styles = StyleSheet.create({
   view: {
     display: "flex",
     flexGrow: 1,
-    marginLeft: 5,
+    marginLeft: 2,
   },
   itemTitleText: {
     textAlign: "left",
     fontSize: 16,
     marginVertical: 5,
+    marginLeft: 1,
   },
   textInput: {
-    paddingVertical: 10,
+    backgroundColor: "#F6F6F6",
+    marginBottom: 5,
+    borderRadius: 10,
+    borderWidth: 0.5,
+    height: 33,
+    paddingLeft: 8,
   },
 });
