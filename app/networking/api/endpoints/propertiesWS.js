@@ -1,6 +1,14 @@
 import api from '../Api';
 
 export default propertiesWS = {
+    post: async function (data) {
+        return await api.post('/properties', {
+            ...data
+        });
+    },
+    getCalles: async function (calle) {
+        return await api.get(`/properties/calles/${calle}`);
+    },
     getAll: async function () {
         return await api.get('/properties',);
     },
@@ -11,9 +19,8 @@ export default propertiesWS = {
         return await api.get(`/properties/${id}`);
     },
     put: async function (data) {
-        const { id,} = data;
         return await api.put('/properties', {
-            id,
+            ...data
         });
     },
     delete: async function (id) {
