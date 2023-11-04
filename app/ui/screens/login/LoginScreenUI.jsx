@@ -1,12 +1,30 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, Modal, ActivityIndicator} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import {useNavigation} from '@react-navigation/native';
+import aliveWS from '../../../networking/api/endpoints/aliveWS';
+import React, {useEffect, useState} from 'react';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
+    const [showLoading, setShowLoading] = useState(true);
+
+    useEffect(() => {
+        const getBackendUp = async () => {
+            try {
+                await new Promise(resolve => setTimeout(resolve, 20000));
+                const response = await aliveWS.alive();
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setShowLoading(false);
+            }
+        };
+
+        getBackendUp();
+    }, []);
     
     return (
         <ImageBackground source={Login} style={styles.background}>
@@ -21,6 +39,14 @@ export default LoginScreenUI = () => {
                         <Text style={[styles.realStateText]}>Soy Inmobiliario</Text>
                     </TouchableOpacity>
                 </View>
+                <Modal transparent={true} animationType="slide" visible={showLoading}>
+                    <View style={styles.modalBackGround}>
+                        <View style={[styles.modalContainer]}>
+                            <Text style={styles.titleModal}>En busca de tu propiedad ideal... aguarda un momento por favor!</Text>
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        </View>
+                    </View>
+                </Modal>
             </View>
         </ImageBackground>
     )
@@ -82,5 +108,25 @@ const styles = StyleSheet.create({
     realStateText: {
         color: 'white',
         fontSize: 14,
+    },
+    modalBackGround: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+    
+      modalContainer: {
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+        borderRadius: 10,
+        eleation: 20,
+      },
+      titleModal: {
+        fontWeight: '300',
+        fontSize: 27,
+        marginVertical: 20,
+        color: '#47A7FF',
     },
   });
