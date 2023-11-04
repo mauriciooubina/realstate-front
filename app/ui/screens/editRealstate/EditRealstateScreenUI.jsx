@@ -9,11 +9,12 @@ import Theme from '../../styles/Theme';
 import * as ImagePicker from "expo-image-picker";
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import DeleteAccount from "../../../components/DeleteAccount";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
-  const [initialValues, setInitialValues] = useState({});
+  const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
@@ -47,7 +48,7 @@ const EditRealstateScreenUI = () => {
       try {
         const id = await AsyncStorage.getItem('realstateId');
         const response = await propertiesWS.get(id);
-        setInitialValues(response.data);
+        setInitialValues(response.data[0]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -67,6 +68,11 @@ const EditRealstateScreenUI = () => {
   };
 
   return (
+    loading ? (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+      </View>
+    ) :(
     <Formik initialValues={initialValues} onSubmit={values => console.log({ values })}>
       {({ handleChange, handleBlur, handleSubmit, values }) => (
         <SafeAreaView style={styles.container}>
@@ -83,25 +89,25 @@ const EditRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
               </View>
-              <DropdownComponent title="País" />
-              <DropdownComponent title="Provincia" />
-              <DropdownComponent title="Localidad" />
-              <DropdownComponent title="Barrio" />
-              <CustomTextInput title="Calle" placeholder="Ingrese la calle" />
+              <DropdownComponent title="País" val={initialValues.address.country}/>
+              <DropdownComponent title="Provincia" val={initialValues.address.province}/>
+              <DropdownComponent title="Localidad" val={initialValues.address.locality}/>
+              <DropdownComponent title="Barrio" val={initialValues.address.district}/>
+              <CustomTextInput title="Calle" value={initialValues.address.street} />
               <CustomTextInput
                 title="Altura"
                 type="numeric"
-                placeholder="Ingrese la altura"
+                value={initialValues.address.streetNumber}
               />
               <View style={styles.horizontalContainer}>
                 <CustomTextInput
                   title="Piso"
                   type="numeric"
-                  placeholder="Ingrese el piso"
+                  value={initialValues.address.floor}
                 />
                 <CustomTextInput
                   title="Departamento"
-                  placeholder="Ingrese el depto."
+                  value={initialValues.address.department}
                 />
               </View>
             </View>
@@ -109,11 +115,11 @@ const EditRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>CATEGORÍA</Text>
               </View>
-              <DropdownComponent title="Tipo de propiedad" />
+              <DropdownComponent title="Tipo de propiedad" val={initialValues.details.propertyType}/>
               <CustomTextInput
                 title="Antiguedad"
                 type="numeric"
-                placeholder="Ingrese la antiguedad de la propiedad."
+                value={initialValues.details.howOld}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -123,16 +129,16 @@ const EditRealstateScreenUI = () => {
               <CustomTextInput
                 title="M2 Cubiertos"
                 type="numeric"
-                placeholder="Ingrese los m2 cubiertos."
+                value={initialValues.details.coveredMeters}
               />
               <CustomTextInput
                 title="M2 Semicubiertos"
                 type="numeric"
-                placeholder="Ingrese los m2 semicubiertos."
+                value={initialValues.details.semiUncoveredMeters}
               />
               <CustomTextInput
                 title="M2 Descubiertos"
-                placeholder="Ingrese los m2 descubiertos."
+                value={initialValues.details.uncoveredMeters}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -140,54 +146,54 @@ const EditRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" />
-                <DropdownComponent title="Habitaciones" />
+                <DropdownComponent title="Totales" val={initialValues.details.propertyType}/>
+                <DropdownComponent title="Habitaciones" val={initialValues.details.propertyType}/>
               </View>
-              <DropdownComponent title="Baños" />
+              <DropdownComponent title="Baños" val={initialValues.details.bathrooms}/>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" />
-                <DropdownComponent title="Bauleras" />
+                <DropdownComponent title="Cocheras" val={initialValues.details.garage}/>
+                <DropdownComponent title="Bauleras" val={initialValues.details.trunk}/>
               </View>
-              <CustomSwitchComponent title="Terraza" />
+              <CustomSwitchComponent title="Terraza" val={initialValues.details.terrace}/>
 
-              <CustomSwitchComponent title="Balcon" />
+              <CustomSwitchComponent title="Balcon" val={initialValues.details.balcony}/>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>ORIENTACION</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" />
-                <DropdownComponent title="Vista" />
+                <DropdownComponent title="Ortientación" val={initialValues.details.orientation}/>
+                <DropdownComponent title="Vista" val={initialValues.details.front}/>
               </View>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>AMENITIES</Text>
               </View>
-              <CustomSwitchComponent title="Quincho" />
-              <CustomSwitchComponent title="Pileta" />
-              <CustomSwitchComponent title="Jacuzzi" />
-              <CustomSwitchComponent title="Sauna" />
-              <CustomSwitchComponent title="SUM" />
-              <CustomSwitchComponent title="Gym" />
-              <CustomSwitchComponent title="Mas+" />
+              <CustomSwitchComponent title="Quincho" value={initialValues.additionaldetails.amenities.includes("Quincho")}/>
+              <CustomSwitchComponent title="Pileta" value={initialValues.additionaldetails.amenities.includes("Swimming Pool")}/>
+              <CustomSwitchComponent title="Jacuzzi" value={initialValues.additionaldetails.amenities.includes("Jacuzzi")}/>
+              <CustomSwitchComponent title="Sauna" value={initialValues.additionaldetails.amenities.includes("Sauna")}/>
+              <CustomSwitchComponent title="SUM" value={initialValues.additionaldetails.amenities.includes("SUM")}/>
+              <CustomSwitchComponent title="Gym" value={initialValues.additionaldetails.amenities.includes("Gym")}/>
+              <CustomSwitchComponent title="Mas+" value={initialValues.additionaldetails.amenities.includes("More")}/>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>PRECIO</Text>
               </View>
-              <DropdownComponent title="Estado" />
+              <DropdownComponent title="Estado" val='Venta'/>
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <CustomTextInput
                       title="Valor"
-                      placeholder="Ingrese el Valor"
+                      value={initialValues.additionaldetails.price}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" />
+                    <DropdownComponent title="Moneda" val='$'/>
                   </View>
                 </View>
               </View>
@@ -196,11 +202,11 @@ const EditRealstateScreenUI = () => {
                   <View style={{ flex: 1 }}>
                     <CustomTextInput
                       title="Expensas"
-                      placeholder="Ingrese las Expensas"
+                      value={initialValues.additionaldetails.expensePrice}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" />
+                    <DropdownComponent title="Moneda" val='$'/>
                   </View>
                 </View>
               </View>
@@ -211,7 +217,7 @@ const EditRealstateScreenUI = () => {
               </View>
               <CustomTextInput
                 title="Descripcion"
-                placeholder="Ingrese la Descripcion"
+                value={initialValues.additionaldetails.description}
               />
             </View>
             <View style={styles.buttons}>
@@ -234,12 +240,20 @@ const EditRealstateScreenUI = () => {
         </SafeAreaView>
       )}
     </Formik>
+    )
   );
 };
 
 export default EditRealstateScreenUI;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   scrollView: {
     width: "90%",
     paddingLeft: "2%",

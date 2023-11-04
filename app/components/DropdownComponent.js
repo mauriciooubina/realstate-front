@@ -13,8 +13,8 @@ const data = [
   { label: "Item 8", value: "8" },
 ];
 
-const DropdownComponent = ({ title }) => {
-  const [value, setValue] = useState(null);
+const DropdownComponent = ({ title, val=null }) => {
+  const [value, setValue] = useState(val);
   return (
     <View style={styles.itemTitleView}>
       {title && <Text style={styles.itemTitleText}>{title}</Text>}
