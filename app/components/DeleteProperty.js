@@ -1,86 +1,57 @@
-import React from "react";
-import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
+import React, {useState} from "react";
+import { StyleSheet, Modal, Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import Theme from "../ui/styles/Theme";
-import propertiesWS from '../networking/api/endpoints/propertiesWS';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import NavigatorConstants from '../navigation/NavigatorConstants';
+import propertiesWS from "../networking/api/endpoints/propertiesWS";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import NavigatorConstants from "../navigation/NavigatorConstants";
 
 export default DeleteProperty = ({ closeDeleteProperty }) => {
-  
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const handleDeleteProperty = async () => {
     try {
-        const id = await AsyncStorage.getItem('propertyId');
-        await propertiesWS.delete(id);
-        navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-  }
+      const id = await AsyncStorage.getItem("propertyId");
+      await propertiesWS.delete(id);
+      navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-  <Modal
-    animationType="slide"
-    transparent={true}
-  >
-    <View style={styles.modalBackGround}>
-      <View style={[styles.modalContainer]}>
-        <Text style={styles.title}>
-          ¿Está seguro que desea borrar la publicacion?
-        </Text>
-        <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteProperty}  >
-            <Text style={[styles.noText]}> NO </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.whiteButton]} onPress={handleDeleteProperty} >
-            <Text style={[styles.siText]}> SI </Text>
-          </TouchableOpacity>
+    <Modal animationType="slide" transparent={true}>
+      <View style={styles.modalBackGround}>
+        <View style={[styles.modalContainer]}>
+          <Text style={styles.title}>
+            ¿Está seguro que desea borrar la publicacion?
+          </Text>
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              style={[styles.blueButton]}
+              onPress={closeDeleteProperty}
+            >
+              <Text style={[styles.noText]}> NO </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.whiteButton]}
+              onPress={handleDeleteProperty}
+            >
+              {isLoggingIn ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={[styles.siText]}> SI </Text>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  </Modal>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  blueContainer: {
-    width: "100%",
-    height: "40%",
-
-    justifyContent: "left",
-    alignItems: "center",
-    backgroundColor: "#47A7FF",
-    flexDirection: "row",
-    marginTop: "0%",
-    marginBottom: "0%",
-  },
-
-  textContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  homeText: {
-    color: "white",
-    fontSize: 25,
-    marginLeft: 100,
-  },
-
-  burger: {
-    marginLeft: 20,
-  },
-
-  plus: {
-    marginLeft: 110,
-  },
-
-  stars: {
-    marginBottom: 20,
-    marginLeft: 15,
-  },
-
   blueButton: {
     flex: 1,
     backgroundColor: "#F6FF6",
@@ -92,7 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
   },
-
   whiteButton: {
     flex: 1,
     padding: 5,
@@ -105,65 +75,21 @@ const styles = StyleSheet.create({
     borderColor: Theme.colors.clear.PRIMARY,
     borderWidth: 2.5,
   },
-
   modalBackGround: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
-
   modalContainer: {
     width: "90%",
-    height: "60%",
+    height: "50%",
     backgroundColor: "white",
     paddingHorizontal: 20,
     paddingVertical: 30,
     borderRadius: 10,
     eleation: 20,
   },
-
-  modal2Container: {
-    width: "60%",
-    height: "100%",
-    backgroundColor: "white",
-    borderRadius: 10,
-    eleation: 20,
-  },
-
-  modal2BackGround: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    justifyContent: "center",
-    alignItems: "left",
-  },
-
-  inmobTitle: {
-    fontSize: 35,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginLeft: 15,
-  },
-
-  inmobTitleBox: {
-    borderColor: "grey",
-    borderWidth: 0.5,
-    width: "100%",
-    marginLeft: 0,
-    marginTop: 40,
-  },
-
-  editTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginLeft: 15,
-    marginBottom: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    color: Theme.colors.clear.PRIMARY,
-  },
-
   editCerrarSesion: {
     fontSize: 20,
     fontWeight: "bold",
@@ -174,40 +100,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: Theme.colors.clear.PRIMARY,
   },
-
-  editBorrarCuenta: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 10,
-    marginLeft: 15,
-    marginBottom: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    color: "red",
-  },
-
-  editBox: {
-    borderColor: "grey",
-    borderWidth: 0.5,
-    width: "100%",
-    marginLeft: 0,
-    marginTop: 0,
-    flexDirection: "row",
-    justifyContent: "left",
-    alignItems: "center",
-  },
-
-  editBox2: {
-    borderColor: "grey",
-    borderWidth: 0.5,
-    width: "100%",
-    marginLeft: 0,
-    marginTop: 315,
-    flexDirection: "row",
-    justifyContent: "left",
-    alignItems: "center",
-  },
-
   title: {
     fontWeight: "400",
     fontSize: 35,
@@ -215,15 +107,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 50,
   },
-
-  subtitle: {
-    fontWeight: "400",
-    fontSize: 15,
-    marginTop: "10%",
-    textAlign: "center",
-    lineHeight: 25,
-  },
-
   buttons: {
     display: "flex",
     width: "100%",
@@ -231,12 +114,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginTop: 60,
   },
-
   noText: {
     color: "white",
     fontSize: 14,
   },
-
   siText: {
     color: Theme.colors.clear.PRIMARY,
     fontSize: 14,

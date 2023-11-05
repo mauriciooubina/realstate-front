@@ -36,7 +36,6 @@ export default RealStateHomeScreenUI = () => {
     }, []);
 
     const handleEditProperty = async ({ property }) => {
-        console.log(property.id);
         await AsyncStorage.setItem('propertyId', `${property.id}`);
         navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT);
     };
@@ -48,7 +47,7 @@ export default RealStateHomeScreenUI = () => {
                     <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
                 </View>
             ) : properties ? (
-                properties != null ? (
+                properties.length > 0 ? (
                     properties.map((property, index) => (
                         <View key={index} style={styles.box}>
                             <Image source={property.image} style={styles.imageContainer} />
@@ -66,16 +65,16 @@ export default RealStateHomeScreenUI = () => {
                         </View>
                     ))
                 ) : (
+                    <View style={styles.loadingContainer}>
                     <View style={styles.noPropertiesBox}>
                         <View style={styles.noProperties}>
                             <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
                         </View>
                     </View>
+                    </View>
                 )
             ) : null}
         </ScrollView>
-
-
     );
 };
 

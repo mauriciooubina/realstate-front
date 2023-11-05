@@ -1,10 +1,11 @@
-import React from "react";
-import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
+import React,{useState} from "react";
+import { StyleSheet, Modal, Text, View, TouchableOpacity,ActivityIndicator } from "react-native";
 import Theme from "../ui/styles/Theme";
 import realstateWS from '../networking/api/endpoints/realstateWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default DeleteAccount = ({ closeDeleteProperty }) => {
+export default DeleteAccount = ({ closeDeleteAccount }) => {
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   
   const handleDeleteAccount = async () => {
     console.log('Delete account');
@@ -31,11 +32,15 @@ export default DeleteAccount = ({ closeDeleteProperty }) => {
           Recuerde que se perderá toda información vinculada a dicha cuenta
         </Text>
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteProperty}  >
+          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteAccount}  >
             <Text style={[styles.noText]}> NO </Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.whiteButton]} onPress={handleDeleteAccount} >
+          {isLoggingIn ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
             <Text style={[styles.siText]}> SI </Text>
+          )}
           </TouchableOpacity>
         </View>
       </View>

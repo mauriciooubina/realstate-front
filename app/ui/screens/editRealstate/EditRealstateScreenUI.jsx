@@ -8,7 +8,7 @@ import { Formik } from "formik";
 import Theme from '../../styles/Theme';
 import * as ImagePicker from "expo-image-picker";
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
-import DeleteAccount from "../../../components/DeleteAccount";
+import DeleteProperty from "../../../components/DeleteProperty";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EditRealstateScreenUI = () => {
@@ -434,7 +434,7 @@ const EditRealstateScreenUI = () => {
               </TouchableOpacity>
             </View>
             {showDeleteProperty && (
-              <DeleteAccount closeDeleteProperty={closeDeleteProperty} />
+              <DeleteProperty closeDeleteProperty={closeDeleteProperty} />
             )}
           </ScrollView>
         </SafeAreaView>
