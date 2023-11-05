@@ -174,10 +174,10 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
               </View>
-              <DropdownComponent title="Pais" data={paises} name="pais" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-              <DropdownComponent title="Provincia" data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-              <DropdownComponent title="Localidad" data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-              <DropdownComponent title="Barrio" data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+              <DropdownComponent title="Pais" data={paises} name="pais" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent title="Provincia" data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent title="Localidad" data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent title="Barrio" data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <CustomTextInput title="Calle" placeholder="Ingrese la calle" onChange={(text) => handleChange("calle", text)} />
               <CustomTextInput
                 title="Altura"
@@ -203,7 +203,7 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>CATEGORÍA</Text>
               </View>
-              <DropdownComponent title="Tipo de propiedad" data={tipoPropiedad} name="propertyType" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+              <DropdownComponent title="Tipo de propiedad" data={tipoPropiedad} name="propertyType" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <CustomTextInput
                 title="Antiguedad"
                 type="numeric"
@@ -238,13 +238,13 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-                <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+                <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               </View>
-              <DropdownComponent title="Baños" data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+              <DropdownComponent title="Baños" data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" data={contador} name="garage" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-                <DropdownComponent title="Bauleras" data={contador} name="trunk" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+                <DropdownComponent title="Cocheras" data={contador} name="garage" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Bauleras" data={contador} name="trunk" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               </View>
               <CustomSwitchComponent
                 title="Terraza"
@@ -264,8 +264,8 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>ORIENTACION</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" data={orientacion} name="orientation" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
-                <DropdownComponent title="Vista" data={vista} name="front" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+                <DropdownComponent title="Ortientación" data={orientacion} name="orientation" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Vista" data={vista} name="front" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               </View>
             </View>
             <View style={styles.contentContainer}>
@@ -319,7 +319,7 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>PRECIO</Text>
               </View>
-              <DropdownComponent title="Estado" name="state" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+              <DropdownComponent title="Estado" name="state" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
@@ -330,7 +330,7 @@ const CreateRealstateScreenUI = () => {
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>
@@ -344,7 +344,7 @@ const CreateRealstateScreenUI = () => {
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue); }} />
+                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>
