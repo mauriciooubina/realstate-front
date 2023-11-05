@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Modal, Text, View, TouchableOpacity } from "react-native";
 import Theme from "../ui/styles/Theme";
 import propertiesWS from '../networking/api/endpoints/propertiesWS';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigatorConstants from '../navigation/NavigatorConstants';
 
 export default DeleteProperty = ({ closeDeleteProperty }) => {

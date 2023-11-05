@@ -1,40 +1,37 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Pressable,
-  ScrollView,
-  SafeAreaView,
-  Switch,
-  TextInput,
-  Button,
+import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView, SafeAreaView, Switch, TextInput, Button,
 } from "react-native";
-import Mail from "../../../../assets/images/mail.png";
 import { useNavigation } from "@react-navigation/native";
-import NavigatorConstants from "../../../navigation/NavigatorConstants";
-import SelectDropdown from "react-native-select-dropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
 import { Formik } from "formik";
 import Theme from '../../styles/Theme';
-
+import georefWS from "../../../networking/api/endpoints/georefWS";
 import * as ImagePicker from "expo-image-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const CreateRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [initialValues, setInitialValues] = useState({});
+  const paises = [
+    { label: 'Argentina', value: 'Argentina' },
+    { label: 'Brasil', value: 'Brasil' },
+    { label: 'Uruguay', value: 'Uruguay' },
+    { label: 'Chile', value: 'Chile' },
+  ];
+  const moneda = [
+    { label: '$', value: '$' },
+    { label: 'u$d', value: 'u$d' },
+  ]
+  const [provincias, setProvincias] = useState([]);
+  const [localidades, setLocalidades] = useState([]);
+  const [barrios, setBarrios] = useState([]);
 
   //Switch
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  //TextInput
-  const [number, onChangeNumber] = useState("");
 
   // Select image from library or camera
   const selectImage = async (useLibrary) => {
@@ -60,9 +57,35 @@ const CreateRealstateScreenUI = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+          const response = await georefWS.getProvincias();
+          const newData = response.provincias.map((p) => {
+            return { label: p.nombre, value: p.nombre };
+          });
+          setProvincias(newData);
+          const response1 = await georefWS.getLocalidades();
+          const newData1 = response1.departamentos.map((p) => {
+            return { label: p.nombre, value: p.nombre };
+          });
+          setLocalidades(newData1);
+          const response2 = await georefWS.getBarrios();
+          const newData2 = response2.localidades.map((p) => {
+            return { label: p.nombre, value: p.nombre };
+          });
+          setBarrios(newData2);
+        } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Formik initialValues={initialValues} onSubmit={values => console.log({values})}>
-      {({handleChange, handleBlur, handleSubmit, values}) => (
+      {({handleChange, handleBlur, handleSubmit, values, setFieldValue}) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
             <Pressable onPress={() => selectImage(true)}>
@@ -77,25 +100,28 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
               </View>
-              <DropdownComponent title="País" />
-              <DropdownComponent title="Provincia" />
-              <DropdownComponent title="Localidad" />
-              <DropdownComponent title="Barrio" />
-              <CustomTextInput title="Calle" placeholder="Ingrese la calle" />
+              <DropdownComponent title="País" data={paises} onChange={handleChange}/>
+              <DropdownComponent title="Provincia" data={provincias} onChange={handleChange}/>
+              <DropdownComponent title="Localidad" data={localidades} onChange={handleChange}/>
+              <DropdownComponent title="Barrio" data={barrios} onChange={handleChange}/>
+              <CustomTextInput title="Calle" placeholder="Ingrese la calle" onChange={handleChange}/>
               <CustomTextInput
                 title="Altura"
                 type="numeric"
                 placeholder="Ingrese la altura"
+                onChange={handleChange}
               />
               <View style={styles.horizontalContainer}>
                 <CustomTextInput
                   title="Piso"
                   type="numeric"
                   placeholder="Ingrese el piso"
+                  onChange={handleChange}
                 />
                 <CustomTextInput
                   title="Departamento"
                   placeholder="Ingrese el depto."
+                  onChange={handleChange}
                 />
               </View>
             </View>
@@ -108,6 +134,7 @@ const CreateRealstateScreenUI = () => {
                 title="Antiguedad"
                 type="numeric"
                 placeholder="Ingrese la antiguedad de la propiedad."
+                onChange={handleChange}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -118,15 +145,18 @@ const CreateRealstateScreenUI = () => {
                 title="M2 Cubiertos"
                 type="numeric"
                 placeholder="Ingrese los m2 cubiertos."
+                onChange={handleChange}
               />
               <CustomTextInput
                 title="M2 Semicubiertos"
                 type="numeric"
                 placeholder="Ingrese los m2 semicubiertos."
+                onChange={handleChange}
               />
               <CustomTextInput
                 title="M2 Descubiertos"
                 placeholder="Ingrese los m2 descubiertos."
+                onChange={handleChange}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -134,54 +164,55 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" />
-                <DropdownComponent title="Habitaciones" />
+                <DropdownComponent title="Totales" onChange={handleChange}/>
+                <DropdownComponent title="Habitaciones" onChange={handleChange}/>
               </View>
-              <DropdownComponent title="Baños" />
+              <DropdownComponent title="Baños" onChange={handleChange}/>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" />
-                <DropdownComponent title="Bauleras" />
+                <DropdownComponent title="Cocheras" onChange={handleChange}/>
+                <DropdownComponent title="Bauleras" onChange={handleChange}/>
               </View>
-              <CustomSwitchComponent title="Terraza" />
+              <CustomSwitchComponent title="Terraza" setFieldValue={setFieldValue}/>
 
-              <CustomSwitchComponent title="Balcon" />
+              <CustomSwitchComponent title="Balcon" setFieldValue={setFieldValue}/>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>ORIENTACION</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" />
-                <DropdownComponent title="Vista" />
+                <DropdownComponent title="Ortientación" onChange={handleChange}/>
+                <DropdownComponent title="Vista" onChange={handleChange}/>
               </View>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>AMENITIES</Text>
               </View>
-              <CustomSwitchComponent title="Quincho" />
-              <CustomSwitchComponent title="Pileta" />
-              <CustomSwitchComponent title="Jacuzzi" />
-              <CustomSwitchComponent title="Sauna" />
-              <CustomSwitchComponent title="SUM" />
-              <CustomSwitchComponent title="Gym" />
-              <CustomSwitchComponent title="Mas+" />
+              <CustomSwitchComponent title="Quincho" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Pileta" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Jacuzzi" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Sauna" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="SUM" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Gym" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Mas+" setFieldValue={setFieldValue}/>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>PRECIO</Text>
               </View>
-              <DropdownComponent title="Estado" />
+              <DropdownComponent title="Estado" onChange={handleChange}/>
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <CustomTextInput
                       title="Valor"
                       placeholder="Ingrese el Valor"
+                      onChange={handleChange}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" />
+                    <DropdownComponent title="Moneda" data={moneda} onChange={handleChange}/>
                   </View>
                 </View>
               </View>
@@ -191,10 +222,11 @@ const CreateRealstateScreenUI = () => {
                     <CustomTextInput
                       title="Expensas"
                       placeholder="Ingrese las Expensas"
+                      onChange={handleChange}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" />
+                    <DropdownComponent title="Moneda" data={moneda} onChange={handleChange}/>
                   </View>
                 </View>
               </View>
@@ -206,6 +238,7 @@ const CreateRealstateScreenUI = () => {
               <CustomTextInput
                 title="Descripcion"
                 placeholder="Ingrese la Descripcion"
+                onChange={handleChange}
               />
             </View>
             <View style={styles.buttons}>

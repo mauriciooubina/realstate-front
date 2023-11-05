@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 
 export default RealStateStackNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName={NavigatorConstant.REALSTATE_STACK.HOME}>
+    <Stack.Navigator initialRouteName={NavigatorConstant.REALSTATE_STACK.CREATE}>
       <Stack.Screen
         name={NavigatorConstant.REALSTATE_STACK.HOME}
         component={RealStateHomeScreen}

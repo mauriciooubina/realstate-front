@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
-const data = [
-  { label: "Item 1", value: "1" },
-  { label: "Item 2", value: "2" },
-  { label: "Item 3", value: "3" },
-  { label: "Item 4", value: "4" },
-  { label: "Item 5", value: "5" },
-  { label: "Item 6", value: "6" },
-  { label: "Item 7", value: "7" },
-  { label: "Item 8", value: "8" },
-];
-
-const DropdownComponent = ({ title, val=null }) => {
+const DropdownComponent = ({
+  title,
+  val = null,
+  onChange,
+  name,
+  data = [],
+}) => {
   const [value, setValue] = useState(val);
   return (
     <View style={styles.itemTitleView}>
@@ -29,12 +24,11 @@ const DropdownComponent = ({ title, val=null }) => {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder="Select Item"
+        placeholder={"Seleccione " + title}
         searchPlaceholder="Search..."
         value={value}
-        onChange={(item) => {
-          setValue(item.value);
-        }}
+        name={name}
+        onChange={onChange}
       />
     </View>
   );
