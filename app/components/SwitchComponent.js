@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Switch } from "react-native";
 
-const CustomSwitchComponent = ({ title, value = false, onChange }) => {
+const CustomSwitchComponent = ({ title, value=false, setFieldValue, name  }) => {
   return (
     <View style={styles.view}>
       {title && <Text style={styles.itemTitleText}>{title}</Text>}
@@ -10,8 +10,11 @@ const CustomSwitchComponent = ({ title, value = false, onChange }) => {
         trackColor={{ false: "#767577", true: "#81b0ff" }}
         thumbColor={value ? "#365EEB" : "#f4f3f4"}
         ios_backgroundColor="#3e3e3e"
-        onValueChange={onChange}
+        onValueChange={(value) => {
+          setFieldValue(name, value);
+        }}
         value={value}
+        name={name}
       />
     </View>
   );
