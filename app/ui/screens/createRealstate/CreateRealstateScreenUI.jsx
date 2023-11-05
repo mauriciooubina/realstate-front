@@ -1,5 +1,5 @@
 import {
-  Text, View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView,ActivityIndicator, SafeAreaView, Switch, TextInput, Button,
+  Text, View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView, ActivityIndicator, SafeAreaView, Switch, TextInput, Button,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
@@ -55,44 +55,23 @@ const CreateRealstateScreenUI = () => {
     "urlVideo": ""
   }
   );
-  const paises = [
-    { label: 'Argentina', value: 'Argentina' },
-  ];
-  const moneda = [
-    { label: '$', value: '$' },
-    { label: 'u$d', value: 'u$d' },
-  ];
-  const tipoPropiedad = [
-    { label: 'Casa', value: 'Casa' },
-    { label: 'Departamento', value: 'Departamento' },
-    { label: 'Ph', value: 'Ph' },
-  ];
-  const contador = [
-    { label: '1', value: '1' },
-    { label: '2', value: '2' },
-    { label: '3', value: '3' },
-    { label: '4', value: '4' },
-    { label: '5', value: '5' },
-  ];
-  const orientacion = [
-    { label: 'Norte', value: 'Norte' },
-    { label: 'Sur', value: 'Sur' },
-    { label: 'Este', value: 'Este' },
-    { label: 'Oeste', value: 'Oeste' },
-  ];
-  const vista = [
-    { label: 'Jardin', value: 'Jardin' },
-    { label: 'Calle', value: 'Calle' },
-  ];
+  const paises = [{ label: 'Argentina', value: 'Argentina' },];
+  const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
+  const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
+  const contador = [{ label: '0', value: '0' }, { label: '1', value: '1' }, { label: '2', value: '2' },
+  { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' },];
+  const orientacion = [{ label: 'Norte', value: 'Norte' }, { label: 'Sur', value: 'Sur' },
+  { label: 'Este', value: 'Este' }, { label: 'Oeste', value: 'Oeste' },];
+  const vista = [{ label: 'Jardin', value: 'Jardin' }, { label: 'Calle', value: 'Calle' },];
+  const estados = [{ label: 'Venta', value: 'Venta' },{ label: 'Alquiler', value: 'Alquiler' },
+    { label: 'Reservado', value: 'Reservado' },{ label: 'Alquilado', value: 'Alquilado' },
+    { label: 'Vendido', value: 'Vendido' },]
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
-
-  //Switch
+  const [amenities, setAmenities] = useState([]);
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  // Select image from library or camera
   const selectImage = async (useLibrary) => {
     let result;
     const options = {
@@ -101,15 +80,12 @@ const CreateRealstateScreenUI = () => {
       aspect: [4, 3],
       quality: 0.75,
     };
-
     if (useLibrary) {
       result = await ImagePicker.launchImageLibraryAsync(options);
     } else {
       await ImagePicker.requestCameraPermissionsAsync();
       result = await ImagePicker.launchCameraAsync(options);
     }
-
-    // Save image if not cancelled
     if (!result.canceled) {
       console.log(result.assets[0].uri);
       setPictures([...pictures, result.assets[0].uri]);
@@ -145,10 +121,13 @@ const CreateRealstateScreenUI = () => {
   const handleCreateProperty = async (values) => {
     console.log(values);
     setIsLoggingIn(true);
+    if ("money" in values) {
+      delete values.money;
+    }
     try {
       const id = await AsyncStorage.getItem('realstateId');
-      propertyData.realStateId = id;
-      const response = await propertiesWS.post(propertyData);
+      values.realStateId = id;
+      const response = await propertiesWS.post(values);
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
@@ -178,24 +157,40 @@ const CreateRealstateScreenUI = () => {
               <DropdownComponent title="Provincia" data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <DropdownComponent title="Localidad" data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <DropdownComponent title="Barrio" data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <CustomTextInput title="Calle" placeholder="Ingrese la calle" onChange={(text) => handleChange("calle", text)} />
+              <CustomTextInput
+                title="Calle"
+                placeholder="Ingrese la calle"
+                onChange={(text) => {
+                  handleChange("calle", text);
+                  setFieldValue("calle", text);
+                }}
+              />
               <CustomTextInput
                 title="Altura"
                 type="numeric"
                 placeholder="Ingrese la altura"
-                onChange={handleChange}
+                onChange={(text) => {
+                  handleChange("altura", text);
+                  setFieldValue("altura", text);
+                }}
               />
               <View style={styles.horizontalContainer}>
                 <CustomTextInput
                   title="Piso"
                   type="numeric"
                   placeholder="Ingrese el piso"
-                  onChange={(text) => handleChange("altura", text)}
+                  onChange={(text) => {
+                    handleChange("piso", text);
+                    setFieldValue("piso", text);
+                  }}
                 />
                 <CustomTextInput
                   title="Departamento"
                   placeholder="Ingrese el depto."
-                  onChange={(text) => handleChange("depto", text)}
+                  onChange={(text) => {
+                    handleChange("depto", text);
+                    setFieldValue("depto", text);
+                  }}
                 />
               </View>
             </View>
@@ -208,7 +203,10 @@ const CreateRealstateScreenUI = () => {
                 title="Antiguedad"
                 type="numeric"
                 placeholder="Ingrese la antiguedad de la propiedad."
-                onChange={(text) => handleChange("howOld", text)}
+                onChange={(text) => {
+                  handleChange("howOld", text);
+                  setFieldValue("howOld", text);
+                }}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -219,18 +217,27 @@ const CreateRealstateScreenUI = () => {
                 title="M2 Cubiertos"
                 type="numeric"
                 placeholder="Ingrese los m2 cubiertos."
-                onChange={(text) => handleChange("coveredMeters", text)}
+                onChange={(text) => {
+                  handleChange("coveredMeters", text);
+                  setFieldValue("coveredMeters", text);
+                }}
               />
               <CustomTextInput
                 title="M2 Semicubiertos"
                 type="numeric"
                 placeholder="Ingrese los m2 semicubiertos."
-                onChange={(text) => handleChange("semiUncoveredMeters", text)}
+                onChange={(text) => {
+                  handleChange("semiUncoveredMeters", text);
+                  setFieldValue("semiUncoveredMeters", text);
+                }}
               />
               <CustomTextInput
                 title="M2 Descubiertos"
                 placeholder="Ingrese los m2 descubiertos."
-                onChange={(text) => handleChange("cunoveredMeters", text)}
+                onChange={(text) => {
+                  handleChange("uncoveredMeters", text);
+                  setFieldValue("uncoveredMeters", text);
+                }}
               />
             </View>
             <View style={styles.contentContainer}>
@@ -248,13 +255,13 @@ const CreateRealstateScreenUI = () => {
               </View>
               <CustomSwitchComponent
                 title="Terraza"
-                value={values.terraza}
+                value={values.terrace}
                 setFieldValue={setFieldValue}
                 name="terrace"
               />
               <CustomSwitchComponent
                 title="Balcon"
-                value={values.balcon}
+                value={values.balcony}
                 setFieldValue={setFieldValue}
                 name="balcony"
               />
@@ -277,56 +284,71 @@ const CreateRealstateScreenUI = () => {
                 value={values.quincho}
                 setFieldValue={setFieldValue}
                 name="quincho"
+
               />
               <CustomSwitchComponent
                 title="Pileta"
                 value={values.pileta}
                 setFieldValue={setFieldValue}
                 name="pileta"
+
               />
               <CustomSwitchComponent
                 title="Jacuzzi"
                 value={values.jacuzzi}
                 setFieldValue={setFieldValue}
                 name="jacuzzi"
+
               />
               <CustomSwitchComponent
                 title="Sauna"
                 value={values.sauna}
                 setFieldValue={setFieldValue}
                 name="sauna"
+
               />
               <CustomSwitchComponent
                 title="SUM"
                 value={values.sum}
                 setFieldValue={setFieldValue}
                 name="sum"
+
               />
               <CustomSwitchComponent
                 title="Gym"
                 value={values.gym}
                 setFieldValue={setFieldValue}
                 name="gym"
+
               />
               <CustomSwitchComponent
                 title="Mas+"
                 value={values.mas}
                 setFieldValue={setFieldValue}
                 name="mas"
+
               />
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>PRECIO</Text>
               </View>
-              <DropdownComponent title="Estado" name="state" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent
+                title="Estado"
+                name="state"
+                data={estados}
+                onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
+              />
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1 }}>
                     <CustomTextInput
                       title="Valor"
                       placeholder="Ingrese el Valor"
-                      onChange={(text) => handleChange("price", text)}
+                      onChange={(text) => {
+                        handleChange("price", text);
+                        setFieldValue("price", text);
+                      }}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
@@ -340,7 +362,10 @@ const CreateRealstateScreenUI = () => {
                     <CustomTextInput
                       title="Expensas"
                       placeholder="Ingrese las Expensas"
-                      onChange={(text) => handleChange("expensePrice", text)}
+                      onChange={(text) => {
+                        handleChange("expensePrice", text);
+                        setFieldValue("expensePrice", text);
+                      }}
                     />
                   </View>
                   <View style={{ flex: 1 }}>
@@ -356,7 +381,10 @@ const CreateRealstateScreenUI = () => {
               <CustomTextInput
                 title="Descripcion"
                 placeholder="Ingrese la Descripcion"
-                onChange={(text) => handleChange("description", text)}
+                onChange={(text) => {
+                  handleChange("description", text);
+                  setFieldValue("description", text);
+                }}
               />
             </View>
             <View style={styles.buttons}>

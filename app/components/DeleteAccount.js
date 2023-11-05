@@ -4,7 +4,7 @@ import Theme from "../ui/styles/Theme";
 import realstateWS from '../networking/api/endpoints/realstateWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default DeleteAccount = ({ closeDeleteAccount }) => {
+export default DeleteAccount = ({ closeDeleteProperty }) => {
   
   const handleDeleteAccount = async () => {
     console.log('Delete account');
@@ -31,7 +31,7 @@ export default DeleteAccount = ({ closeDeleteAccount }) => {
           Recuerde que se perderá toda información vinculada a dicha cuenta
         </Text>
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteAccount}  >
+          <TouchableOpacity style={[styles.blueButton]} onPress={closeDeleteProperty}  >
             <Text style={[styles.noText]}> NO </Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.whiteButton]} onPress={handleDeleteAccount} >

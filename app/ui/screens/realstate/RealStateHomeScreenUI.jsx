@@ -1,6 +1,6 @@
 import Theme from '../../styles/Theme';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
-import { Text, View,ScrollView,SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { Text, View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
@@ -13,6 +13,7 @@ export default RealStateHomeScreenUI = () => {
     const [loading, setLoading] = useState(true);
 
     const fetchProperties = async () => {
+        setLoading(true);
         try {
             const id = await AsyncStorage.getItem('realstateId');
             const response = await propertiesWS.getFromRealstate(id);
@@ -24,11 +25,18 @@ export default RealStateHomeScreenUI = () => {
         }
     };
 
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchProperties();
+        }, [])
+    );
+
     useEffect(() => {
         fetchProperties();
     }, []);
 
     const handleEditProperty = async ({ property }) => {
+        console.log(property.id);
         await AsyncStorage.setItem('propertyId', `${property.id}`);
         navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT);
     };
@@ -36,7 +44,9 @@ export default RealStateHomeScreenUI = () => {
     return (
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
             {loading ? (
-                <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+                </View>
             ) : properties ? (
                 properties != null ? (
                     properties.map((property, index) => (
@@ -80,6 +90,13 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+    },
+    loadingContainer: {
+        flex: 1,
+        display: 'flex',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     box: {
         width: '88%',
