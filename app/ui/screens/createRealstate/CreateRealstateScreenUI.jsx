@@ -17,14 +17,33 @@ const CreateRealstateScreenUI = () => {
   const [initialValues, setInitialValues] = useState({});
   const paises = [
     { label: 'Argentina', value: 'Argentina' },
-    { label: 'Brasil', value: 'Brasil' },
-    { label: 'Uruguay', value: 'Uruguay' },
-    { label: 'Chile', value: 'Chile' },
   ];
   const moneda = [
     { label: '$', value: '$' },
     { label: 'u$d', value: 'u$d' },
-  ]
+  ];
+  const tipoPropiedad = [
+    { label: 'Casa', value: 'Casa' },
+    { label: 'Departamento', value: 'Departamento' },
+    { label: 'Ph', value: 'Ph' },
+  ];
+  const contador = [
+    { label: '1', value: '1' },
+    { label: '2', value: '2' },
+    { label: '3', value: '3' },
+    { label: '4', value: '4' },
+    { label: '5', value: '5' },
+  ];
+  const orientacion = [
+    { label: 'Norte', value: 'Norte' },
+    { label: 'Sur', value: 'Sur' },
+    { label: 'Este', value: 'Este' },
+    { label: 'Oeste', value: 'Oeste' },
+  ];
+  const vista = [
+    { label: 'Jardin', value: 'Jardin' },
+    { label: 'Calle', value: 'Calle' },
+  ];
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
@@ -83,8 +102,12 @@ const CreateRealstateScreenUI = () => {
     fetchData();
   }, []);
 
+  const handleCreateProperty = ({values}) => {
+    console.log(values);
+  }
+
   return (
-    <Formik initialValues={initialValues} onSubmit={values => console.log({values})}>
+    <Formik initialValues={initialValues} onSubmit={values=> handleCreateProperty(values)}>
       {({handleChange, handleBlur, handleSubmit, values, setFieldValue}) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
@@ -100,7 +123,7 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
               </View>
-              <DropdownComponent title="País" data={paises} onChange={handleChange}/>
+              <DropdownComponent title="Pais" data={paises} onChange={handleChange}/>
               <DropdownComponent title="Provincia" data={provincias} onChange={handleChange}/>
               <DropdownComponent title="Localidad" data={localidades} onChange={handleChange}/>
               <DropdownComponent title="Barrio" data={barrios} onChange={handleChange}/>
@@ -129,7 +152,7 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>CATEGORÍA</Text>
               </View>
-              <DropdownComponent title="Tipo de propiedad" />
+              <DropdownComponent title="Tipo de propiedad" data={tipoPropiedad}/>
               <CustomTextInput
                 title="Antiguedad"
                 type="numeric"
@@ -164,38 +187,38 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" onChange={handleChange}/>
-                <DropdownComponent title="Habitaciones" onChange={handleChange}/>
+                <DropdownComponent title="Totales" data={contador} onChange={handleChange}/>
+                <DropdownComponent title="Habitaciones" data={contador} onChange={handleChange}/>
               </View>
-              <DropdownComponent title="Baños" onChange={handleChange}/>
+              <DropdownComponent title="Baños"  data={contador}onChange={handleChange}/>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" onChange={handleChange}/>
-                <DropdownComponent title="Bauleras" onChange={handleChange}/>
+                <DropdownComponent title="Cocheras" data={contador} onChange={handleChange}/>
+                <DropdownComponent title="Bauleras" data={contador} onChange={handleChange}/>
               </View>
-              <CustomSwitchComponent title="Terraza" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Terraza" />
 
-              <CustomSwitchComponent title="Balcon" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Balcon" />
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>ORIENTACION</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" onChange={handleChange}/>
-                <DropdownComponent title="Vista" onChange={handleChange}/>
+                <DropdownComponent title="Ortientación" data={orientacion} onChange={handleChange}/>
+                <DropdownComponent title="Vista" data={vista} onChange={handleChange}/>
               </View>
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>AMENITIES</Text>
               </View>
-              <CustomSwitchComponent title="Quincho" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="Pileta" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="Jacuzzi" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="Sauna" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="SUM" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="Gym" setFieldValue={setFieldValue}/>
-              <CustomSwitchComponent title="Mas+" setFieldValue={setFieldValue}/>
+              <CustomSwitchComponent title="Quincho" />
+              <CustomSwitchComponent title="Pileta" />
+              <CustomSwitchComponent title="Jacuzzi" />
+              <CustomSwitchComponent title="Sauna" />
+              <CustomSwitchComponent title="SUM" />
+              <CustomSwitchComponent title="Gym" />
+              <CustomSwitchComponent title="Mas+" />
             </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>

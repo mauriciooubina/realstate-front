@@ -4,12 +4,11 @@ import { Dropdown } from "react-native-element-dropdown";
 
 const DropdownComponent = ({
   title,
-  val = null,
+  value = null,
   onChange,
   name,
   data = [],
 }) => {
-  const [value, setValue] = useState(val);
   return (
     <View style={styles.itemTitleView}>
       {title && <Text style={styles.itemTitleText}>{title}</Text>}
@@ -28,7 +27,7 @@ const DropdownComponent = ({
         searchPlaceholder="Search..."
         value={value}
         name={name}
-        onChange={onChange}
+        onChange={(value) => onChange(value)}
       />
     </View>
   );
