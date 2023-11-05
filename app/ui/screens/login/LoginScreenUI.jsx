@@ -14,7 +14,6 @@ export default LoginScreenUI = () => {
     useEffect(() => {
         const getBackendUp = async () => {
             try {
-                await new Promise(resolve => setTimeout(resolve, 20000));
                 const response = await aliveWS.alive();
             } catch (error) {
                 console.log(error);
@@ -125,8 +124,8 @@ const styles = StyleSheet.create({
       },
       titleModal: {
         fontWeight: '300',
-        fontSize: 27,
-        marginVertical: 20,
+        fontSize: 24,
+        marginVertical: 17,
         color: '#47A7FF',
     },
   });

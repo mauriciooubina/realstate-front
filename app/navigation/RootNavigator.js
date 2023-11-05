@@ -11,7 +11,7 @@ export default RootNavigator = () => {
  return (
    <NavigationContainer>
      <Stack.Navigator
-       initialRouteName={NavigatorConstant.NAVIGATOR.LOGIN}
+       initialRouteName={NavigatorConstant.NAVIGATOR.REALSTATE}
        screenOptions={{headerShown: false}}
        headerMode="none">
        <Stack.Screen
