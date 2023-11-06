@@ -132,7 +132,8 @@ const CreateRealstateScreenUI = () => {
       const id = await AsyncStorage.getItem('realstateId');
       values.realStateId = id;
       const response = await propertiesWS.post(values);
-      //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); 
+      const responseMedia = await propertiesWS.postMedia(pictures, response.data.id); 
+      console.log('responseMedia: ',responseMedia);
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);

@@ -15,7 +15,7 @@ export default DeleteProperty = ({ closeDeleteProperty }) => {
     try {
       const id = await AsyncStorage.getItem("propertyId");
       await propertiesWS.delete(id);
-      navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+      navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
     } finally {
@@ -42,7 +42,7 @@ export default DeleteProperty = ({ closeDeleteProperty }) => {
               onPress={handleDeleteProperty}
             >
               {isLoggingIn ? (
-                <ActivityIndicator color="#fff" />
+                <ActivityIndicator color={Theme.colors.clear.PRIMARY}/>
               ) : (
                 <Text style={[styles.siText]}> SI </Text>
               )}
