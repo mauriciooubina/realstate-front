@@ -112,11 +112,9 @@ const EditRealstateScreenUI = () => {
       const response = await propertiesWS.get(id);
       const am = response.data[0].additionaldetails.amenities;
       const res = { ...response.data[0] };
-      console.log('resAntes: ', res);
       am.forEach(valor => {
         res[valor] = true; 
       });
-      console.log('res: ', res);
       setInitialValues(res);
     } catch (error) {
       console.log(error);

@@ -7,12 +7,20 @@ export default propertiesWS = {
       ...data,
     });
   },
-  postMedia: async function (media) {
+  postMedia: async function (media, propertyId) {
     const formData = new FormData();
-    formData.append("file", {
-      uri: "file://path/to/your/file",
-      name: "example.jpg",
-      type: "image/jpeg",
+    const json = {
+      "idProperty": propertyId
+    };
+    formData.append('propertyInDTO', JSON.stringify(json));
+    media.forEach(valor => {
+      const pos1 = valor.lastIndexOf("/");
+      const pos2 = valor.lastIndexOf(".");
+      formData.append("photos", {
+        uri: valor,
+        name: valor.substring(pos1 + 1),
+        type: `image/${valor.substring(pos2 + 1)}`,
+      });
     });
     return await fetch('https://backend-myhome.onrender.com//myhome/properties/loadMultimedia', {
       method: 'POST',
