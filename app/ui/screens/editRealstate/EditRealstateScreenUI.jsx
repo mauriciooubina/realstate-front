@@ -576,15 +576,15 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
-    borderTopRightRadius: 20, // Radio en la esquina superior derecha
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20,
   },
   picture: {
     objectFit: 'cover',
     height: 225,
     width: "98%",
-    borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
-    borderTopRightRadius: 20, // Radio en la esquina superior derecha
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20,
   },
   selectedPictureView: {
     display: 'flex',
@@ -630,14 +630,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 3,
     marginRight: 3,
-    // Añade margen entre los botones
   },
   picBotBar: {
-    height: 50, // Ajusta la altura según tus preferencias
-    backgroundColor: "#47A7FF", // Color y transparencia deseados
+    height: 50, 
+    backgroundColor: "#47A7FF",
     opacity: 0.7,
-    borderBottomLeftRadius: 20, // Radio en la esquina inferior izquierda
-    borderBottomRightRadius: 20, // Radio en la esquina inferior derecha
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20,
     width: "98%",
     display: 'flex',
     justifyContent: 'center',

@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   itemTitleText: {
-    textAlign: "left", // Alinea el texto a la izquierda
+    textAlign: "left",
     fontSize: 16,
     marginVertical: 5,
   },

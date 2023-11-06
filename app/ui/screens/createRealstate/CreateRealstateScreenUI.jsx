@@ -472,7 +472,7 @@ const CreateRealstateScreenUI = () => {
               </View>
               <View >
                 <CustomTextInput
-                  customHeight={125} // Establece la altura a 300
+                  customHeight={125}
                   title=""
                   isDescription={true}
                   placeholder="Ingrese la Descripcion"

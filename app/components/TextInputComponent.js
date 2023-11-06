@@ -8,7 +8,7 @@ const CustomTextInput = ({ title, type, value, onChange, placeholder, customHeig
       <TextInput
         style={[
           styles.textInput,
-          isDescription && styles.customTextInput, // Aplica el estilo personalizado si esDescription es verdadero
+          isDescription && styles.customTextInput, 
           customHeight && { height: customHeight },,
         ]}
         onChangeText={onChange}
@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderRadius: 10,
     borderWidth: 0.5,
-    height: 33, // Altura predeterminada para otros campos
+    height: 33, 
     paddingLeft: 8,
   },
   customTextInput: {
-    height: 300, // Altura específica para la descripción
+    height: 300,
   },
 });
