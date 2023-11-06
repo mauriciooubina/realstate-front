@@ -189,6 +189,8 @@ const EditRealstateScreenUI = () => {
       }
       console.log('newValues: ',newValues);
       const response = await propertiesWS.put(newValues);
+      //const responseMedia = await propertiesWS.postMedia(pictures, values.id); 
+      //console.log('responseMedia: ',responseMedia);
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
