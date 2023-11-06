@@ -132,7 +132,7 @@ const CreateRealstateScreenUI = () => {
       const id = await AsyncStorage.getItem('realstateId');
       values.realStateId = id;
       const response = await propertiesWS.post(values);
-      //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); //ajustar formato del body, pq con esto como esta tira error 400
+      //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); 
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
