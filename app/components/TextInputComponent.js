@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text, TextInput } from "react-native";
 
-const CustomTextInput = ({ title, type, value, onChange, placeholder, customHeight, isDescription }) => {
+const CustomTextInput = ({ title, type, value, onChange, placeholder, customHeight, isDescription, textAlignVertical='center' }) => {
   return (
     <View style={styles.view}>
       {title && <Text style={styles.itemTitleText}>{title}</Text>}
@@ -9,7 +9,7 @@ const CustomTextInput = ({ title, type, value, onChange, placeholder, customHeig
         style={[
           styles.textInput,
           isDescription && styles.customTextInput, // Aplica el estilo personalizado si esDescription es verdadero
-          customHeight && { height: customHeight }, // Establece la altura personalizada si customHeight está presente
+          customHeight && { height: customHeight },,
         ]}
         onChangeText={onChange}
         value={value}
@@ -17,6 +17,7 @@ const CustomTextInput = ({ title, type, value, onChange, placeholder, customHeig
         placeholder={placeholder}
         ellipsizeMode="tail"
         multiline={true}
+        textAlignVertical={textAlignVertical}
       />
     </View>
   );

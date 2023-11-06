@@ -17,7 +17,7 @@ import NavigatorConstants from "../../../navigation/NavigatorConstants";
 const CreateRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
-  console.log({ pictures });
+  const [pictureIndex, setPictureIndex] = useState(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [realStateID, setRealStateID] = useState();
@@ -78,10 +78,10 @@ const CreateRealstateScreenUI = () => {
   const selectImage = async (useLibrary) => {
     let result;
     const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.75,
+      quality: 1,
     };
     if (useLibrary) {
       result = await ImagePicker.launchImageLibraryAsync(options);
@@ -90,7 +90,6 @@ const CreateRealstateScreenUI = () => {
       result = await ImagePicker.launchCameraAsync(options);
     }
     if (!result.canceled) {
-      console.log({ uri: result.assets[0].uri });
       setPictures([...pictures, result.assets[0].uri]);
     }
   };
@@ -127,15 +126,13 @@ const CreateRealstateScreenUI = () => {
   }, []);
 
   const handleCreateProperty = async (values) => {
-    console.log(values);
     setIsLoggingIn(true);
     if ("money" in values) {
       delete values.money;
     }
     try {
-      const id = await AsyncStorage.getItem('realstateId');
-      values.realStateId = id;
       const response = await propertiesWS.post(values);
+      //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); //ajustar formato del body, pq con esto como esta tira error 400
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
@@ -149,23 +146,51 @@ const CreateRealstateScreenUI = () => {
       {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
-            <Pressable onPress={() => selectImage(true)}>
-              {pictures.length === 0 ?
-                <View style={styles.picture}>
+            {!pictures[pictureIndex] ?
+              <Pressable onPress={() => selectImage(true)}>
+                <View style={styles.pictureView}>
                   <Image
                     style={styles.addIcon}
-                    source={"../../../../assets/images/add_image.png"}
+                    source={require("../../../../assets/images/add_image.png")}
                   />
-                </View> :
-                <View style={styles.picture}>
-                  <Image
-                    style={styles.addIcon}
-                    source={{ uri: 'data:image/jpeg;base64,' + pictures[0] }}
-                  />
+                  {pictureIndex > 0 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
                 </View>
+              </Pressable>
+              :
+              <View style={styles.selectedPictureView}>
+                <Image
+                  style={styles.picture}
+                  source={{ uri: pictures[pictureIndex] }}
+                />
+                {pictureIndex > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+              </View>
+            }
+            <View style={styles.picBotBar}>
+              {pictures.map((picture, index) => {
+                return <Text key={index} style={index === pictureIndex ? styles.selectedDot : styles.dot}>
+                  •
+                </Text>
+              })
               }
-              <View style={styles.picBotBar} />
-            </Pressable>
+            </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
@@ -449,7 +474,7 @@ const CreateRealstateScreenUI = () => {
               <View >
                 <CustomTextInput
                   customHeight={125} // Establece la altura a 300
-                  title="Descripcion"
+                  title=""
                   isDescription={true}
                   placeholder="Ingrese la Descripcion"
                   onChange={(text) => {
@@ -487,7 +512,11 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     borderBottomLeftRadius: 20, // Radio en la esquina inferior izquierda
     borderBottomRightRadius: 20, // Radio en la esquina inferior derecha
-    width: "98%"
+    width: "98%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
   },
   scrollView: {
     width: "90%",
@@ -499,13 +528,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  picture: {
+  pictureView: {
     backgroundColor: "#c4c4c4",
     height: 225,
     width: "98%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
+    borderTopRightRadius: 20, // Radio en la esquina superior derecha
+  },
+  picture: {
+    objectFit: 'cover',
+    height: 225,
+    width: "98%",
     borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
     borderTopRightRadius: 20, // Radio en la esquina superior derecha
   },
@@ -575,4 +611,40 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
   },
+  dot: {
+    fontSize: 40,
+    color: 'white',
+    opacity: .5,
+    paddingHorizontal: 10
+  },
+  selectedDot: {
+    fontSize: 40,
+    color: 'white',
+    paddingHorizontal: 10,
+    // opacity: 0
+  },
+  arrowRight: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    right: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5
+  },
+  arrowLeft: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    left: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    transform: [{ scaleX: -1 }]
+  },
+  selectedPictureView: {
+    display: 'flex',
+  }
 });

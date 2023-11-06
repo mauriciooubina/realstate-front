@@ -50,7 +50,7 @@ export default RealStateHomeScreenUI = () => {
                 properties.length > 0 ? (
                     properties.map((property, index) => (
                         <View key={index} style={styles.box}>
-                            <Image source={property.image} style={styles.imageContainer} />
+                            <Image source={{uri: property?.additionaldetails?.urlPhoto1}} style={styles.imageContainer} />
                             <View style={styles.textContainer}>
                                 <Text style={styles.text}>{`${property.address.street} ${property.address.streetNumber}, ${property.address.floor}${property.address.department}`}</Text>
                                 <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
@@ -66,11 +66,11 @@ export default RealStateHomeScreenUI = () => {
                     ))
                 ) : (
                     <View style={styles.loadingContainer}>
-                    <View style={styles.noPropertiesBox}>
-                        <View style={styles.noProperties}>
-                            <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
+                        <View style={styles.noPropertiesBox}>
+                            <View style={styles.noProperties}>
+                                <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
+                            </View>
                         </View>
-                    </View>
                     </View>
                 )
             ) : null}

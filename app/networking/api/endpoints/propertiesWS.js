@@ -6,6 +6,11 @@ export default propertiesWS = {
             ...data
         });
     },
+    postMedia: async function (media) {
+        return await api.post('/properties/loadMultimedia', {
+            ...media
+        });
+    },
     getCalles: async function (calle) {
         return await api.get(`/properties/calles/${calle}`);
     },

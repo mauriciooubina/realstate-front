@@ -21,6 +21,8 @@ const EditRealstateScreenUI = () => {
   const [number, onChangeNumber] = useState("");
   const [showDeleteProperty, setShowDeleteProperty] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+
   const paises = [
     { label: 'Argentina', value: 'Argentina' },
   ];
@@ -62,28 +64,28 @@ const EditRealstateScreenUI = () => {
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
   const [amenities, setAmenities] = useState([]);
+  const [pictureIndex, setPictureIndex] = useState(0);
+
 
   const selectImage = async (useLibrary) => {
     let result;
     const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.75,
+      quality: 1,
     };
-
     if (useLibrary) {
       result = await ImagePicker.launchImageLibraryAsync(options);
     } else {
       await ImagePicker.requestCameraPermissionsAsync();
       result = await ImagePicker.launchCameraAsync(options);
     }
-
     if (!result.canceled) {
-      console.log(result.assets[0].uri);
       setPictures([...pictures, result.assets[0].uri]);
     }
   };
+
 
   const fetchData = async () => {
     try {
@@ -153,293 +155,360 @@ const EditRealstateScreenUI = () => {
       <View style={styles.container}>
         <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
       </View>
-    ) :(
+    ) : (
       <Formik initialValues={initialValues} onSubmit={values => handleEditProperty(values)}>
-      {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
-        <SafeAreaView style={styles.container}>
-          <ScrollView style={styles.scrollView}>
-          <Pressable onPress={() => selectImage(true)}>
-              <View style={styles.picture}>
+        {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+          <SafeAreaView style={styles.container}>
+            <ScrollView style={styles.scrollView}>
+            {!pictures[pictureIndex] ?
+              <Pressable onPress={() => selectImage(true)}>
+                <View style={styles.pictureView}>
+                  <Image
+                    style={styles.addIcon}
+                    source={require("../../../../assets/images/add_image.png")}
+                  />
+                  {pictureIndex > 0 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                </View>
+              </Pressable>
+              :
+              <View style={styles.selectedPictureView}>
                 <Image
-                  style={styles.addIcon}
-                  source={require("../../../../assets/images/add_image.png")}
+                  style={styles.picture}
+                  source={{ uri: pictures[pictureIndex] }}
                 />
+                {pictureIndex > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
               </View>
-            </Pressable>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>DIRECCIÓN</Text>
-              </View>
-              <DropdownComponent title="Pais" value={initialValues.address.country} data={paises} name="pais" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <DropdownComponent title="Provincia" value={initialValues.address.province} data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <DropdownComponent title="Localidad" value={initialValues.address.locality} data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <DropdownComponent title="Barrio" value={initialValues.address.district} data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <CustomTextInput 
-                title="Calle" 
-                placeholder="Ingrese la calle" 
-                onChange={(text) => {
-                  handleChange("calle", text);
-                  setFieldValue("calle", text);
-                }}
-                value={initialValues.address.street} 
-                />
-              <CustomTextInput
-                title="Altura"
-                type="numeric"
-                placeholder="Ingrese la altura"
-                onChange={(text) => {
-                  handleChange("altura", text);
-                  setFieldValue("altura", text);
-                }}
-                value={initialValues.address.streetNumber} 
-              />
-              <View style={styles.horizontalContainer}>
+            }
+            <View style={styles.picBotBar}>
+              {pictures.map((picture, index) => {
+                return <Text key={index} style={index === pictureIndex ? styles.selectedDot : styles.dot}>
+                  •
+                </Text>
+              })
+              }
+            </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>DIRECCIÓN</Text>
+                </View>
+                <DropdownComponent title="Pais" value={initialValues.address.country} data={paises} name="pais" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Provincia" value={initialValues.address.province} data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Localidad" value={initialValues.address.locality} data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <DropdownComponent title="Barrio" value={initialValues.address.district} data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                 <CustomTextInput
-                  title="Piso"
+                  title="Calle"
+                  placeholder="Ingrese la calle"
+                  onChange={(text) => {
+                    handleChange("calle", text);
+                    setFieldValue("calle", text);
+                  }}
+                  value={initialValues.address.street}
+                />
+                <CustomTextInput
+                  title="Altura"
                   type="numeric"
-                  placeholder="Ingrese el piso"
+                  placeholder="Ingrese la altura"
                   onChange={(text) => {
-                    handleChange("piso", text);
-                    setFieldValue("piso", text);
+                    handleChange("altura", text);
+                    setFieldValue("altura", text);
                   }}
-                  value={initialValues.address.floor} 
+                  value={initialValues.address.streetNumber}
+                />
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <CustomTextInput
+                        title="Piso"
+                        type="numeric"
+                        placeholder="Ingrese el piso"
+                        onChange={(text) => {
+                          handleChange("piso", text);
+                          setFieldValue("piso", text);
+                        }}
+                        value={initialValues.address.floor}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <CustomTextInput
+                        title="Departamento"
+                        placeholder="Ingrese el depto."
+                        onChange={(text) => {
+                          handleChange("depto", text);
+                          setFieldValue("depto", text);
+                        }}
+                        value={initialValues.address.department}
+                      />
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>CATEGORÍA</Text>
+                </View>
+                <DropdownComponent title="Tipo de propiedad" value={initialValues.details.propertyType} data={tipoPropiedad} name="propertyType" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <CustomTextInput
+                  title="Antiguedad"
+                  type="numeric"
+                  placeholder="Ingrese la antiguedad de la propiedad."
+                  onChange={(text) => {
+                    handleChange("howOld", text);
+                    setFieldValue("howOld", text);
+                  }}
+                  value={initialValues.details.howOld}
+                />
+              </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>METRAJES</Text>
+                </View>
+                <CustomTextInput
+                  title="M2 Cubiertos"
+                  type="numeric"
+                  placeholder="Ingrese los m2 cubiertos."
+                  onChange={(text) => {
+                    handleChange("coveredMeters", text);
+                    setFieldValue("coveredMeters", text);
+                  }}
+                  value={initialValues.details.coveredMeters}
                 />
                 <CustomTextInput
-                  title="Departamento"
-                  placeholder="Ingrese el depto."
+                  title="M2 Semicubiertos"
+                  type="numeric"
+                  placeholder="Ingrese los m2 semicubiertos."
                   onChange={(text) => {
-                    handleChange("depto", text);
-                    setFieldValue("depto", text);
+                    handleChange("semiUncoveredMeters", text);
+                    setFieldValue("semiUncoveredMeters", text);
                   }}
-                  value={initialValues.address.department} 
+                  value={initialValues.details.semiUncoveredMeters}
+                />
+                <CustomTextInput
+                  title="M2 Descubiertos"
+                  placeholder="Ingrese los m2 descubiertos."
+                  onChange={(text) => {
+                    handleChange("uncoveredMeters", text);
+                    setFieldValue("uncoveredMeters", text);
+                  }}
+                  value={initialValues.details.uncoveredMeters}
                 />
               </View>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>CATEGORÍA</Text>
-              </View>
-              <DropdownComponent title="Tipo de propiedad" value={initialValues.details.propertyType} data={tipoPropiedad} name="propertyType" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <CustomTextInput
-                title="Antiguedad"
-                type="numeric"
-                placeholder="Ingrese la antiguedad de la propiedad."
-                onChange={(text) => {
-                  handleChange("howOld", text);
-                  setFieldValue("howOld", text);
-                }}
-                value={initialValues.details.howOld} 
-              />
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>METRAJES</Text>
-              </View>
-              <CustomTextInput
-                title="M2 Cubiertos"
-                type="numeric"
-                placeholder="Ingrese los m2 cubiertos."
-                onChange={(text) => {
-                  handleChange("coveredMeters", text);
-                  setFieldValue("coveredMeters", text);
-                }}
-                value={initialValues.details.coveredMeters} 
-              />
-              <CustomTextInput
-                title="M2 Semicubiertos"
-                type="numeric"
-                placeholder="Ingrese los m2 semicubiertos."
-                onChange={(text) => {
-                  handleChange("semiUncoveredMeters", text);
-                  setFieldValue("semiUncoveredMeters", text);
-                }}
-                value={initialValues.details.semiUncoveredMeters} 
-              />
-              <CustomTextInput
-                title="M2 Descubiertos"
-                placeholder="Ingrese los m2 descubiertos."
-                onChange={(text) => {
-                  handleChange("uncoveredMeters", text);
-                  setFieldValue("uncoveredMeters", text);
-                }}
-                value={initialValues.details.uncoveredMeters} 
-              />
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>AMBIENTES</Text>
-              </View>
-              <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" value={initialValues.details.rooms} data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Habitaciones" value={initialValues.details.rooms} data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              </View>
-              <DropdownComponent title="Baños" value={initialValues.details.bathrooms} data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" value={initialValues.details.garage} data={contador} name="garage" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Bauleras" value={initialValues.details.trunk} data={contador} name="trunk" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              </View>
-              <CustomSwitchComponent
-                title="Terraza"
-                value={values.terrace}
-                setFieldValue={setFieldValue}
-                name="terrace"
-              />
-              <CustomSwitchComponent
-                title="Balcon"
-                value={values.balcony}
-                setFieldValue={setFieldValue}
-                name="balcony"
-              />
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>ORIENTACION</Text>
-              </View>
-              <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" value={initialValues.details.orientation} data={orientacion} name="orientation" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Vista" value={initialValues.details.front} data={vista} name="front" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              </View>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>AMENITIES</Text>
-              </View>
-              <CustomSwitchComponent
-                title="Quincho"
-                value={values.quincho}
-                setFieldValue={setFieldValue}
-                name="quincho"
-                
-              />
-              <CustomSwitchComponent
-                title="Pileta"
-                value={values.pileta}
-                setFieldValue={setFieldValue}
-                name="pileta"
-                
-              />
-              <CustomSwitchComponent
-                title="Jacuzzi"
-                value={values.jacuzzi}
-                setFieldValue={setFieldValue}
-                name="jacuzzi"
-                
-              />
-              <CustomSwitchComponent
-                title="Sauna"
-                value={values.sauna}
-                setFieldValue={setFieldValue}
-                name="sauna"
-                
-              />
-              <CustomSwitchComponent
-                title="SUM"
-                value={values.sum}
-                setFieldValue={setFieldValue}
-                name="sum"
-                
-              />
-              <CustomSwitchComponent
-                title="Gym"
-                value={values.gym}
-                setFieldValue={setFieldValue}
-                name="gym"
-                
-              />
-              <CustomSwitchComponent
-                title="Mas+"
-                value={values.mas}
-                setFieldValue={setFieldValue}
-                name="mas"
-                
-              />
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>PRECIO</Text>
-              </View>
-              <DropdownComponent 
-                title="Estado" 
-                name="state" 
-                data={estados}
-                onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} 
-                value={initialValues.additionaldetails.state} 
-                />
-              <View style={styles.horizontalContainer}>
-                <View style={{ flexDirection: "row" }}>
-                  <View style={{ flex: 1 }}>
-                    <CustomTextInput
-                      title="Valor"
-                      placeholder="Ingrese el Valor"
-                      onChange={(text) => {
-                        handleChange("price", text);
-                        setFieldValue("price", text);
-                      }}
-                      value={initialValues.additionaldetails.price} 
-                    />
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>AMBIENTES</Text>
+                </View>
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <DropdownComponent title="Totales" value={initialValues.details.rooms} data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <DropdownComponent title="Habitaciones" value={initialValues.details.rooms} data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+
+                    </View>
                   </View>
-                  <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); } } />
+
+                </View>
+                <DropdownComponent title="Baños" value={initialValues.details.bathrooms} data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <DropdownComponent title="Cocheras" value={initialValues.details.garage} data={contador} name="garage" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <DropdownComponent title="Bauleras" value={initialValues.details.trunk} data={contador} name="trunk" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
+                  </View>
+                </View>
+                <CustomSwitchComponent
+                  title="Terraza"
+                  value={values.terrace}
+                  setFieldValue={setFieldValue}
+                  name="terrace"
+                />
+                <CustomSwitchComponent
+                  title="Balcon"
+                  value={values.balcony}
+                  setFieldValue={setFieldValue}
+                  name="balcony"
+                />
+              </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>ORIENTACION</Text>
+                </View>
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <DropdownComponent title="Ortientación" value={initialValues.details.orientation} data={orientacion} name="orientation" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <DropdownComponent title="Vista" value={initialValues.details.front} data={vista} name="front" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
                   </View>
                 </View>
               </View>
-              <View style={styles.horizontalContainer}>
-                <View style={{ flexDirection: "row" }}>
-                  <View style={{ flex: 1 }}>
-                    <CustomTextInput
-                      title="Expensas"
-                      placeholder="Ingrese las Expensas"
-                      onChange={(text) => {
-                        handleChange("expensePrice", text);
-                        setFieldValue("expensePrice", text);
-                      }}
-                      value={initialValues.additionaldetails.expensePrice} 
-                    />
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>AMENITIES</Text>
+                </View>
+                <CustomSwitchComponent
+                  title="Quincho"
+                  value={values.quincho}
+                  setFieldValue={setFieldValue}
+                  name="quincho"
+
+                />
+                <CustomSwitchComponent
+                  title="Pileta"
+                  value={values.pileta}
+                  setFieldValue={setFieldValue}
+                  name="pileta"
+
+                />
+                <CustomSwitchComponent
+                  title="Jacuzzi"
+                  value={values.jacuzzi}
+                  setFieldValue={setFieldValue}
+                  name="jacuzzi"
+
+                />
+                <CustomSwitchComponent
+                  title="Sauna"
+                  value={values.sauna}
+                  setFieldValue={setFieldValue}
+                  name="sauna"
+
+                />
+                <CustomSwitchComponent
+                  title="SUM"
+                  value={values.sum}
+                  setFieldValue={setFieldValue}
+                  name="sum"
+
+                />
+                <CustomSwitchComponent
+                  title="Gym"
+                  value={values.gym}
+                  setFieldValue={setFieldValue}
+                  name="gym"
+
+                />
+                <CustomSwitchComponent
+                  title="Mas+"
+                  value={values.mas}
+                  setFieldValue={setFieldValue}
+                  name="mas"
+
+                />
+              </View>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>PRECIO</Text>
+                </View>
+                <DropdownComponent
+                  title="Estado"
+                  name="state"
+                  data={estados}
+                  onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
+                  value={initialValues.additionaldetails.state}
+                />
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <CustomTextInput
+                        title="Valor"
+                        placeholder="Ingrese el Valor"
+                        onChange={(text) => {
+                          handleChange("price", text);
+                          setFieldValue("price", text);
+                        }}
+                        value={initialValues.additionaldetails.price}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
                   </View>
-                  <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                </View>
+                <View style={styles.horizontalContainer}>
+                  <View style={{ flexDirection: "row" }}>
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                      <CustomTextInput
+                        title="Expensas"
+                        placeholder="Ingrese las Expensas"
+                        onChange={(text) => {
+                          handleChange("expensePrice", text);
+                          setFieldValue("expensePrice", text);
+                        }}
+                        value={initialValues.additionaldetails.expensePrice}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <DropdownComponent title="Moneda" data={moneda} name="money" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-            <View style={styles.contentContainer}>
-              <View style={styles.itemTitleView}>
-                <Text style={styles.titleText}>DESCRIPCION</Text>
+              <View style={styles.contentContainer}>
+                <View style={styles.itemTitleView}>
+                  <Text style={styles.titleText}>DESCRIPCION</Text>
+                </View>
+                <CustomTextInput
+                  title=""
+                  placeholder="Ingrese la Descripcion"
+                  customHeight={125}
+                  isDescription={true}
+                  textAlignVertical='top'
+                  onChange={(text) => {
+                    handleChange("description", text);
+                    setFieldValue("description", text);
+                  }}
+                  value={initialValues.additionaldetails.description}
+                />
               </View>
-              <CustomTextInput
-                title="Descripcion"
-                placeholder="Ingrese la Descripcion"
-                onChange={(text) => {
-                  handleChange("description", text);
-                  setFieldValue("description", text);
-                }}
-                value={initialValues.additionaldetails.description} 
-              />
-            </View>
-            <View style={styles.buttons}>
-              <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
-                <Text style={[styles.realStateText]}>Cancelar</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.blueButton]} onPress={handleSubmit}>
-                {isLoggingIn ? (
-                  <ActivityIndicator color="#fff" />
-                ) : (
-                  <Text style={[styles.realStateText]}>Guardar</Text>
-                )}
-              </TouchableOpacity>
-            </View>
-            <View style={styles.deleteButton}>
-              <TouchableOpacity style={[styles.redButton]} onPress={openDeleteProperty}>
-                <Text style={[styles.realStateText]}>Eliminar publicacion</Text>
-              </TouchableOpacity>
-            </View>
-            {showDeleteProperty && (
-              <DeleteProperty closeDeleteProperty={closeDeleteProperty} />
-            )}
-          </ScrollView>
-        </SafeAreaView>
-      )}
-    </Formik>
+              <View style={styles.buttons}>
+                <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                  <Text style={[styles.realStateText]}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.blueButton]} onPress={handleSubmit}>
+                  {isLoggingIn ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={[styles.realStateText]}>Guardar</Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+              <View style={styles.deleteButton}>
+                <TouchableOpacity style={[styles.redButton]} onPress={openDeleteProperty}>
+                  <Text style={[styles.realStateText]}>Eliminar publicacion</Text>
+                </TouchableOpacity>
+              </View>
+              {showDeleteProperty && (
+                <DeleteProperty closeDeleteProperty={closeDeleteProperty} />
+              )}
+            </ScrollView>
+          </SafeAreaView>
+        )}
+      </Formik>
     )
   );
 };
@@ -449,34 +518,38 @@ export default EditRealstateScreenUI;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   scrollView: {
     width: "90%",
     paddingLeft: "2%",
     paddingTop: "5%",
   },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  picture: {
+  pictureView: {
     backgroundColor: "#c4c4c4",
     height: 225,
     width: "98%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
+    borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
+    borderTopRightRadius: 20, // Radio en la esquina superior derecha
+  },
+  picture: {
+    objectFit: 'cover',
+    height: 225,
+    width: "98%",
+    borderTopLeftRadius: 20, // Radio en la esquina superior izquierda
+    borderTopRightRadius: 20, // Radio en la esquina superior derecha
+  },
+  selectedPictureView: {
+    display: 'flex',
   },
   addIcon: {
     width: "30%",
     objectFit: "contain",
-    opacity: 0.7,
+    opacity: 0.5,
   },
   contentContainer: {
     display: "flex",
@@ -516,6 +589,19 @@ const styles = StyleSheet.create({
     marginRight: 3,
     // Añade margen entre los botones
   },
+  picBotBar: {
+    height: 50, // Ajusta la altura según tus preferencias
+    backgroundColor: "#47A7FF", // Color y transparencia deseados
+    opacity: 0.7,
+    borderBottomLeftRadius: 20, // Radio en la esquina inferior izquierda
+    borderBottomRightRadius: 20, // Radio en la esquina inferior derecha
+    width: "98%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
+  
   buttonText: {
     color: "white",
     fontSize: 16,
@@ -534,6 +620,39 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: Theme.colors.clear.PRIMARY,
     borderRadius: 40,
+  },
+  arrowRight: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    right: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5
+  },
+  dot: {
+    fontSize: 40,
+    color: 'white',
+    opacity: .5,
+    paddingHorizontal: 10
+  },
+  selectedDot: {
+    fontSize: 40,
+    color: 'white',
+    paddingHorizontal: 10,
+    // opacity: 0
+  },
+  arrowLeft: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    left: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    transform: [{ scaleX: -1 }]
   },
   deleteButton: {
     flexDirection: 'row',
