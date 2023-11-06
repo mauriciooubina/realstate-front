@@ -22,7 +22,7 @@ export default propertiesWS = {
         type: `image/${valor.substring(pos2 + 1)}`,
       });
     });
-    return await fetch('https://backend-myhome.onrender.com//myhome/properties/loadMultimedia', {
+    return await fetch('https://backend-myhome.onrender.com/myhome/properties/loadMultimedia', {
       method: 'POST',
       body: formData,
       headers: {
