@@ -50,9 +50,16 @@ export default RealStateHomeScreenUI = () => {
                 properties.length > 0 ? (
                     properties.map((property, index) => (
                         <View key={index} style={styles.box}>
-                            <Image source={{uri: property?.additionaldetails?.urlPhoto1}} style={styles.imageContainer} />
+                            <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
                             <View style={styles.textContainer}>
-                                <Text style={styles.text}>{`${property.address.street} ${property.address.streetNumber}, ${property.address.floor}${property.address.department}`}</Text>
+                                {
+                                    <Text style={styles.text}>
+                                        {property.address.floor === null && property.address.department === null
+                                            ? `${property.address.street} ${property.address.streetNumber}`
+                                            : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
+                                    </Text>
+                                }
+
                                 <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
                                 <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
                                 <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>

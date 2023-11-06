@@ -19,7 +19,6 @@ const CreateRealstateScreenUI = () => {
   const [pictures, setPictures] = useState([]);
   const [pictureIndex, setPictureIndex] = useState(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [realStateID, setRealStateID] = useState();
   const propertyData = {
     "calle": null,
     "altura": null,
@@ -29,7 +28,7 @@ const CreateRealstateScreenUI = () => {
     "localidad": null,
     "provincia": null,
     "pais": null,
-    "realStateId": realStateID,
+    "realStateId": null,
     "propertyType": null,
     "coveredMeters": null,
     "uncoveredMeters": null,
@@ -93,11 +92,6 @@ const CreateRealstateScreenUI = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
-      const id = await AsyncStorage.getItem('realstateId');
-
-      setRealStateID(id);
-
       try {
         const response = await georefWS.getProvincias();
         const newData = response.provincias.map((p) => {
@@ -128,6 +122,15 @@ const CreateRealstateScreenUI = () => {
       delete values.money;
     }
     try {
+      const amenities = ["quincho", "pileta", "jacuzzi", "sum", "sauna", "gym", "mas"];
+      for (const val of amenities) {
+        if (values.hasOwnProperty(val) && values[val] === true) {
+          values.amenities.push(val);
+          delete values.val;
+        }
+      }
+      const id = await AsyncStorage.getItem('realstateId');
+      values.realStateId = id;
       const response = await propertiesWS.post(values);
       //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); //ajustar formato del body, pq con esto como esta tira error 400
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
