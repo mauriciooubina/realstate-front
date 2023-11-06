@@ -111,7 +111,13 @@ const EditRealstateScreenUI = () => {
       const id = await AsyncStorage.getItem('propertyId');
       const response = await propertiesWS.get(id);
       const am = response.data[0].additionaldetails.amenities;
-      setInitialValues(response.data[0]);
+      const res = { ...response.data[0] };
+      console.log('resAntes: ', res);
+      am.forEach(valor => {
+        res[valor] = true; 
+      });
+      console.log('res: ', res);
+      setInitialValues(res);
     } catch (error) {
       console.log(error);
     } finally {
@@ -165,7 +171,7 @@ const EditRealstateScreenUI = () => {
         "front": values.details.front,
         "howOld": values.details.howOld,
         "orientation": values.details.orientation,
-        "amenities": values.additionaldetails.amenities,
+        "amenities": [],
         "description": values.additionaldetails.description,
         "state": values.additionaldetails.state,
         "price": values.additionaldetails.price,
@@ -415,49 +421,49 @@ const EditRealstateScreenUI = () => {
                 </View>
                 <CustomSwitchComponent
                   title="Quincho"
-                  value={initialValues.additionaldetails.amenities.includes("quincho")}
+                  value={values.quincho}
                   setFieldValue={setFieldValue}
                   name="quincho"
 
                 />
                 <CustomSwitchComponent
                   title="Pileta"
-                  value={initialValues.additionaldetails.amenities.includes("pileta")}
+                  value={values.pileta}
                   setFieldValue={setFieldValue}
                   name="pileta"
 
                 />
                 <CustomSwitchComponent
                   title="Jacuzzi"
-                  value={initialValues.additionaldetails.amenities.includes("jacuzzi")}
+                  value={values.jacuzzi}
                   setFieldValue={setFieldValue}
                   name="jacuzzi"
 
                 />
                 <CustomSwitchComponent
                   title="Sauna"
-                  value={initialValues.additionaldetails.amenities.includes("sauna")}
+                  value={values.sauna}
                   setFieldValue={setFieldValue}
                   name="sauna"
 
                 />
                 <CustomSwitchComponent
                   title="SUM"
-                  value={initialValues.additionaldetails.amenities.includes("sum")}
+                  value={values.sum}
                   setFieldValue={setFieldValue}
                   name="sum"
 
                 />
                 <CustomSwitchComponent
                   title="Gym"
-                  value={initialValues.additionaldetails.amenities.includes("gym")}
+                  value={values.gym}
                   setFieldValue={setFieldValue}
                   name="gym"
 
                 />
                 <CustomSwitchComponent
                   title="Mas+"
-                  value={initialValues.additionaldetails.amenities.includes("mas")}
+                  value={values.sum}
                   setFieldValue={setFieldValue}
                   name="mas"
 
