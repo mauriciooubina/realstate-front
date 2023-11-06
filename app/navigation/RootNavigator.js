@@ -4,15 +4,22 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import RealStateStackNavigator from './RealStateStackNavigator';
 import UserStackNavigator from './UserStackNavigator';
+import { StatusBar, setStatusBarHidden } from 'expo-status-bar';
+import Theme from "../../app/ui/styles/Theme";
 
 const Stack = createNativeStackNavigator();
 
 export default RootNavigator = () => {
  return (
+  
    <NavigationContainer>
+    <StatusBar
+       backgroundColor={Theme.colors.clear.SECONDARY}
+       barStyle="light-content"
+     />
      <Stack.Navigator
        initialRouteName={NavigatorConstant.NAVIGATOR.LOGIN}
-       screenOptions={{headerShown: false}}
+       screenOptions={{headerShown: false, setStatusBarHidden:false}}
        headerMode="none">
        <Stack.Screen
          name={NavigatorConstant.NAVIGATOR.LOGIN}

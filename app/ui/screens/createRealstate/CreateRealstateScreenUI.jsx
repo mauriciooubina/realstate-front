@@ -18,30 +18,31 @@ const CreateRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [propertyData, setPropertyData] = useState({
-    "calle": "",
-    "altura": "",
-    "piso": "",
-    "depto": "",
-    "barrio": "",
-    "localidad": "",
-    "provincia": "",
-    "pais": "",
-    "realStateId": null,
-    "propertyType": "",
-    "coveredMeters": "",
-    "uncoveredMeters": "",
-    "semiUncoveredMeters": "",
-    "rooms": "",
-    "environments": "",
-    "bathrooms": "",
-    "terrace": "",
-    "balcony": "",
-    "garage": "",
-    "trunk": "",
-    "front": "",
-    "howOld": "",
-    "orientation": "",
+  const [realStateID, setRealStateID] = useState();
+  const propertyData = {
+    "calle": null,
+    "altura": null,
+    "piso": null,
+    "depto": null,
+    "barrio": null,
+    "localidad": null,
+    "provincia": null,
+    "pais": null,
+    "realStateId": realStateID,
+    "propertyType": null,
+    "coveredMeters": null,
+    "uncoveredMeters": null,
+    "semiUncoveredMeters": null,
+    "rooms": null,
+    "environments": null,
+    "bathrooms": null,
+    "terrace": false,
+    "balcony": false,
+    "garage": false,
+    "trunk": false,
+    "front": false,
+    "howOld": null,
+    "orientation": null,
     "amenities": [],
     "description": "",
     "state": "",
@@ -53,8 +54,7 @@ const CreateRealstateScreenUI = () => {
     "urlPhoto2": "",
     "urlPhoto3": "",
     "urlVideo": ""
-  }
-  );
+  };
   const paises = [{ label: 'Argentina', value: 'Argentina' },];
   const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
   const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
@@ -245,8 +245,16 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                  </View>
+                </View>
+
               </View>
               <DropdownComponent title="Baños" data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <View style={styles.horizontalContainer}>
@@ -409,6 +417,18 @@ const CreateRealstateScreenUI = () => {
 export default CreateRealstateScreenUI;
 
 const styles = StyleSheet.create({
+  picBotBar: {
+    height: 50, 
+    backgroundColor: "#47A7FF", 
+    opacity: 0.7,
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20,
+    width: "98%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
   scrollView: {
     width: "90%",
     paddingLeft: "2%",
@@ -426,7 +446,15 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  picture: {
+    objectFit: 'cover',
+    height: 225,
+    width: "98%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   addIcon: {
     width: "30%",

@@ -10,6 +10,7 @@ import * as ImagePicker from "expo-image-picker";
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import DeleteProperty from "../../../components/DeleteProperty";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NavigatorConstants from "../../../navigation/NavigatorConstants";
 
 const EditRealstateScreenUI = () => {
   const navigation = useNavigation();
@@ -21,6 +22,7 @@ const EditRealstateScreenUI = () => {
   const [number, onChangeNumber] = useState("");
   const [showDeleteProperty, setShowDeleteProperty] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   const paises = [
     { label: 'Argentina', value: 'Argentina' },
   ];
@@ -135,11 +137,50 @@ const EditRealstateScreenUI = () => {
   const handleEditProperty = async (values) => {
     console.log(values);
     setIsLoggingIn(true);
+    const id = await AsyncStorage.getItem('realstateId');
     if ("money" in values) {
       delete values.money;
     }
     try {
-      const response = await propertiesWS.put(values);
+      const newValues = {
+        "propertyId": values.id,
+        "calle": values.address.street,
+        "altura": values.address.streetNumber,
+        "piso": values.address.floor,
+        "depto": values.address.department,
+        "barrio": values.address.district,
+        "localidad": values.address.locality,
+        "provincia": values.address.province,
+        "pais": values.address.country,
+        "realStateId": id,
+        "propertyType": values.details.propertyType,
+        "coveredMeters": values.details.coveredMeters,
+        "uncoveredMeters": values.details.uncoveredMeters,
+        "semiUncoveredMeters": values.details.semiUncoveredMeters,
+        "rooms": values.details.rooms,
+        "environments": values.details.environments,
+        "bathrooms": values.details.bathrooms,
+        "terrace": values.details.terrace,
+        "balcony": values.details.balcony,
+        "garage": values.details.garage,
+        "trunk": values.details.trunk,
+        "front": values.details.front,
+        "howOld": values.details.howOld,
+        "orientation": values.details.orientation,
+        "amenities": values.additionaldetails.amenities,
+        "description": values.additionaldetails.description,
+        "state": values.additionaldetails.state,
+        "price": values.additionaldetails.price,
+        "expensePrice": values.additionaldetails.expensePrice,
+        "rentalPrice": values.additionaldetails.rentalPrice,
+        "salePrice": values.additionaldetails.salePrice,
+        "urlPhoto1": values.additionaldetails.urlPhoto1,
+        "urlPhoto2": values.additionaldetails.urlPhoto2,
+        "urlPhoto3": values.additionaldetails.urlPhoto3,
+        "urlVideo": values.additionaldetails.urlVideo
+      };
+      console.log('newValues: ',newValues);
+      const response = await propertiesWS.put(newValues);
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
