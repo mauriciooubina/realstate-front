@@ -9,6 +9,7 @@ export default propertiesWS = {
   },
   postMedia: async function (media, propertyId) {
     const formData = new FormData();
+    console.log('idProperty: ', propertyId);
     const json = {
       "idProperty": propertyId
     };
@@ -16,6 +17,9 @@ export default propertiesWS = {
     media.forEach(valor => {
       const pos1 = valor.lastIndexOf("/");
       const pos2 = valor.lastIndexOf(".");
+      console.log('uri: ',valor);
+      console.log('name: ',valor.substring(pos1 + 1));
+      console.log('type: ', `image/${valor.substring(pos2 + 1)}`);
       formData.append("photos", {
         uri: valor,
         name: valor.substring(pos1 + 1),
