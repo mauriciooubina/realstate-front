@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Theme from "../../app/ui/styles/Theme";
 import {
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -15,11 +16,14 @@ import { Rating } from "react-native-stock-star-rating";
 import DeleteAccount from "./DeleteAccount";
 import loginWS from "../networking/api/endpoints/loginWS";
 import NavigatorConstants from "../navigation/NavigatorConstants";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function BurgerModal({ onClose }) {
   const navigation = useNavigation();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+  const [fantasyName, setFantasyName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const openDeleteAccount = () => {
     setShowDeleteAccount(true);
@@ -28,6 +32,23 @@ export default function BurgerModal({ onClose }) {
   const closeDeleteAccount = () => {
     setShowDeleteAccount(false);
   };
+
+  useEffect(() => {
+    const fetchRealEstateData = async () => {
+      try {
+        const id = await AsyncStorage.getItem("realstateId");
+        const response = await realstateWS.get(id);
+        console.log("fantasy: ", response.data[0]);
+        setFantasyName(response.data[0].fantasyName);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchRealEstateData();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -46,45 +67,60 @@ export default function BurgerModal({ onClose }) {
     <Modal animationType="slide-from-left" transparent={true}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modal2BackGround}>
-          <View style={[styles.modal2Container]}>
-            <View style={styles.inmobTitleBox}>
-              <Text style={styles.inmobTitle}>Inmobiliaria Atilio</Text>
-              <View style={styles.stars}>
-                <Rating maxStars={5} size={30} stars={3} />
-              </View>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <ActivityIndicator
+                size="large"
+                color={Theme.colors.clear.PRIMARY}
+              />
             </View>
-            <TouchableOpacity onPress={handleEditProfile}>
-              <View style={styles.editBox}>
-                <View>
-                  <SimpleLineIcons name="note" size={20} color={Theme.colors.clear.PRIMARY} marginLeft={17} />
+          ) : (
+            <View style={[styles.modal2Container]}>
+              <View style={styles.inmobTitleBox}>
+                <Text style={styles.inmobTitle}>{fantasyName}</Text>
+                <View style={styles.stars}>
+                  <Rating maxStars={5} size={30} stars={3} />
                 </View>
-                <Text style={styles.editTitle}>Editar datos</Text>
               </View>
-            </TouchableOpacity>
-            <View style={styles.editBox2}>
+              <TouchableOpacity onPress={handleEditProfile}>
+                <View style={styles.editBox}>
+                  <View>
+                    <SimpleLineIcons
+                      name="note"
+                      size={20}
+                      color={Theme.colors.clear.PRIMARY}
+                      marginLeft={17}
+                    />
+                  </View>
+                  <Text style={styles.editTitle}>Editar datos</Text>
+                </View>
+              </TouchableOpacity>
+              <View style={styles.editBox2}>
                 <MaterialCommunityIcons
                   name="logout"
                   size={24}
                   color={Theme.colors.clear.PRIMARY}
-                  marginLeft={15}/>
-              <TouchableOpacity onPress={handleLogout}>
-                <Text style={styles.editCerrarSesion}>Cerrar sesión</Text>
+                  marginLeft={15}
+                />
+                <TouchableOpacity onPress={handleLogout}>
+                  <Text style={styles.editCerrarSesion}>Cerrar sesión</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={openDeleteAccount}>
+                <View style={styles.editBox}>
+                  <View>
+                    <Ionicons
+                      name="md-trash-sharp"
+                      size={24}
+                      color="red"
+                      marginLeft={15}
+                    />
+                  </View>
+                  <Text style={styles.editBorrarCuenta}> Borrar cuenta </Text>
+                </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={openDeleteAccount}>
-              <View style={styles.editBox}>
-                <View>
-                  <Ionicons
-                    name="md-trash-sharp"
-                    size={24}
-                    color="red"
-                    marginLeft={15}
-                  />
-                </View>
-                <Text style={styles.editBorrarCuenta}> Borrar cuenta </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+          )}
           {showDeleteAccount && (
             <DeleteAccount closeDeleteAccount={closeDeleteAccount} />
           )}
