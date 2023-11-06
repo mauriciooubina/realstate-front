@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
     },
     wrenchbox: {
         display: 'flex',
-        width: '7%',
+        width: '10%',
         height: '30%',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: Theme.colors.clear.PRIMARY,
-        borderRadius: 13,
+        borderRadius: 16,
         flexDirection: 'row',
         marginRight: '3%',
 
