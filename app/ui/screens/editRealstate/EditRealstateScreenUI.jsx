@@ -266,20 +266,18 @@ const EditRealstateScreenUI = () => {
                   title="Calle"
                   placeholder="Ingrese la calle"
                   onChange={(text) => {
-                    handleChange("calle", text);
-                    setFieldValue("calle", text);
+                    setFieldValue("address.street", text);
                   }}
-                  value={initialValues.address.street}
+                  value={values.address.street}
                 />
                 <CustomTextInput
                   title="Altura"
                   type="numeric"
                   placeholder="Ingrese la altura"
                   onChange={(text) => {
-                    handleChange("altura", text);
-                    setFieldValue("altura", text);
+                    setFieldValue("address.streetNumber", text);
                   }}
-                  value={initialValues.address.streetNumber}
+                  value={values.address.streetNumber}
                 />
                 <View style={styles.horizontalContainer}>
                   <View style={{ flexDirection: "row" }}>
@@ -289,10 +287,9 @@ const EditRealstateScreenUI = () => {
                         type="numeric"
                         placeholder="Ingrese el piso"
                         onChange={(text) => {
-                          handleChange("piso", text);
-                          setFieldValue("piso", text);
+                          setFieldValue("address.floor", text);
                         }}
-                        value={initialValues.address.floor}
+                        value={values.address.floor}
                       />
                     </View>
                     <View style={{ flex: 1 }}>
@@ -300,10 +297,9 @@ const EditRealstateScreenUI = () => {
                         title="Departamento"
                         placeholder="Ingrese el depto."
                         onChange={(text) => {
-                          handleChange("depto", text);
-                          setFieldValue("depto", text);
+                          setFieldValue("address.departmen", text);
                         }}
-                        value={initialValues.address.department}
+                        value={values.address.department}
                       />
                     </View>
                   </View>
@@ -319,10 +315,9 @@ const EditRealstateScreenUI = () => {
                   type="numeric"
                   placeholder="Ingrese la antiguedad de la propiedad."
                   onChange={(text) => {
-                    handleChange("howOld", text);
-                    setFieldValue("howOld", text);
+                    setFieldValue("details.howOld", text);
                   }}
-                  value={initialValues.details.howOld}
+                  value={values.details.howOld}
                 />
               </View>
               <View style={styles.contentContainer}>
@@ -334,29 +329,26 @@ const EditRealstateScreenUI = () => {
                   type="numeric"
                   placeholder="Ingrese los m2 cubiertos."
                   onChange={(text) => {
-                    handleChange("coveredMeters", text);
-                    setFieldValue("coveredMeters", text);
+                    setFieldValue("details.coveredMeters", text);
                   }}
-                  value={initialValues.details.coveredMeters}
+                  value={values.details.coveredMeters}
                 />
                 <CustomTextInput
                   title="M2 Semicubiertos"
                   type="numeric"
                   placeholder="Ingrese los m2 semicubiertos."
                   onChange={(text) => {
-                    handleChange("semiUncoveredMeters", text);
-                    setFieldValue("semiUncoveredMeters", text);
+                    setFieldValue("details.semiUncoveredMeters", text);
                   }}
-                  value={initialValues.details.semiUncoveredMeters}
+                  value={values.details.semiUncoveredMeters}
                 />
                 <CustomTextInput
                   title="M2 Descubiertos"
                   placeholder="Ingrese los m2 descubiertos."
                   onChange={(text) => {
-                    handleChange("uncoveredMeters", text);
-                    setFieldValue("uncoveredMeters", text);
+                    setFieldValue("details.uncoveredMeters", text);
                   }}
-                  value={initialValues.details.uncoveredMeters}
+                  value={values.details.uncoveredMeters}
                 />
               </View>
               <View style={styles.contentContainer}>
@@ -463,7 +455,7 @@ const EditRealstateScreenUI = () => {
                 />
                 <CustomSwitchComponent
                   title="Mas+"
-                  value={values.sum}
+                  value={values.mas}
                   setFieldValue={setFieldValue}
                   name="mas"
 
@@ -478,7 +470,7 @@ const EditRealstateScreenUI = () => {
                   name="state"
                   data={estados}
                   onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
-                  value={initialValues.additionaldetails.state}
+                  value={values.additionaldetails.state}
                 />
                 <View style={styles.horizontalContainer}>
                   <View style={{ flexDirection: "row" }}>
@@ -487,10 +479,9 @@ const EditRealstateScreenUI = () => {
                         title="Valor"
                         placeholder="Ingrese el Valor"
                         onChange={(text) => {
-                          handleChange("price", text);
-                          setFieldValue("price", text);
+                          setFieldValue("additionaldetails.price", text);
                         }}
-                        value={initialValues.additionaldetails.price}
+                        value={values.additionaldetails.price}
                       />
                     </View>
                     <View style={{ flex: 1 }}>
@@ -505,10 +496,9 @@ const EditRealstateScreenUI = () => {
                         title="Expensas"
                         placeholder="Ingrese las Expensas"
                         onChange={(text) => {
-                          handleChange("expensePrice", text);
-                          setFieldValue("expensePrice", text);
+                          setFieldValue("additionaldetails.expensePrice", text);
                         }}
-                        value={initialValues.additionaldetails.expensePrice}
+                        value={values.additionaldetails.expensePrice}
                       />
                     </View>
                     <View style={{ flex: 1 }}>
@@ -528,10 +518,9 @@ const EditRealstateScreenUI = () => {
                   isDescription={true}
                   textAlignVertical='top'
                   onChange={(text) => {
-                    handleChange("description", text);
-                    setFieldValue("description", text);
+                    setFieldValue("additionaldetails.description", text);
                   }}
-                  value={initialValues.additionaldetails.description}
+                  value={values.additionaldetails.description}
                 />
               </View>
               <View style={styles.buttons}>
