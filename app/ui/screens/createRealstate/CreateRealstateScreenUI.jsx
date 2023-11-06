@@ -17,44 +17,45 @@ import NavigatorConstants from "../../../navigation/NavigatorConstants";
 const CreateRealstateScreenUI = () => {
   const navigation = useNavigation();
   const [pictures, setPictures] = useState([]);
+  const [pictureIndex, setPictureIndex] = useState(0);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [propertyData, setPropertyData] = useState({
-    "calle": "",
-    "altura": "",
-    "piso": "",
-    "depto": "",
-    "barrio": "",
-    "localidad": "",
-    "provincia": "",
-    "pais": "",
+  const propertyData = {
+    "calle": null,
+    "altura": null,
+    "piso": null,
+    "depto": null,
+    "barrio": null,
+    "localidad": null,
+    "provincia": null,
+    "pais": null,
     "realStateId": null,
-    "propertyType": "",
-    "coveredMeters": "",
-    "uncoveredMeters": "",
-    "semiUncoveredMeters": "",
-    "rooms": "",
-    "environments": "",
-    "bathrooms": "",
-    "terrace": "",
-    "balcony": "",
-    "garage": "",
-    "trunk": "",
-    "front": "",
-    "howOld": "",
-    "orientation": "",
+    "propertyType": null,
+    "coveredMeters": null,
+    "uncoveredMeters": null,
+    "semiUncoveredMeters": null,
+    "rooms": null,
+    "environments": null,
+    "bathrooms": null,
+    "terrace": false,
+    "balcony": false,
+    "garage": false,
+    "trunk": false,
+    "front": false,
+    "howOld": null,
+    "orientation": null,
     "amenities": [],
-    "description": "",
-    "state": "",
-    "price": "",
-    "expensePrice": "",
-    "rentalPrice": "",
-    "salePrice": "",
-    "urlPhoto1": "",
-    "urlPhoto2": "",
-    "urlPhoto3": "",
-    "urlVideo": ""
-  }
-  );
+    "description": null,
+    "state": null,
+    "price": null,
+    "expensePrice": null,
+    "rentalPrice": null,
+    "salePrice": null,
+    "urlPhoto1": null,
+    "urlPhoto2": null,
+    "urlPhoto3": null,
+    "urlVideo": null
+  };
+
   const paises = [{ label: 'Argentina', value: 'Argentina' },];
   const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
   const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
@@ -62,23 +63,21 @@ const CreateRealstateScreenUI = () => {
   { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' },];
   const orientacion = [{ label: 'Norte', value: 'Norte' }, { label: 'Sur', value: 'Sur' },
   { label: 'Este', value: 'Este' }, { label: 'Oeste', value: 'Oeste' },];
-  const vista = [{ label: 'Jardin', value: 'Jardin' }, { label: 'Calle', value: 'Calle' },];
-  const estados = [{ label: 'Venta', value: 'Venta' },{ label: 'Alquiler', value: 'Alquiler' },
-    { label: 'Reservado', value: 'Reservado' },{ label: 'Alquilado', value: 'Alquilado' },
-    { label: 'Vendido', value: 'Vendido' },]
+  const vista = [{ label: 'Frente', value: 'Frente' }, { label: 'Contrafrente', value: 'Contrafrente' },];
+  const estados = [{ label: 'Venta', value: 'Venta' }, { label: 'Alquiler', value: 'Alquiler' },
+  { label: 'Reservado', value: 'Reservado' }, { label: 'Alquilado', value: 'Alquilado' },
+  { label: 'Vendido', value: 'Vendido' },]
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
-  const [amenities, setAmenities] = useState([]);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
   const selectImage = async (useLibrary) => {
     let result;
     const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 0.75,
+      quality: 1,
     };
     if (useLibrary) {
       result = await ImagePicker.launchImageLibraryAsync(options);
@@ -87,7 +86,6 @@ const CreateRealstateScreenUI = () => {
       result = await ImagePicker.launchCameraAsync(options);
     }
     if (!result.canceled) {
-      console.log(result.assets[0].uri);
       setPictures([...pictures, result.assets[0].uri]);
     }
   };
@@ -119,15 +117,22 @@ const CreateRealstateScreenUI = () => {
   }, []);
 
   const handleCreateProperty = async (values) => {
-    console.log(values);
     setIsLoggingIn(true);
     if ("money" in values) {
       delete values.money;
     }
     try {
+      const amenities = ["quincho", "pileta", "jacuzzi", "sum", "sauna", "gym", "mas"];
+      for (const val of amenities) {
+        if (values.hasOwnProperty(val) && values[val] === true) {
+          values.amenities.push(val);
+          delete values.val;
+        }
+      }
       const id = await AsyncStorage.getItem('realstateId');
       values.realStateId = id;
       const response = await propertiesWS.post(values);
+      //await propertiesWS.postMedia({pictures: pictures, idProperty: response.data.id}); 
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
@@ -141,14 +146,51 @@ const CreateRealstateScreenUI = () => {
       {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
-            <Pressable onPress={() => selectImage(true)}>
-              <View style={styles.picture}>
+            {!pictures[pictureIndex] ?
+              <Pressable onPress={() => selectImage(true)}>
+                <View style={styles.pictureView}>
+                  <Image
+                    style={styles.addIcon}
+                    source={require("../../../../assets/images/add_image.png")}
+                  />
+                  {pictureIndex > 0 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                </View>
+              </Pressable>
+              :
+              <View style={styles.selectedPictureView}>
                 <Image
-                  style={styles.addIcon}
-                  source={require("../../../../assets/images/add_image.png")}
+                  style={styles.picture}
+                  source={{ uri: pictures[pictureIndex] }}
                 />
+                {pictureIndex > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
+                {pictureIndex < 2 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
+                  <Text style={{ color: 'white' }} >
+                    ➜
+                  </Text>
+                </Pressable>}
               </View>
-            </Pressable>
+            }
+            <View style={styles.picBotBar}>
+              {pictures.map((picture, index) => {
+                return <Text key={index} style={index === pictureIndex ? styles.selectedDot : styles.dot}>
+                  •
+                </Text>
+              })
+              }
+            </View>
             <View style={styles.contentContainer}>
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
@@ -175,23 +217,31 @@ const CreateRealstateScreenUI = () => {
                 }}
               />
               <View style={styles.horizontalContainer}>
-                <CustomTextInput
-                  title="Piso"
-                  type="numeric"
-                  placeholder="Ingrese el piso"
-                  onChange={(text) => {
-                    handleChange("piso", text);
-                    setFieldValue("piso", text);
-                  }}
-                />
-                <CustomTextInput
-                  title="Departamento"
-                  placeholder="Ingrese el depto."
-                  onChange={(text) => {
-                    handleChange("depto", text);
-                    setFieldValue("depto", text);
-                  }}
-                />
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <CustomTextInput
+                      title="Piso"
+                      type="numeric"
+                      placeholder="Ingrese el piso"
+                      onChange={(text) => {
+                        handleChange("piso", text);
+                        setFieldValue("piso", text);
+                      }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <CustomTextInput
+                      title="Departamento"
+                      placeholder="Ingrese el depto."
+                      onChange={(text) => {
+                        handleChange("depto", text);
+                        setFieldValue("depto", text);
+                      }}
+                    />
+                  </View>
+                </View>
+
+
               </View>
             </View>
             <View style={styles.contentContainer}>
@@ -234,6 +284,7 @@ const CreateRealstateScreenUI = () => {
               <CustomTextInput
                 title="M2 Descubiertos"
                 placeholder="Ingrese los m2 descubiertos."
+                type="numeric"
                 onChange={(text) => {
                   handleChange("uncoveredMeters", text);
                   setFieldValue("uncoveredMeters", text);
@@ -245,13 +296,37 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>AMBIENTES</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <DropdownComponent title="Totales" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <DropdownComponent title="Habitaciones" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                  </View>
+                </View>
+
               </View>
               <DropdownComponent title="Baños" data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Cocheras" data={contador} name="garage" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Bauleras" data={contador} name="trunk" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <DropdownComponent
+                      title="Cocheras"
+                      data={contador}
+                      name="garage"
+                      onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <DropdownComponent
+                      title="Bauleras"
+                      data={contador}
+                      name="trunk"
+                      onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
+                    />
+                  </View>
+                </View>
               </View>
               <CustomSwitchComponent
                 title="Terraza"
@@ -271,8 +346,23 @@ const CreateRealstateScreenUI = () => {
                 <Text style={styles.titleText}>ORIENTACION</Text>
               </View>
               <View style={styles.horizontalContainer}>
-                <DropdownComponent title="Ortientación" data={orientacion} name="orientation" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-                <DropdownComponent title="Vista" data={vista} name="front" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
+                    <DropdownComponent
+                      title="Ortientación"
+                      data={orientacion}
+                      name="orientation"
+                      onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }}
+                    />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <DropdownComponent
+                      title="Vista"
+                      data={vista}
+                      name="front"
+                      onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                  </View>
+                </View>
               </View>
             </View>
             <View style={styles.contentContainer}>
@@ -341,10 +431,11 @@ const CreateRealstateScreenUI = () => {
               />
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
-                  <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
                     <CustomTextInput
                       title="Valor"
                       placeholder="Ingrese el Valor"
+                      type="numeric"
                       onChange={(text) => {
                         handleChange("price", text);
                         setFieldValue("price", text);
@@ -358,9 +449,10 @@ const CreateRealstateScreenUI = () => {
               </View>
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
-                  <View style={{ flex: 1 }}>
+                  <View style={{ flex: 1, paddingRight: 10 }}>
                     <CustomTextInput
                       title="Expensas"
+                      type="numeric"
                       placeholder="Ingrese las Expensas"
                       onChange={(text) => {
                         handleChange("expensePrice", text);
@@ -378,14 +470,18 @@ const CreateRealstateScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DESCRIPCION</Text>
               </View>
-              <CustomTextInput
-                title="Descripcion"
-                placeholder="Ingrese la Descripcion"
-                onChange={(text) => {
-                  handleChange("description", text);
-                  setFieldValue("description", text);
-                }}
-              />
+              <View >
+                <CustomTextInput
+                  customHeight={125}
+                  title=""
+                  isDescription={true}
+                  placeholder="Ingrese la Descripcion"
+                  onChange={(text) => {
+                    handleChange("description", text);
+                    setFieldValue("description", text);
+                  }}
+                />
+              </View>
             </View>
             <View style={styles.buttons}>
               <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
@@ -395,7 +491,7 @@ const CreateRealstateScreenUI = () => {
                 {isLoggingIn ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
-                  <Text style={[styles.realStateText]}>Guardar</Text>
+                  <Text style={[styles.realStateText]}> Guardar</Text>
                 )}
               </TouchableOpacity>
             </View>
@@ -409,6 +505,18 @@ const CreateRealstateScreenUI = () => {
 export default CreateRealstateScreenUI;
 
 const styles = StyleSheet.create({
+  picBotBar: {
+    height: 50, 
+    backgroundColor: "#47A7FF", 
+    opacity: 0.7,
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20,
+    width: "98%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row'
+  },
   scrollView: {
     width: "90%",
     paddingLeft: "2%",
@@ -419,19 +527,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  picture: {
+  pictureView: {
     backgroundColor: "#c4c4c4",
     height: 225,
     width: "98%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  picture: {
+    objectFit: 'cover',
+    height: 225,
+    width: "98%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
   addIcon: {
     width: "30%",
     objectFit: "contain",
-    opacity: 0.7,
+    opacity: 0.5,
   },
   contentContainer: {
     display: "flex",
@@ -488,9 +604,46 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     backgroundColor: Theme.colors.clear.PRIMARY,
     borderRadius: 40,
+    width: 120
   },
   realStateText: {
     color: 'white',
     fontSize: 14,
   },
+  dot: {
+    fontSize: 40,
+    color: 'white',
+    opacity: .5,
+    paddingHorizontal: 10
+  },
+  selectedDot: {
+    fontSize: 40,
+    color: 'white',
+    paddingHorizontal: 10,
+    // opacity: 0
+  },
+  arrowRight: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    right: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5
+  },
+  arrowLeft: {
+    fontSize: 20,
+    position: 'absolute',
+    top: '50%',
+    left: '5%',
+    color: 'white',
+    backgroundColor: '#47A7FF',
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    transform: [{ scaleX: -1 }]
+  },
+  selectedPictureView: {
+    display: 'flex',
+  }
 });

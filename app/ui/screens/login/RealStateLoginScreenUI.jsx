@@ -72,7 +72,7 @@ export default RealStateLoginScreenUI = () => {
                     </View>
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.LOGIN)}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.blueButton]} onPress={handleLogin}>

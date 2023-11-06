@@ -4,11 +4,14 @@ import Theme from "../ui/styles/Theme";
 import propertiesWS from "../networking/api/endpoints/propertiesWS";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavigatorConstants from "../navigation/NavigatorConstants";
+import { useNavigation } from '@react-navigation/native';
 
 export default DeleteProperty = ({ closeDeleteProperty }) => {
+  const navigation = useNavigation();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const handleDeleteProperty = async () => {
+    setIsLoggingIn(true);
     try {
       const id = await AsyncStorage.getItem("propertyId");
       await propertiesWS.delete(id);
@@ -16,7 +19,7 @@ export default DeleteProperty = ({ closeDeleteProperty }) => {
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false);
+      setIsLoggingIn(false);
     }
   };
 
