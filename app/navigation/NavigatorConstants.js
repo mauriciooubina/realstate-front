@@ -20,6 +20,10 @@ const NAVIGATOR = {
    };
    const USER_STACK = {
     HOME: 'HOME',
+    HOME_FAV: 'HOME_FAV',
+    VIEW: 'VIEW',
+    SEARCH: 'SEARCH',
+    EDIT_PROFILE: 'EDIT_PROFILE',
    };
    export default {
     NAVIGATOR,

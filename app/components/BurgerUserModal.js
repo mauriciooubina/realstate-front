@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
@@ -18,13 +19,20 @@ import loginWS from "../networking/api/endpoints/loginWS";
 import NavigatorConstants from "../navigation/NavigatorConstants";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userWS from "../networking/api/endpoints/userWS";
+import Profile from '../../assets/images/photo.png';
 
-export default function BurgerModal({ onClose }) {
+export default function BurgerUserModal({ onClose }) {
   const navigation = useNavigation();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
-  const [fantasyName, setFantasyName] = useState("");
   const [loading, setLoading] = useState(true);
-  const [rating, setRating] = useState(0);
+  //const [userData, setUserData] = useState('');
+
+  const userData = {
+    picture: 'https://example.com/photo1.jpg',
+    email: 'camila_ponce@hotmail.com',
+    name: 'Camila Ponce',
+  };
 
   const openDeleteAccount = () => {
     setShowDeleteAccount(true);
@@ -35,16 +43,13 @@ export default function BurgerModal({ onClose }) {
   };
 
   useEffect(() => {
-    const fetchRealEstateData = async () => {
+    const fetchUserData = async () => {
       try {
-        const id = await AsyncStorage.getItem("realstateId");
-        const response = await realstateWS.get(id);
-        setFantasyName(response.data[0].fantasyName);
-        if(response.data[0].qualification === null){
-          setRating(0);
-        } else{
-          setRating(response.data[0].qualification);
-        }
+        {/*
+        const id = await AsyncStorage.getItem("userId");
+        const response = await userWS.get(id);
+        setUserData(response.data[0]);
+        */}
       } catch (error) {
         console.log(error);
       } finally {
@@ -52,12 +57,12 @@ export default function BurgerModal({ onClose }) {
       }
     };
 
-    fetchRealEstateData();
+    fetchUserData();
   }, []);
 
   const handleLogout = async () => {
     try {
-      const response = await loginWS.logout();
+      //const response = await loginWS.logout();
       navigation.navigate(NavigatorConstants.NAVIGATOR.LOGIN);
     } catch (error) {
       console.log(error);
@@ -65,7 +70,11 @@ export default function BurgerModal({ onClose }) {
   };
 
   const handleEditProfile = () => {
-    navigation.navigate(NavigatorConstants.REALSTATE_STACK.EDIT_PROFILE);
+    navigation.navigate(NavigatorConstants.USER_STACK.EDIT_PROFILE);
+  };
+
+  const handleViewFav = () => {
+    navigation.navigate(NavigatorConstants.USER_STACK.HOME_FAV);
   };
 
   return (
@@ -82,10 +91,11 @@ export default function BurgerModal({ onClose }) {
           ) : (
             <View style={[styles.modal2Container]}>
               <View style={styles.inmobTitleBox}>
-                <Text style={styles.inmobTitle}>{fantasyName}</Text>
-                <View style={styles.stars}>
-                  <Rating maxStars={5} size={30} stars={rating} />
-                </View>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <Image source={Profile} style={{ width: 70, height: 70, marginTop:5 }} />
+                <Text style={styles.inmobTitle}>{userData.name}</Text>
+              </View>
+                <Text style={styles.userSubtitle}>{userData.email}</Text>
               </View>
               <TouchableOpacity onPress={handleEditProfile}>
                 <View style={styles.editBox}>
@@ -97,7 +107,15 @@ export default function BurgerModal({ onClose }) {
                       marginLeft={17}
                     />
                   </View>
-                  <Text style={styles.editTitle}>Editar datos</Text>
+                  <Text style={styles.editTitle}>Editar perfil</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleViewFav}>
+                <View style={styles.editBox}>
+                  <View style={{ marginLeft:12 }}>
+                    <Rating maxStars={1} size={30} stars={1}/>
+                  </View>
+                  <Text style={styles.editTitle}>Favoritos</Text>
                 </View>
               </TouchableOpacity>
               <View style={styles.editBox2}>
@@ -230,10 +248,16 @@ const styles = StyleSheet.create({
   },
 
   inmobTitle: {
-    fontSize: 35,
+    fontSize: 22,
     fontWeight: "bold",
     marginTop: 10,
     marginLeft: 15,
+  },
+  userSubtitle: {
+    fontSize: 12,
+    marginTop: 10,
+    marginLeft: 15,
+    marginBottom: 10,
   },
 
   inmobTitleBox: {
