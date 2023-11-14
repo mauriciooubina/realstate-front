@@ -7,7 +7,9 @@ import EditProfileUserScreen from "../ui/screens/profileUser/EditProfileUserScre
 import UserSearchScreen from "../ui/screens/userSearch/UserSearchScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LeftUserIcon, RightSearchIcon } from "../components/HeaderComponent";
-import ViewPropertyScreen from '../ui/screens/editRealstate/EditRealstateScreen';
+import ViewPropertyScreen from '../ui/screens/viewProperty/ViewPropertyScreen';
+import ContactScreen from '../ui/screens/contact/ContactScreen';
+import ReserveScreen from '../ui/screens/reserve/ReserveScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -84,6 +86,38 @@ export default UserStackNavigator = () => {
       <Stack.Screen
         name={NavigatorConstant.USER_STACK.VIEW}
         component={ViewPropertyScreen}
+        options={{
+          headerTitle: "My Home",
+          headerTitleAlign: "center",
+          presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={NavigatorConstant.USER_STACK.CONTACT}
+        component={ContactScreen}
+        options={{
+          headerTitle: "My Home",
+          headerTitleAlign: "center",
+          presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={NavigatorConstant.USER_STACK.RESERVE}
+        component={ReserveScreen}
         options={{
           headerTitle: "My Home",
           headerTitleAlign: "center",

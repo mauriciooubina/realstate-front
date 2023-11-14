@@ -46,7 +46,7 @@ const ViewPropertyScreenUI = () => {
   };
 
   const fetchPropertyData = async () => {
-    try {
+    try {{/*}
       const id = await AsyncStorage.getItem('propertyId');
       const response = await propertiesWS.get(id);
       const am = response.data[0].additionaldetails.amenities;
@@ -54,7 +54,7 @@ const ViewPropertyScreenUI = () => {
       am.forEach(valor => {
         res[valor] = true;
       });
-      setInitialValues(res);
+    setInitialValues(res); */}
     } catch (error) {
       console.log(error);
     } finally {
@@ -136,6 +136,14 @@ const ViewPropertyScreenUI = () => {
       setIsLoggingIn(false);
     }
   }
+
+  const handleContact = () => {
+    navigation.navigate(NavigatorConstants.USER_STACK.CONTACT);
+  };
+
+  const handleReserve = () => {
+    navigation.navigate(NavigatorConstants.USER_STACK.RESERVE);
+  };
 
   return (
     loading ? (

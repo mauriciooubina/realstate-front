@@ -18,49 +18,25 @@ const UserSearchScreenUI = () => {
   const navigation = useNavigation();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const propertyData = {
-    "calle": null,
-    "altura": null,
-    "piso": null,
-    "depto": null,
     "barrio": null,
     "localidad": null,
     "provincia": null,
-    "pais": null,
     "realStateId": null,
     "propertyType": null,
-    "coveredMeters": null,
-    "uncoveredMeters": null,
-    "semiUncoveredMeters": null,
     "rooms": null,
     "environments": null,
     "bathrooms": null,
-    "terrace": false,
-    "balcony": false,
-    "garage": false,
-    "trunk": false,
-    "front": false,
     "howOld": null,
-    "orientation": null,
     "amenities": [],
-    "description": null,
     "state": null,
     "price": null,
-    "expensePrice": null,
-    "rentalPrice": null,
     "salePrice": null,
-    "urlPhoto1": null,
-    "urlPhoto2": null,
-    "urlPhoto3": null,
-    "urlVideo": null
   };
 
   const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
   const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
   const contador = [{ label: '0', value: '0' }, { label: '1', value: '1' }, { label: '2', value: '2' },
   { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' },];
-  const estados = [{ label: 'Venta', value: 'Venta' }, { label: 'Alquiler', value: 'Alquiler' },
-  { label: 'Reservado', value: 'Reservado' }, { label: 'Alquilado', value: 'Alquilado' },
-  { label: 'Vendido', value: 'Vendido' },]
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
@@ -138,12 +114,16 @@ const UserSearchScreenUI = () => {
           <ScrollView style={styles.scrollView}>
 
             <View style={styles.buttonsProperty}>
-                <TouchableOpacity style={[styles.selectedButton]}>
-                  <Text style={[styles.selectedText]}> Comprar</Text>
+            <TouchableOpacity
+                style={comprarBtn ? styles.selectedButton : styles.unselectedButton}
+                onPress={() => handleSelectedButton('Comprar')}>
+                  <Text style={comprarBtn ? styles.selectedText : styles.unselectedText}> Comprar</Text>
                 </TouchableOpacity>
                 <View style={{ marginHorizontal: 30 }}></View>
-                <TouchableOpacity style={[styles.unselectedButton]} >
-                  <Text style={[styles.unselectedText]}> Alquilar</Text>
+                <TouchableOpacity
+                style={alquilarBtn ? styles.selectedButton : styles.unselectedButton}
+                onPress={() => handleSelectedButton('Alquilar')}>
+                  <Text style={alquilarBtn ? styles.selectedText : styles.unselectedText}> Alquilar</Text>
                 </TouchableOpacity>
             </View>
 
@@ -358,7 +338,7 @@ const styles = StyleSheet.create({
   },
   itemTitleView: {
     alignItems: "flex-start",
-    marginTop:20,
+    marginTop:10,
   },
   buttonContainer: {
     flexDirection: "row",

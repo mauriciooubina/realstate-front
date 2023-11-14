@@ -92,7 +92,7 @@ export default function BurgerUserModal({ onClose }) {
             <View style={[styles.modal2Container]}>
               <View style={styles.inmobTitleBox}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                <Image source={Profile} style={{ width: 70, height: 70, marginTop:5 }} />
+                <Image source={Profile} style={{ width: 65, height: 60, marginTop:5 }} />
                 <Text style={styles.inmobTitle}>{userData.name}</Text>
               </View>
                 <Text style={styles.userSubtitle}>{userData.email}</Text>

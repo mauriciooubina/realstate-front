@@ -92,7 +92,7 @@ export default UserFavHomeScreenUI = () => {
             ) : favProperties ? (
                 favProperties.length > 0 ? (
                     favProperties.map((property, index) => (
-                        <View key={index} style={styles.box} onPress={() => handleViewProperty({ property })}>
+                        <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
                             <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
                             <View style={styles.textContainer}>
                                 {
@@ -112,7 +112,7 @@ export default UserFavHomeScreenUI = () => {
                                     <MaterialCommunityIcons name="star" size={15} color="yellow" />
                                 </TouchableOpacity>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     ))
                 ) : (
                     <View style={styles.loadingContainer}>

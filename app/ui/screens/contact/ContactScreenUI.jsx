@@ -7,8 +7,11 @@ import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import realstateWS from '../../../networking/api/endpoints/realstateWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../../../assets/images/photo.png';
+import { Rating } from "react-native-stock-star-rating";
+import CustomTextInput from "../../../components/TextInputComponent";
+import { FontAwesome } from '@expo/vector-icons';
 
-export default EditProfileUserScreenUI = () => {
+export default ContactScreenUI = () => {
     const navigation = useNavigation();
     //const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -36,7 +39,6 @@ export default EditProfileUserScreenUI = () => {
         setSaveEdit(true);
         try {
             {/*}
-            console.log(password);
             await realstateWS.put(realEstateData);
             const id = await AsyncStorage.getItem('realstateId');
             navigation.navigate(NavigatorConstants.USER_STACK.HOME);
@@ -47,10 +49,17 @@ export default EditProfileUserScreenUI = () => {
             setSaveEdit(false);
         }
     }
-    const userData = {
-        picture: 'https://example.com/photo1.jpg',
-        email: 'camila_ponce@hotmail.com',
-        name: 'Camila Ponce',
+    const realstateData = {
+        fantasyName: 'Inmobiliaria Prueba',
+        qualification: 4,
+    };
+
+    const handleSendQuestion = () => {
+
+    };
+
+    const handleVisit = () => {
+
     };
 
     return (
@@ -58,58 +67,48 @@ export default EditProfileUserScreenUI = () => {
             {loading ? (
                 <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
             ) : (
-                <View>
-                    <View style={{ width: '100%', height: '15%' }}>
+                <View style={{ width: '90%', height: '90%' }}>
+                    <View style={{ alignItems: 'left' }}>
+                        <Text style={styles.title}>{realstateData.fantasyName}</Text>
                     </View>
-                    <View style={{ alignItems: 'center' }}>
-                        <Text style={styles.title}>Editar Perfil</Text>
+                    <View style={styles.stars}>
+                        <Rating maxStars={5} size={35} stars={realstateData.qualification} />
                     </View>
-                    <View style={{alignItems: 'center'} }>
-                        <Image source={Profile} style={{ width: 150, height: 140, marginTop: 20 }} />
-                    </View>
-                    <View style={{ width: '100%', height: '8%' }}>
-                    </View>
-                    <View style={{ height: '60%', width: '80%', alignContent: 'center' }}>
-                        <Text style={styles.inputText}>Email</Text>
-                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <TextInput style={styles.input}
-                                value={userData.email}
-                                onChangeText={(text) => setRealEstateData((prevData) => ({
-                                    ...prevData,
-                                    email: text,
-                                }))}>
-                            </TextInput>
-                            <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
-                        </View>
-                        <Text style={styles.inputText}>Nombre de usuario</Text>
-                        <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <TextInput
-                                style={styles.input}
-                                value={userData.name}
-                                onChangeText={(text) => setRealEstateData((prevData) => ({
-                                    ...prevData,
-                                    name: text,
-                                }))}>
-                            </TextInput>
-                            <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
-                        </View>
 
-                        <View style={styles.buttons}>
-                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
-                                <Text style={[styles.realStateText]}>  Cancelar  </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
-                                {saveEdit ? (
-                                    <ActivityIndicator color="#fff" />
-                                ) : (
-                                    <Text style={[styles.realStateText]}>  Guardar  </Text>
-                                )}
-                            </TouchableOpacity>
+                    <View style={styles.contentContainer}>
+                        <View style={styles.itemTitleView}>
+                            <Text style={styles.titleText}>Dejanos tu consulta</Text>
                         </View>
+                        <View >
+                            <CustomTextInput
+                                customHeight={125}
+                                title=""
+                                isDescription={true}
+                            />
+                        </View>
+                    </View>
+
+                    <View style={styles.buttons}>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleSendQuestion} >
+                            {saveEdit ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.realStateText]}>  Enviar  </Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.buttons}>
+                        <TouchableOpacity style={[styles.whiteButton]} onPress={handleVisit} >
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <FontAwesome name="home" size={20} color={Theme.colors.clear.PRIMARY} />
+                            <Text style={[styles.whiteText]}>  Visitar Propiedad  </Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
-            )}
-        </View>
+            )
+            }
+        </View >
     );
 };
 
@@ -127,7 +126,6 @@ const styles = StyleSheet.create({
         fontWeight: '400',
         fontSize: 30,
         color: Theme.colors.clear.PRIMARY,
-        marginBottom: '',
     },
     inputText: {
         color: '#000',
@@ -150,7 +148,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         backgroundColor: Theme.colors.clear.PRIMARY,
         borderRadius: 30,
-
     },
     realStateText: {
         color: 'white',
@@ -162,8 +159,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         flexDirection: 'row',
-        marginTop: 40,
-
+        marginTop: 30,
     },
     subtitleContainer: {
         margin: 30,
@@ -179,6 +175,21 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '13%'
     },
+    stars: {
+        marginBottom: 20,
+    },
+    whiteButton: {
+        display: 'flex',
+        padding: 5,
+        paddingHorizontal: 20,
+        marginHorizontal: 20,
+        borderRadius: 30,
+        borderColor: Theme.colors.clear.PRIMARY,
+        borderWidth: 2,
 
-
+    },
+    whiteText: {
+        color: Theme.colors.clear.PRIMARY,
+        fontSize: 14,
+    },
 });
