@@ -26,6 +26,7 @@ const NAVIGATOR = {
     EDIT_PROFILE: 'EDIT_PROFILE',
     CONTACT: 'CONTACT',
     RESERVE: 'RESERVE',
+    EXPERIENCE: 'EXPERIENCE',
    };
    export default {
     NAVIGATOR,

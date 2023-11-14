@@ -11,6 +11,7 @@ import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import DeleteProperty from "../../../components/DeleteProperty";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NavigatorConstants from "../../../navigation/NavigatorConstants";
+import { MaterialIcons } from '@expo/vector-icons';
 
 const ViewPropertyScreenUI = () => {
   const navigation = useNavigation();
@@ -46,7 +47,8 @@ const ViewPropertyScreenUI = () => {
   };
 
   const fetchPropertyData = async () => {
-    try {{/*}
+    try {
+      {/*}
       const id = await AsyncStorage.getItem('propertyId');
       const response = await propertiesWS.get(id);
       const am = response.data[0].additionaldetails.amenities;
@@ -145,6 +147,10 @@ const ViewPropertyScreenUI = () => {
     navigation.navigate(NavigatorConstants.USER_STACK.RESERVE);
   };
 
+  const handleExperience = () => {
+    navigation.navigate(NavigatorConstants.USER_STACK.EXPERIENCE);
+  };
+
   return (
     loading ? (
       <View style={styles.container}>
@@ -204,7 +210,7 @@ const ViewPropertyScreenUI = () => {
             </View>
             <View style={styles.horizontalContainer}>
               <View style={{ flexDirection: "row" }}>
-                
+
               </View>
             </View>
           </View>
@@ -222,7 +228,7 @@ const ViewPropertyScreenUI = () => {
             <View style={styles.itemTitleView}>
               <Text style={styles.titleText}>AMENITIES</Text>
             </View>
-            
+
           </View>
           <View style={styles.contentContainer}>
             <View style={styles.itemTitleView}>
@@ -230,18 +236,14 @@ const ViewPropertyScreenUI = () => {
             </View>
             <View style={styles.horizontalContainer}>
               <View style={{ flexDirection: "row" }}>
-                <View style={{ flex: 1, paddingRight: 10 }}>
-                 
-
-                </View>
-                <View style={{ flex: 1 }}>
-                 
-
-                </View>
+                <Text>Inmobiliaria fantasia   </Text>
+                <MaterialIcons name="star" size={20} color="yellow" />
+                  <Text>   4.3   </Text>
+                <TouchableOpacity onPress={handleExperience}>
+                  <MaterialIcons name="info" size={24} color={Theme.colors.clear.PRIMARY} />
+                </TouchableOpacity>
               </View>
-
             </View>
-           
           </View>
 
           <View style={styles.buttons}>
