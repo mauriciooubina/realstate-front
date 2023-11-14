@@ -147,7 +147,7 @@ export default UserHomeScreenUI = () => {
       ) : properties ? (
         properties.length > 0 ? (
           properties.map((property, index) => (
-              <View key={index} style={styles.box}>
+              <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
                 <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
                 <View style={styles.textContainer}>
                   {
@@ -162,7 +162,7 @@ export default UserHomeScreenUI = () => {
                   <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
                   <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
           ))
         ) : (
           <View style={styles.loadingContainer}>

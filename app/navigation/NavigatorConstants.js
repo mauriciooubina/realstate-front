@@ -24,6 +24,8 @@ const NAVIGATOR = {
     VIEW: 'VIEW',
     SEARCH: 'SEARCH',
     EDIT_PROFILE: 'EDIT_PROFILE',
+    CONTACT: 'CONTACT',
+    RESERVE: 'RESERVE',
    };
    export default {
     NAVIGATOR,
