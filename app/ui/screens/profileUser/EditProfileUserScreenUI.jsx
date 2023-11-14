@@ -65,7 +65,7 @@ export default EditProfileUserScreenUI = () => {
                         <Text style={styles.title}>Editar Perfil</Text>
                     </View>
                     <View style={{alignItems: 'center'} }>
-                        <Image source={Profile} style={{ width: 130, height: 130, marginTop: 20 }} />
+                        <Image source={Profile} style={{ width: 150, height: 140, marginTop: 20 }} />
                     </View>
                     <View style={{ width: '100%', height: '8%' }}>
                     </View>
