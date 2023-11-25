@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import NavigatorConstant from "./NavigatorConstants";
 import Theme from "../ui/styles/Theme";
 import UserHomeScreen from "../ui/screens/user/UserHomeScreen";
@@ -7,10 +7,10 @@ import EditProfileUserScreen from "../ui/screens/profileUser/EditProfileUserScre
 import UserSearchScreen from "../ui/screens/userSearch/UserSearchScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LeftUserIcon, RightSearchIcon } from "../components/HeaderComponent";
-import ViewPropertyScreen from '../ui/screens/viewProperty/ViewPropertyScreen';
-import ContactScreen from '../ui/screens/contact/ContactScreen';
-import ReserveScreen from '../ui/screens/reserve/ReserveScreen';
-import ExperienceScreen from '../ui/screens/experience/ExperienceScreen';
+import ViewPropertyScreen from "../ui/screens/viewProperty/ViewPropertyScreen";
+import ContactScreen from "../ui/screens/contact/ContactScreen";
+import ReserveScreen from "../ui/screens/reserve/ReserveScreen";
+import ExperienceScreen from "../ui/screens/experience/ExperienceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -31,8 +31,8 @@ export default UserStackNavigator = () => {
           headerTitleStyle: {
             fontSize: 24,
           },
-          headerLeft: () => <LeftUserIcon/>,
-          headerRight: () => <RightSearchIcon/>,
+          headerLeft: () => <LeftUserIcon />,
+          headerRight: () => <RightSearchIcon />,
         }}
       />
       <Stack.Screen
@@ -49,7 +49,7 @@ export default UserStackNavigator = () => {
           headerTitleStyle: {
             fontSize: 24,
           },
-          headerRight: () => <RightSearchIcon/>,
+          headerRight: () => <RightSearchIcon />,
         }}
       />
       <Stack.Screen
