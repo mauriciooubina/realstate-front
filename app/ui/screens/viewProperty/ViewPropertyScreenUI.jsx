@@ -1,62 +1,60 @@
-import { Text, View, StyleSheet, TouchableOpacity, Image, Pressable, ScrollView, SafeAreaView, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Pressable,
+  ScrollView,
+  SafeAreaView,
+  ActivityIndicator,
+  Share,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import CustomTextInput from "../../../components/TextInputComponent";
 import CustomSwitchComponent from "../../../components/SwitchComponent";
 import DropdownComponent from "../../../components/DropdownComponent";
 import { Formik } from "formik";
-import Theme from '../../styles/Theme';
+import Theme from "../../styles/Theme";
 import * as ImagePicker from "expo-image-picker";
-import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
+import propertiesWS from "../../../networking/api/endpoints/propertiesWS";
 import DeleteProperty from "../../../components/DeleteProperty";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavigatorConstants from "../../../navigation/NavigatorConstants";
-import { MaterialIcons } from '@expo/vector-icons';
+import {
+  MaterialIcons,
+  MaterialCommunityIcons,
+  Feather,
+  FontAwesome5,
+  FontAwesome,
+  Entypo,
+  AntDesign,
+} from "@expo/vector-icons";
 
 const ViewPropertyScreenUI = () => {
   const navigation = useNavigation();
-  const [pictures, setPictures] = useState([]);
-  const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const [number, onChangeNumber] = useState("");
-  const [showDeleteProperty, setShowDeleteProperty] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const [amenities, setAmenities] = useState([]);
   const [pictureIndex, setPictureIndex] = useState(0);
+  const [property, setProperty] = useState();
+  const [realStateId, setRealStateId] = useState();
 
+  const { additionaldetails, address, details } = property || {};
 
-  const selectImage = async (useLibrary) => {
-    let result;
-    const options = {
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    };
-    if (useLibrary) {
-      result = await ImagePicker.launchImageLibraryAsync(options);
-    } else {
-      await ImagePicker.requestCameraPermissionsAsync();
-      result = await ImagePicker.launchCameraAsync(options);
-    }
-    if (!result.canceled) {
-      setPictures([...pictures, result.assets[0].uri]);
-    }
-  };
+  const [pictures, setPictures] = useState([]);
 
   const fetchPropertyData = async () => {
     try {
-      {/*}
-      const id = await AsyncStorage.getItem('propertyId');
+      const id = await AsyncStorage.getItem("propertyId");
+      const realStateId = await AsyncStorage.getItem("realstateId");
+      setRealStateId(realStateId);
       const response = await propertiesWS.get(id);
-      const am = response.data[0].additionaldetails.amenities;
-      const res = { ...response.data[0] };
-      am.forEach(valor => {
-        res[valor] = true;
-      });
-    setInitialValues(res); */}
+      setProperty(response.data[0]);
+      setPictures([
+        response.data[0].additionaldetails?.urlPhoto1,
+        response.data[0].additionaldetails?.urlPhoto2,
+        response.data[0].additionaldetails?.urlPhoto3,
+      ]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -65,79 +63,9 @@ const ViewPropertyScreenUI = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchPropertyData();
   }, []);
-
-  const openDeleteProperty = () => {
-    setShowDeleteProperty(true);
-  };
-
-  const closeDeleteProperty = () => {
-    setShowDeleteProperty(false);
-  };
-
-  const handleEditProperty = async (values) => {
-    console.log(values);
-    setIsLoggingIn(true);
-    const id = await AsyncStorage.getItem('realstateId');
-    if ("money" in values) {
-      delete values.money;
-    }
-    try {
-      const newValues = {
-        "propertyId": values.id,
-        "calle": values.address.street,
-        "altura": values.address.streetNumber,
-        "piso": values.address.floor,
-        "depto": values.address.department,
-        "barrio": values.address.district,
-        "localidad": values.address.locality,
-        "provincia": values.address.province,
-        "pais": values.address.country,
-        "realStateId": id,
-        "propertyType": values.details.propertyType,
-        "coveredMeters": values.details.coveredMeters,
-        "uncoveredMeters": values.details.uncoveredMeters,
-        "semiUncoveredMeters": values.details.semiUncoveredMeters,
-        "rooms": values.details.rooms,
-        "environments": values.details.environments,
-        "bathrooms": values.details.bathrooms,
-        "terrace": values.details.terrace,
-        "balcony": values.details.balcony,
-        "garage": values.details.garage,
-        "trunk": values.details.trunk,
-        "front": values.details.front,
-        "howOld": values.details.howOld,
-        "orientation": values.details.orientation,
-        "amenities": [],
-        "description": values.additionaldetails.description,
-        "state": values.additionaldetails.state,
-        "price": values.additionaldetails.price,
-        "expensePrice": values.additionaldetails.expensePrice,
-        "rentalPrice": values.additionaldetails.rentalPrice,
-        "salePrice": values.additionaldetails.salePrice,
-        "urlPhoto1": values.additionaldetails.urlPhoto1,
-        "urlPhoto2": values.additionaldetails.urlPhoto2,
-        "urlPhoto3": values.additionaldetails.urlPhoto3,
-        "urlVideo": values.additionaldetails.urlVideo
-      };
-      const amenities = ["quincho", "pileta", "jacuzzi", "sum", "sauna", "gym", "mas"];
-      for (const val of amenities) {
-        if (values.hasOwnProperty(val) && values[val] === true) {
-          newValues.amenities.push(val);
-        }
-      }
-      console.log('newValues: ', newValues);
-      const response = await propertiesWS.put(newValues);
-      //const responseMedia = await propertiesWS.postMedia(pictures, values.id); 
-      //console.log('responseMedia: ',responseMedia);
-      navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoggingIn(false);
-    }
-  }
 
   const handleContact = () => {
     navigation.navigate(NavigatorConstants.USER_STACK.CONTACT);
@@ -151,112 +79,519 @@ const ViewPropertyScreenUI = () => {
     navigation.navigate(NavigatorConstants.USER_STACK.EXPERIENCE);
   };
 
-  return (
-    loading ? (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
-      </View>
-    ) : (
-      <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.scrollView}>
-          {!pictures[pictureIndex] ?
-            <Pressable onPress={() => selectImage(true)}>
-              <View style={styles.pictureView}>
-                <Image
-                  style={styles.addIcon}
-                  source={require("../../../../assets/images/add_image.png")}
-                />
-                {pictureIndex > 0 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
-                  <Text style={{ color: 'white' }} >
-                    ➜
-                  </Text>
-                </Pressable>}
-                {pictureIndex < 2 && pictures.length > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
-                  <Text style={{ color: 'white' }} >
-                    ➜
-                  </Text>
-                </Pressable>}
-              </View>
-            </Pressable>
-            :
-            <View style={styles.selectedPictureView}>
-              <Image
-                style={styles.picture}
-                source={{ uri: pictures[pictureIndex] }}
+  const handleFavs = () => {
+    navigation.navigate(NavigatorConstants.USER_STACK.HOME_FAV);
+  };
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message:
+          "React Native | A framework for building native apps using React",
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
+  };
+
+  return loading ? (
+    <View style={styles.container}>
+      <ActivityIndicator size="large" color={Theme.colors.clear.BLACK} />
+    </View>
+  ) : (
+    <SafeAreaView style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        {!realStateId && (
+          <View
+            style={[
+              styles.horizontalContainer,
+              {
+                justifyContent: "flex-start",
+              },
+            ]}
+          >
+            <Pressable
+              style={{
+                borderRadius: 20,
+                backgroundColor: Theme.colors.clear.SECONDARY,
+                padding: 5,
+                marginBottom: 5,
+              }}
+              onPress={handleShare}
+            >
+              <AntDesign
+                name="sharealt"
+                size={24}
+                color={Theme.colors.clear.BLACK}
               />
-              {pictureIndex > 0 && <Pressable onPress={() => setPictureIndex(pictureIndex - 1)} style={styles.arrowLeft}>
-                <Text style={{ color: 'white' }} >
-                  ➜
-                </Text>
-              </Pressable>}
-              {pictureIndex < 2 && <Pressable onPress={() => setPictureIndex(pictureIndex + 1)} style={styles.arrowRight}>
-                <Text style={{ color: 'white' }} >
-                  ➜
-                </Text>
-              </Pressable>}
-            </View>
-          }
-          <View style={styles.picBotBar}>
-            {pictures.map((picture, index) => {
-              return <Text key={index} style={index === pictureIndex ? styles.selectedDot : styles.dot}>
+            </Pressable>
+            <Pressable
+              style={{
+                borderRadius: 20,
+                backgroundColor: Theme.colors.clear.SECONDARY,
+                padding: 5,
+                marginBottom: 5,
+                marginLeft: 5,
+              }}
+              onPress={handleFavs}
+            >
+              <MaterialCommunityIcons name="star" size={24} color={"#F6BE00"} />
+            </Pressable>
+          </View>
+        )}
+        {!pictures[pictureIndex] ? (
+          <View style={styles.pictureView}>
+            <Image
+              style={styles.addIcon}
+              source={require("../../../../assets/images/add_image.png")}
+            />
+            {pictureIndex > 0 && pictures.length > 0 && (
+              <Pressable
+                onPress={() => setPictureIndex(pictureIndex - 1)}
+                style={styles.arrowLeft}
+              >
+                <Text style={{ color: "white" }}>➜</Text>
+              </Pressable>
+            )}
+            {pictureIndex < 2 && pictures.length > 0 && (
+              <Pressable
+                onPress={() => setPictureIndex(pictureIndex + 1)}
+                style={styles.arrowRight}
+              >
+                <Text style={{ color: "white" }}>➜</Text>
+              </Pressable>
+            )}
+          </View>
+        ) : (
+          <View style={styles.selectedPictureView}>
+            <Image
+              style={styles.picture}
+              source={{ uri: pictures[pictureIndex] }}
+            />
+            {pictureIndex > 0 && (
+              <Pressable
+                onPress={() => setPictureIndex(pictureIndex - 1)}
+                style={styles.arrowLeft}
+              >
+                <Text style={{ color: "white" }}>➜</Text>
+              </Pressable>
+            )}
+            {pictureIndex < 2 && (
+              <Pressable
+                onPress={() => setPictureIndex(pictureIndex + 1)}
+                style={styles.arrowRight}
+              >
+                <Text style={{ color: "white" }}>➜</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+        <View style={styles.picBotBar}>
+          {pictures.map((picture, index) => {
+            return (
+              <Text
+                key={index}
+                style={index === pictureIndex ? styles.selectedDot : styles.dot}
+              >
                 •
               </Text>
-            })
-            }
+            );
+          })}
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.itemTitleView}>
+            <Text style={styles.titleText}>ALQUILER - DEPARTAMENTO</Text>
           </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.itemTitleView}>
-              <Text style={styles.titleText}>ALQUILER - DEPARTAMENTO</Text>
-            </View>
-            <View style={styles.horizontalContainer}>
-              <View style={{ flexDirection: "row" }}>
 
+          <View
+            style={[
+              styles.horizontalContainer,
+              { justifyContent: "flex-start", paddingVertical: 10 },
+            ]}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${
+              additionaldetails ? additionaldetails?.price : "0"
+            } + `}</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${
+              additionaldetails ? additionaldetails?.expensePrice : "0"
+            } `}</Text>
+          </View>
+
+          <View
+            style={[
+              styles.horizontalContainer,
+              {
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+                alignContent: "space-between",
+              },
+            ]}
+          >
+            {/* Metros totales */}
+            {details && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="ruler"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text>
+                  M2 Total{" "}
+                  {parseInt(details?.coveredMeters) +
+                    parseInt(details?.semiUncoveredMeters) / 2}
+                </Text>
               </View>
-            </View>
-          </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.itemTitleView}>
-              <Text style={styles.titleText}>DESCRIPCION</Text>
-            </View>
-            <View>
-              <Text>
-                {/*{description}*/}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.itemTitleView}>
-              <Text style={styles.titleText}>AMENITIES</Text>
-            </View>
+            )}
 
-          </View>
-          <View style={styles.contentContainer}>
-            <View style={styles.itemTitleView}>
-              <Text style={styles.titleText}>INMOBILIARIA</Text>
-            </View>
-            <View style={styles.horizontalContainer}>
-              <View style={{ flexDirection: "row" }}>
-                <Text>Inmobiliaria fantasia   </Text>
-                <MaterialIcons name="star" size={20} color="yellow" />
-                  <Text>   4.3   </Text>
-                <TouchableOpacity onPress={handleExperience}>
-                  <MaterialIcons name="info" size={24} color={Theme.colors.clear.PRIMARY} />
-                </TouchableOpacity>
+            {/* cubiertos */}
+            {details?.coveredMeters > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="resize"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  M2 Cubiertos: {details?.coveredMeters}
+                </Text>
               </View>
+            )}
+
+            {/* Descubiertos */}
+            {details?.uncoveredMeters > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <Feather
+                  name="sun"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }} t>
+                  M2 Descubiertos: {details?.uncoveredMeters}
+                </Text>
+              </View>
+            )}
+
+            {/* Semicubiertos */}
+            {details?.semiUncoveredMeters > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <FontAwesome5
+                  name="umbrella-beach"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  M2 Semicubiertos: {details?.semiUncoveredMeters}
+                </Text>
+              </View>
+            )}
+
+            {/* Ambientes */}
+            {details?.rooms > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="door-open"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Ambientes: {details?.rooms}
+                </Text>
+              </View>
+            )}
+
+            {/* Baños*/}
+            {details?.bathrooms > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="bathtub"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Baños: {details?.bathrooms}
+                </Text>
+              </View>
+            )}
+            {/* Dormitorios*/}
+            {details?.rooms > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="bed-outline"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Dormitorios: {details?.rooms - details?.bathrooms}
+                </Text>
+              </View>
+            )}
+            {/* Antiguedad*/}
+            {details?.howOld > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="calendar"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Antiguedad: {details?.howOld}
+                </Text>
+              </View>
+            )}
+            {/* Balcon */}
+            {details?.balcony === "Yes" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="balcony"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>Balcon</Text>
+              </View>
+            )}
+            {/* Terraza */}
+            {details?.terrace === "Yes" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <AntDesign
+                  name="totop"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>Terraza</Text>
+              </View>
+            )}
+            {/* Trunk*/}
+            {details?.trunk === "Yes" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="treasure-chest"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Baulera: {details?.trunk}
+                </Text>
+              </View>
+            )}
+            {/*garage*/}
+            {details?.garage > "0" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="car"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Garage: {details?.garage}
+                </Text>
+              </View>
+            )}
+            {/*Orientacion*/}
+            {details?.orientation !== "" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <Entypo
+                  name="compass"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Orientacion: {details?.orientation}
+                </Text>
+              </View>
+            )}
+            {/*Tipo de propiedad*/}
+            {details?.propertyType !== "" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <MaterialIcons
+                  name="house"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>
+                  Tipo: {details?.propertyType}
+                </Text>
+              </View>
+            )}
+            {/*Frente*/}
+            {details?.front !== "" && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  paddingRight: 20,
+                }}
+              >
+                <FontAwesome5
+                  name="tree"
+                  size={24}
+                  color={Theme.colors.clear.BLACK}
+                />
+                <Text style={{ paddingLeft: 5 }}>Frente: {details?.front}</Text>
+              </View>
+            )}
+          </View>
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.itemTitleView}>
+            <Text style={styles.titleText}>DESCRIPCION</Text>
+          </View>
+          <View>
+            <Text>{additionaldetails?.description}</Text>
+          </View>
+        </View>
+        <View style={styles.contentContainer}>
+          <View style={styles.itemTitleView}>
+            <Text style={styles.titleText}>AMENITIES</Text>
+          </View>
+          <View>
+            {additionaldetails?.amenities.map((amenity, index) => {
+              return (
+                <View
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                  key={index}
+                >
+                  <FontAwesome
+                    name="check-circle-o"
+                    size={24}
+                    color={Theme.colors.clear.SECONDARY}
+                  />
+                  <Text style={{ paddingLeft: 5 }}>{amenity}</Text>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+        <View style={[styles.contentContainer, { marginBottom: 30 }]}>
+          <View style={styles.itemTitleView}>
+            <Text style={styles.titleText}>INMOBILIARIA</Text>
+          </View>
+          <View style={[styles.horizontalContainer]}>
+            <Text>Inmobiliaria fantasia </Text>
+            <View style={{ flexDirection: "row" }}>
+              <MaterialIcons name="star" size={20} color="#F6BE00" />
+              <Text> 4.3 </Text>
+              <TouchableOpacity onPress={handleExperience}>
+                <MaterialIcons
+                  name="info"
+                  size={24}
+                  color={Theme.colors.clear.PRIMARY}
+                />
+              </TouchableOpacity>
             </View>
           </View>
+        </View>
 
+        {!realStateId && (
           <View style={styles.buttons}>
-            <TouchableOpacity style={[styles.blueButton]} onPress={handleContact}>
+            <TouchableOpacity
+              style={[styles.blueButton]}
+              onPress={handleContact}
+            >
               <Text style={[styles.realStateText]}>Contactar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.blueButton]} onPress={handleReserve}>
-              <Text style={[styles.realStateText]}>Reservar</Text>
+            <TouchableOpacity
+              style={[styles.blueButton]}
+              onPress={handleReserve}
+            >
+              <Text style={[styles.realStateText]}>Reservar </Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    )
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -284,14 +619,14 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   picture: {
-    objectFit: 'cover',
+    objectFit: "cover",
     height: 225,
     width: "98%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   selectedPictureView: {
-    display: 'flex',
+    display: "flex",
   },
   addIcon: {
     width: "30%",
@@ -342,10 +677,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     width: "98%",
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row'
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
 
   buttonText: {
@@ -354,13 +689,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   buttons: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 20,
     marginTop: 20,
-    marginLeft: 20,
+    paddingBottom: 10,
   },
   blueButton: {
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     padding: 10,
     paddingHorizontal: 30,
     marginHorizontal: 20,
@@ -369,45 +704,45 @@ const styles = StyleSheet.create({
   },
   arrowRight: {
     fontSize: 20,
-    position: 'absolute',
-    top: '50%',
-    right: '5%',
-    color: 'white',
-    backgroundColor: '#47A7FF',
+    position: "absolute",
+    top: "50%",
+    right: "5%",
+    color: "white",
+    backgroundColor: "#47A7FF",
     borderRadius: 10,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
   },
   dot: {
     fontSize: 40,
-    color: 'white',
-    opacity: .5,
-    paddingHorizontal: 10
+    color: "white",
+    opacity: 0.5,
+    paddingHorizontal: 10,
   },
   selectedDot: {
     fontSize: 40,
-    color: 'white',
+    color: "white",
     paddingHorizontal: 10,
     // opacity: 0
   },
   arrowLeft: {
     fontSize: 20,
-    position: 'absolute',
-    top: '50%',
-    left: '5%',
-    color: 'white',
-    backgroundColor: '#47A7FF',
+    position: "absolute",
+    top: "50%",
+    left: "5%",
+    color: "white",
+    backgroundColor: "#47A7FF",
     borderRadius: 10,
     paddingHorizontal: 5,
-    transform: [{ scaleX: -1 }]
+    transform: [{ scaleX: -1 }],
   },
   deleteButton: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 200,
     marginTop: 20,
     justifyContent: "center",
   },
   redButton: {
-    backgroundColor: '#F6F6F6',
+    backgroundColor: "#F6F6F6",
     padding: 10,
     paddingHorizontal: 30,
     marginHorizontal: 20,
@@ -415,7 +750,7 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   realStateText: {
-    color: 'white',
+    color: "white",
     fontSize: 14,
   },
 });
