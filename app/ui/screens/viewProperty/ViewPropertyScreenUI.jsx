@@ -215,7 +215,7 @@ const ViewPropertyScreenUI = () => {
           <View
             style={[
               styles.horizontalContainer,
-              { justifyContent: "flex-start", paddingVertical: 10 },
+              { justifyContent: "flex-start", paddingVertical: 10,marginLeft:7 },
             ]}
           >
             <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${
@@ -233,6 +233,7 @@ const ViewPropertyScreenUI = () => {
                 justifyContent: "flex-start",
                 flexWrap: "wrap",
                 alignContent: "space-between",
+                marginLeft:7,
               },
             ]}
           >
@@ -528,7 +529,7 @@ const ViewPropertyScreenUI = () => {
           <View style={styles.itemTitleView}>
             <Text style={styles.titleText}>DESCRIPCION</Text>
           </View>
-          <View>
+          <View style={{marginLeft:7}}>
             <Text>{additionaldetails?.description}</Text>
           </View>
         </View>
@@ -536,7 +537,7 @@ const ViewPropertyScreenUI = () => {
           <View style={styles.itemTitleView}>
             <Text style={styles.titleText}>AMENITIES</Text>
           </View>
-          <View>
+          <View style={{marginLeft:7}}>
             {additionaldetails?.amenities.map((amenity, index) => {
               return (
                 <View
@@ -559,7 +560,7 @@ const ViewPropertyScreenUI = () => {
             <Text style={styles.titleText}>INMOBILIARIA</Text>
           </View>
           <View style={[styles.horizontalContainer]}>
-            <Text>Inmobiliaria fantasia </Text>
+            <Text style={{marginLeft:7}}>Inmobiliaria fantasia </Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialIcons name="star" size={20} color="#F6BE00" />
               <Text> 4.3 </Text>

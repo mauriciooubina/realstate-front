@@ -18,7 +18,6 @@ const UserSearchScreenUI = () => {
   const navigation = useNavigation();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const propertyData = {};
-
   const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
   const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
   const contador = [{ label: '0', value: '0' }, { label: '1', value: '1' }, { label: '2', value: '2' },
@@ -57,9 +56,7 @@ const UserSearchScreenUI = () => {
 
   const handleSearch = async (values) => {
     setIsLoggingIn(true);
-    console.log(values);
     try {
-      {
       const amenities = ["quincho", "pileta", "jacuzzi", "sum", "sauna", "gym", "mas"];
       for (const val of amenities) {
         if (values.hasOwnProperty(val) && values[val] === true) {
@@ -67,9 +64,9 @@ const UserSearchScreenUI = () => {
           delete values.val;
         }
       }
+      console.log('values: ', values);
       const response = await propertiesWS.search(values);
       console.log('responseMedia: ', responseMedia);
-    }
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);

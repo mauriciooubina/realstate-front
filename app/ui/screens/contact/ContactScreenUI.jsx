@@ -10,12 +10,14 @@ import Profile from '../../../../assets/images/photo.png';
 import { Rating } from "react-native-stock-star-rating";
 import CustomTextInput from "../../../components/TextInputComponent";
 import { FontAwesome } from '@expo/vector-icons';
+import SendModal from '../../../components/SendModal';
 
 export default ContactScreenUI = () => {
     const navigation = useNavigation();
     //const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
+    const [showSend, setShowSend] = useState(false);
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
@@ -35,31 +37,21 @@ export default ContactScreenUI = () => {
         fetchRealEstateData();
     }, []);
 
-    const handleSaveProfile = async () => {
-        setSaveEdit(true);
-        try {
-            {/*}
-            await realstateWS.put(realEstateData);
-            const id = await AsyncStorage.getItem('realstateId');
-            navigation.navigate(NavigatorConstants.USER_STACK.HOME);
-            */}
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setSaveEdit(false);
-        }
-    }
     const realstateData = {
         fantasyName: 'Inmobiliaria Prueba',
         qualification: 4,
     };
 
     const handleSendQuestion = () => {
+        setShowSend(true);
+    };
 
+    const closeSendQuestion = () => {
+        setShowSend(false);
     };
 
     const handleVisit = () => {
-
+        navigation.navigate(NavigatorConstants.USER_STACK.VISIT);
     };
 
     return (
@@ -107,7 +99,10 @@ export default ContactScreenUI = () => {
                     </View>
                 </View>
             )
-            }
+            } 
+            {showSend && (
+                <SendModal closeSend={closeSendQuestion} />
+              )}
         </View >
     );
 };

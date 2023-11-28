@@ -6,19 +6,26 @@ import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
 
 export default UserHomeScreenUI = () => {
   const navigation = useNavigation();
   const [properties, setProperties] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [location, setLocation] = useState(null);
 
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      {
-        const response = await propertiesWS.getAll();
-        setProperties(response.data);
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status === 'granted') {
+        let location = await Location.getCurrentPositionAsync({});
+        console.log('Latitud:', location.coords.latitude);
+        console.log('Longitud:', location.coords.longitude);
+        setLocation(location.coords);
       }
+      const response = await propertiesWS.getAll();
+      setProperties(response.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -36,8 +43,9 @@ export default UserHomeScreenUI = () => {
     fetchProperties();
   }, []);
 
-  const handleViewProperty = async ({ property }) => {
-    await AsyncStorage.setItem('propertyId', `${property.id}`);
+  const handleViewProperty = async (id) => {
+    console.log('property: ', id);
+    await AsyncStorage.setItem('propertyId', `${id}`);
     navigation.navigate(NavigatorConstants.USER_STACK.VIEW);
   };
 
@@ -50,7 +58,7 @@ export default UserHomeScreenUI = () => {
       ) : properties ? (
         properties.length > 0 ? (
           properties.map((property, index) => (
-            <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
+            <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property.id)}>
               <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
               <View style={styles.textContainer}>
                 {

@@ -28,6 +28,7 @@ const USER_STACK = {
   CONTACT: "CONTACT",
   RESERVE: "RESERVE",
   EXPERIENCE: "EXPERIENCE",
+  VISIT: "VISIT",
 };
 export default {
   NAVIGATOR,

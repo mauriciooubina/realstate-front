@@ -6,6 +6,7 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
@@ -25,7 +26,9 @@ export default LoginScreenUI = () => {
     const handleLogin = async () => {
         setIsLoggingIn(true);
         try {
-            const response = await loginWS.login(null,null, 'ya29.a0AfB_byBpP2wCB3ON5iqo_IyTpcqJcHNoRifDkQkf0i1QnUQbusK8nM4EPaxFoQ8rXG7St6zLNnfnUvn4lJHl_nyfVyh1kXqavbWplG54PDWGlv81-upXH2mIExzs1-1GU13_2bcRR0Ol_SbkDQo2jyyI7hNErQZLtlX0aCgYKAV4SARESFQHGX2MiaBlp22eaebvxxoX3r2k0YA0171');
+            const googleToken = 'ya29.a0AfB_byC0ht4cHkBLY8MZKJg_PUeZRbnUOUmSQNGGB-jBHaJG52-5bDglUsbPjOMJy2rpbDH_r3QbAt9J_EvOzrJwfW7kMxhuD0mPohojI-PUJaqCC6vTgG_IQPWBIl_IHlM8ioi5FncE8N5H0_qtet6IovGbP646uolVaCgYKARgSARESFQHGX2MiqretUtJka6CZJenjKWaWIw0171';
+            await AsyncStorage.setItem('googleToken', `${googleToken}`);
+            const response = await loginWS.login(null,null, googleToken);
             //await AsyncStorage.setItem('user', `${response.data}`);
             navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } catch (error) {

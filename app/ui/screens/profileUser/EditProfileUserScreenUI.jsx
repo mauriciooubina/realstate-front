@@ -17,10 +17,9 @@ export default EditProfileUserScreenUI = () => {
     useEffect(() => {
         const fetchUserData = async () => {
           try {
-            {
-            const response = await loginWS.login(null,null, 'ya29.a0AfB_byBpP2wCB3ON5iqo_IyTpcqJcHNoRifDkQkf0i1QnUQbusK8nM4EPaxFoQ8rXG7St6zLNnfnUvn4lJHl_nyfVyh1kXqavbWplG54PDWGlv81-upXH2mIExzs1-1GU13_2bcRR0Ol_SbkDQo2jyyI7hNErQZLtlX0aCgYKAV4SARESFQHGX2MiaBlp22eaebvxxoX3r2k0YA0171');
+            const googleToken = await AsyncStorage.getItem('googleToken');
+            const response = await loginWS.login(null,null, googleToken);
             setUserData(response.data);
-            }
           } catch (error) {
             console.log(error);
           } finally {

@@ -11,6 +11,7 @@ import ViewPropertyScreen from "../ui/screens/viewProperty/ViewPropertyScreen";
 import ContactScreen from "../ui/screens/contact/ContactScreen";
 import ReserveScreen from "../ui/screens/reserve/ReserveScreen";
 import ExperienceScreen from "../ui/screens/experience/ExperienceScreen";
+import VisitScreen from '../ui/screens/visit/VisitScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -135,6 +136,22 @@ export default UserStackNavigator = () => {
       <Stack.Screen
         name={NavigatorConstant.USER_STACK.EXPERIENCE}
         component={ExperienceScreen}
+        options={{
+          headerTitle: "My Home",
+          headerTitleAlign: "center",
+          presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={NavigatorConstant.USER_STACK.VISIT}
+        component={VisitScreen}
         options={{
           headerTitle: "My Home",
           headerTitleAlign: "center",
