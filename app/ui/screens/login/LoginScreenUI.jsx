@@ -8,13 +8,15 @@ import aliveWS from '../../../networking/api/endpoints/aliveWS';
 import React, {useEffect, useState} from 'react';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
+// Android client id: 273233604040-uh81p8hpsfncn92j4dor2tj7jlve5d32.apps.googleusercontent.com
+
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [showLoading, setShowLoading] = useState(true);
 
     GoogleSignin.configure({
         scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-        webClientId: '273233604040-c0isuh8nd68gb0i6pgdf9i2ssgq3ckj8.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+        webClientId: '273233604040-qj1fvtk8887njppd2bt4i0ned9qbhfne.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
         offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
 
@@ -22,7 +24,8 @@ export default LoginScreenUI = () => {
         try {
           await GoogleSignin.hasPlayServices();
           const userInfo = await GoogleSignin.signIn();
-          console.log(JSON.stringify({ userInfo }));
+          console.log({ userInfo });
+          navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
@@ -57,7 +60,7 @@ export default LoginScreenUI = () => {
                     <Text style={styles.title}>Bienvenido</Text>
                     
                     {/* onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.GOOGLE_LOGIN)} */}
-                    <TouchableOpacity style={styles.googleButton} onPress={() => signIn()}>
+                    <TouchableOpacity style={styles.googleButton} onPress={signIn}>
                         <Image source={Google} style={styles.googleImage} />
                         <Text style={styles.googleText}>Iniciar sesión con Google</Text>
                     </TouchableOpacity>
