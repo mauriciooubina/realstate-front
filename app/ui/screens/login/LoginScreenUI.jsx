@@ -22,10 +22,10 @@ export default LoginScreenUI = () => {
 
     const signIn = async () => {
         try {
-          await GoogleSignin.hasPlayServices();
-          const userInfo = await GoogleSignin.signIn();
-          console.log({ userInfo });
-          navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            await loginWS.login(null, null, userInfo.idToken);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
           if (error.code === statusCodes.SIGN_IN_CANCELLED) {
             // user cancelled the login flow
