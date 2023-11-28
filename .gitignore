@@ -33,3 +33,6 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# File: android sdk route
+realstate-front/android/local.properties
