@@ -4,22 +4,21 @@ import { Text, View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity, Ima
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
-import userWS from '../../../networking/api/endpoints/userWS';
+import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default UserHomeScreenUI = () => {
   const navigation = useNavigation();
-  //const [properties, setProperties] = useState(null);
+  const [properties, setProperties] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const fetchProperties = async () => {
     setLoading(true);
     try {
-      {/*}
-            const id = await AsyncStorage.getItem('realstateId');
-            const response = await userWS.getProperties(id);
-            setProperties(response.data);
-            */}
+      {
+        const response = await propertiesWS.getAll();
+        setProperties(response.data);
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -38,105 +37,9 @@ export default UserHomeScreenUI = () => {
   }, []);
 
   const handleViewProperty = async ({ property }) => {
-    //await AsyncStorage.setItem('propertyId', `${property.id}`);
+    await AsyncStorage.setItem('propertyId', `${property.id}`);
     navigation.navigate(NavigatorConstants.USER_STACK.VIEW);
   };
-  const properties = [
-    {
-      id: 1,
-      address: {
-        street: 'Calle Principal',
-        streetNumber: '123',
-        floor: '2',
-        department: 'A',
-        locality: 'Ciudad',
-      },
-      additionaldetails: {
-        urlPhoto1: 'https://example.com/photo1.jpg',
-        state: 'Buen Estado',
-        price: 200000,
-      },
-      details: {
-        rooms: 3,
-      },
-    },
-    {
-      id: 2,
-      address: {
-        street: 'Avenida Secundaria',
-        streetNumber: '456',
-        floor: null,
-        department: null,
-        locality: 'Otra Ciudad',
-      },
-      additionaldetails: {
-        urlPhoto1: 'https://example.com/photo2.jpg',
-        state: 'Nuevo',
-        price: 300000,
-      },
-      details: {
-        rooms: 4,
-      },
-    },
-    {
-      id: 3,
-      address: {
-        street: 'Calle Tranquila',
-        streetNumber: '789',
-        floor: '1',
-        department: 'B',
-        locality: 'Otra Ciudad',
-      },
-      additionaldetails: {
-        urlPhoto1: 'https://example.com/photo3.jpg',
-        state: 'Para Renovar',
-        price: 150000,
-      },
-      details: {
-        rooms: 2,
-      },
-    },
-  ];
-
-  const favProperties = [
-    {
-      id: 4,
-      address: {
-        street: 'Avenida Favorita',
-        streetNumber: '101',
-        floor: null,
-        department: null,
-        locality: 'Ciudad de Ensueño',
-      },
-      additionaldetails: {
-        urlPhoto1: 'https://example.com/photo4.jpg',
-        state: 'Excelente',
-        price: 400000,
-      },
-      details: {
-        rooms: 5,
-      },
-    },
-    {
-      id: 5,
-      address: {
-        street: 'Calle de Sueños',
-        streetNumber: '202',
-        floor: '3',
-        department: 'C',
-        locality: 'Ciudad de Ensueño',
-      },
-      additionaldetails: {
-        urlPhoto1: 'https://example.com/photo5.jpg',
-        state: 'Impecable',
-        price: 250000,
-      },
-      details: {
-        rooms: 3,
-      },
-    },
-  ];
-
 
   return (
     <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
@@ -147,22 +50,22 @@ export default UserHomeScreenUI = () => {
       ) : properties ? (
         properties.length > 0 ? (
           properties.map((property, index) => (
-              <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
-                <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
-                <View style={styles.textContainer}>
-                  {
-                    <Text style={styles.text}>
-                      {property.address.floor === null && property.address.department === null
-                        ? `${property.address.street} ${property.address.streetNumber}`
-                        : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
-                    </Text>
-                  }
+            <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
+              <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
+              <View style={styles.textContainer}>
+                {
+                  <Text style={styles.text}>
+                    {property.address.floor === null && property.address.department === null
+                      ? `${property.address.street} ${property.address.streetNumber}`
+                      : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
+                  </Text>
+                }
 
-                  <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
-                  <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
-                  <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>
-                </View>
-              </TouchableOpacity>
+                <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
+                <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
+                <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>
+              </View>
+            </TouchableOpacity>
           ))
         ) : (
           <View style={styles.loadingContainer}>

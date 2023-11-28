@@ -1,4 +1,4 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextInput,ActivityIndicator} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
@@ -12,6 +12,7 @@ export default LoginScreenUI = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showError, setShowError] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -22,13 +23,15 @@ export default LoginScreenUI = () => {
       );
 
     const handleLogin = async () => {
-        console.log(email);
-        console.log(password);
+        setIsLoggingIn(true);
         try {
-            const response = await loginWS.login(email, password, 'token');
-            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            const response = await loginWS.login(null,null, 'ya29.a0AfB_byBpP2wCB3ON5iqo_IyTpcqJcHNoRifDkQkf0i1QnUQbusK8nM4EPaxFoQ8rXG7St6zLNnfnUvn4lJHl_nyfVyh1kXqavbWplG54PDWGlv81-upXH2mIExzs1-1GU13_2bcRR0Ol_SbkDQo2jyyI7hNErQZLtlX0aCgYKAV4SARESFQHGX2MiaBlp22eaebvxxoX3r2k0YA0171');
+            //await AsyncStorage.setItem('user', `${response.data}`);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } catch (error) {
             alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        } finally {
+            setIsLoggingIn(false);
         }
       };
 
@@ -70,8 +73,12 @@ export default LoginScreenUI = () => {
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => {handleLogin}}>
-                            <Text style={[styles.realStateText]}>Continuar</Text>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleLogin}>
+                        {isLoggingIn ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.realStateText]}>Continuar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>

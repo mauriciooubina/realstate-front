@@ -34,6 +34,11 @@ export default propertiesWS = {
       },
     });
   },
+  search: async function (data) {
+    return await api.get("/properties/propertyBy", {
+      ...data,
+    });
+  },
   getCalles: async function (calle) {
     return await api.get(`/properties/calles/${calle}`);
   },

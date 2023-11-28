@@ -10,27 +10,26 @@ import Profile from '../../../../assets/images/photo.png';
 
 export default EditProfileUserScreenUI = () => {
     const navigation = useNavigation();
-    //const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
 
     useEffect(() => {
-        const fetchRealEstateData = async () => {
-            try {
-                {/*
-                const id = await AsyncStorage.getItem('realstateId');
-                const response = await realstateWS.get(id);
-                setRealEstateData(response.data[0]);
-                */}
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
+        const fetchUserData = async () => {
+          try {
+            {
+            const response = await loginWS.login(null,null, 'ya29.a0AfB_byBpP2wCB3ON5iqo_IyTpcqJcHNoRifDkQkf0i1QnUQbusK8nM4EPaxFoQ8rXG7St6zLNnfnUvn4lJHl_nyfVyh1kXqavbWplG54PDWGlv81-upXH2mIExzs1-1GU13_2bcRR0Ol_SbkDQo2jyyI7hNErQZLtlX0aCgYKAV4SARESFQHGX2MiaBlp22eaebvxxoX3r2k0YA0171');
+            setUserData(response.data);
             }
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
+          }
         };
-
-        fetchRealEstateData();
-    }, []);
+    
+        fetchUserData();
+      }, []);
 
     const handleSaveProfile = async () => {
         setSaveEdit(true);
@@ -47,11 +46,6 @@ export default EditProfileUserScreenUI = () => {
             setSaveEdit(false);
         }
     }
-    const userData = {
-        picture: 'https://example.com/photo1.jpg',
-        email: 'camila_ponce@hotmail.com',
-        name: 'Camila Ponce',
-    };
 
     return (
         <View style={styles.container}>
@@ -65,7 +59,7 @@ export default EditProfileUserScreenUI = () => {
                         <Text style={styles.title}>Editar Perfil</Text>
                     </View>
                     <View style={{alignItems: 'center'} }>
-                        <Image source={Profile} style={{ width: 150, height: 140, marginTop: 20 }} />
+                        <Image source={{uri:userData.profilePictureUrl}} style={styles.profilePic} />
                     </View>
                     <View style={{ width: '100%', height: '8%' }}>
                     </View>
@@ -85,7 +79,7 @@ export default EditProfileUserScreenUI = () => {
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <TextInput
                                 style={styles.input}
-                                value={userData.name}
+                                value={userData.fullName}
                                 onChangeText={(text) => setRealEstateData((prevData) => ({
                                     ...prevData,
                                     name: text,
@@ -179,6 +173,10 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '13%'
     },
-
-
+    profilePic: { 
+        width: '40%', 
+        height: 140, 
+        marginTop: 20,
+        borderRadius: 100
+    },
 });

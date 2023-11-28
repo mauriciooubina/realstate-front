@@ -19,20 +19,12 @@ import loginWS from "../networking/api/endpoints/loginWS";
 import NavigatorConstants from "../navigation/NavigatorConstants";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import userWS from "../networking/api/endpoints/userWS";
-import Profile from '../../assets/images/photo.png';
 
 export default function BurgerUserModal({ onClose }) {
   const navigation = useNavigation();
   const [showDeleteAccount, setShowDeleteAccount] = useState(false);
   const [loading, setLoading] = useState(true);
-  //const [userData, setUserData] = useState('');
-
-  const userData = {
-    picture: 'https://example.com/photo1.jpg',
-    email: 'camila_ponce@hotmail.com',
-    name: 'Camila Ponce',
-  };
+  const [userData, setUserData] = useState('');
 
   const openDeleteAccount = () => {
     setShowDeleteAccount(true);
@@ -45,11 +37,10 @@ export default function BurgerUserModal({ onClose }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        {/*
-        const id = await AsyncStorage.getItem("userId");
-        const response = await userWS.get(id);
-        setUserData(response.data[0]);
-        */}
+        {
+        const response = await loginWS.login(null,null, 'ya29.a0AfB_byBpP2wCB3ON5iqo_IyTpcqJcHNoRifDkQkf0i1QnUQbusK8nM4EPaxFoQ8rXG7St6zLNnfnUvn4lJHl_nyfVyh1kXqavbWplG54PDWGlv81-upXH2mIExzs1-1GU13_2bcRR0Ol_SbkDQo2jyyI7hNErQZLtlX0aCgYKAV4SARESFQHGX2MiaBlp22eaebvxxoX3r2k0YA0171');
+        setUserData(response.data);
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -62,7 +53,7 @@ export default function BurgerUserModal({ onClose }) {
 
   const handleLogout = async () => {
     try {
-      //const response = await loginWS.logout();
+      const response = await loginWS.logout();
       navigation.navigate(NavigatorConstants.NAVIGATOR.LOGIN);
     } catch (error) {
       console.log(error);
@@ -92,8 +83,11 @@ export default function BurgerUserModal({ onClose }) {
             <View style={[styles.modal2Container]}>
               <View style={styles.inmobTitleBox}>
               <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-                <Image source={Profile} style={{ width: 65, height: 60, marginTop:5 }} />
-                <Text style={styles.inmobTitle}>{userData.name}</Text>
+                <Image source={{uri:userData.profilePictureUrl}} style={styles.profilePic} />
+                <View>
+                  <Text style={styles.inmobTitle}>{userData.fullName.split(' ')[0]}</Text>
+                  <Text style={styles.inmobTitle}>{userData.fullName.split(' ')[1]}</Text>
+                </View>
               </View>
                 <Text style={styles.userSubtitle}>{userData.email}</Text>
               </View>
@@ -355,5 +349,12 @@ const styles = StyleSheet.create({
   siText: {
     color: Theme.colors.clear.PRIMARY,
     fontSize: 14,
+  },
+  profilePic: { 
+    width: '26%', 
+    height: '80%', 
+    marginTop: 10,
+    marginLeft: 10,
+    borderRadius: 30
   },
 });

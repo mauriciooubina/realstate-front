@@ -17,21 +17,7 @@ import NavigatorConstants from "../../../navigation/NavigatorConstants";
 const UserSearchScreenUI = () => {
   const navigation = useNavigation();
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const propertyData = {
-    "barrio": null,
-    "localidad": null,
-    "provincia": null,
-    "realStateId": null,
-    "propertyType": null,
-    "rooms": null,
-    "environments": null,
-    "bathrooms": null,
-    "howOld": null,
-    "amenities": [],
-    "state": null,
-    "price": null,
-    "salePrice": null,
-  };
+  const propertyData = {};
 
   const moneda = [{ label: '$', value: '$' }, { label: 'u$d', value: 'u$d' },];
   const tipoPropiedad = [{ label: 'Casa', value: 'Casa' }, { label: 'Departamento', value: 'Departamento' }, { label: 'Ph', value: 'Ph' },];
@@ -71,11 +57,9 @@ const UserSearchScreenUI = () => {
 
   const handleSearch = async (values) => {
     setIsLoggingIn(true);
-    {/*if ("money" in values) {
-      delete values.money;
-    }*/}
+    console.log(values);
     try {
-      {/*
+      {
       const amenities = ["quincho", "pileta", "jacuzzi", "sum", "sauna", "gym", "mas"];
       for (const val of amenities) {
         if (values.hasOwnProperty(val) && values[val] === true) {
@@ -83,12 +67,9 @@ const UserSearchScreenUI = () => {
           delete values.val;
         }
       }
-      const id = await AsyncStorage.getItem('realstateId');
-      values.realStateId = id;
-      const response = await propertiesWS.post(values);
-      const responseMedia = await propertiesWS.postMedia(pictures, response.data.id);
+      const response = await propertiesWS.search(values);
       console.log('responseMedia: ', responseMedia);
-    */}
+    }
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
@@ -108,7 +89,7 @@ const UserSearchScreenUI = () => {
   };
 
   return (
-    <Formik initialValues={propertyData} onSubmit={values => handleCreateProperty(values)}>
+    <Formik initialValues={propertyData} onSubmit={values => handleSearch(values)}>
       {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
         <SafeAreaView style={styles.container}>
           <ScrollView style={styles.scrollView}>
@@ -149,10 +130,26 @@ const UserSearchScreenUI = () => {
             <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <DropdownComponent title="PrecioMin." data={provincias} name="preciomin" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <CustomTextInput
+                      title="PrecioMin"
+                      name="lowerPriceRange"
+                      placeholder="Ingrese precio mínimo"
+                      onChange={(text) => {
+                        handleChange("lowerPriceRange", text);
+                        setFieldValue("lowerPriceRange", text);
+                      }}
+                    />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="PrecioMax." data={provincias} name="preciomax" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                  <CustomTextInput
+                      title="PrecioMax"
+                      name="topPriceRange"
+                      placeholder="Ingrese precio máximo"
+                      onChange={(text) => {
+                        handleChange("topPriceRange", text);
+                        setFieldValue("topPriceRange", text);
+                      }}
+                    />
                   </View>
                 </View>
             </View>
@@ -165,7 +162,6 @@ const UserSearchScreenUI = () => {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
                     <DropdownComponent title="Minimo" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-
                   </View>
                   <View style={{ flex: 1 }}>
                     <DropdownComponent title="Maximo" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
@@ -179,7 +175,7 @@ const UserSearchScreenUI = () => {
 
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Baños" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Baños" data={contador} name="bathrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>
@@ -191,10 +187,10 @@ const UserSearchScreenUI = () => {
             <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <DropdownComponent title="Minimo" data={provincias} name="preciomin" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Minimo" data={contador} name="antigmin" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Maximo" data={provincias} name="preciomax" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Maximo" data={contador} name="antigmax" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>
@@ -255,7 +251,7 @@ const UserSearchScreenUI = () => {
             </View>
             
             <View style={styles.buttons}>
-              <TouchableOpacity style={[styles.blueButton]} onPress={handleSearch}>
+              <TouchableOpacity style={[styles.blueButton]} onPress={handleSubmit}>
                 {isLoggingIn ? (
                   <ActivityIndicator color="#fff" />
                 ) : (
