@@ -6,20 +6,12 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useEffect, useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
-import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showError, setShowError] = useState(false);
-
-    useEffect(() => {
-        GoogleSignin.configure({
-          webClientId: "273233604040-c0isuh8nd68gb0i6pgdf9i2ssgq3ckj8.apps.googleusercontent.com", 
-          offlineAccess: true
-        });
-    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -28,27 +20,6 @@ export default LoginScreenUI = () => {
           setShowError(false);
         }, [])
       );
-
-      const GoogleSingUp = async () => {
-        try {
-          await GoogleSignin.hasPlayServices();
-          await GoogleSignin.signIn().then(result => { console.log(result) });
-        } catch (error) {
-          if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-            // user cancelled the login flow
-            alert('User cancelled the login flow !');
-          } else if (error.code === statusCodes.IN_PROGRESS) {
-            alert('Signin in progress');
-            // operation (f.e. sign in) is in progress already
-          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-            alert('Google play services not available or outdated !');
-            // play services not available or outdated
-          } else {
-            console.log(error)
-          }
-        }
-    };
-    
 
     const handleLogin = async () => {
         console.log(email);
@@ -67,7 +38,7 @@ export default LoginScreenUI = () => {
                 <View style={styles.graySquare}>
                     <View style={styles.google}> 
                         <Image source={Google} style={styles.googleImage} />
-                        <Text style={styles.googleText} onPress={GoogleSingUp}>Iniciar sesión con Google</Text>
+                        <Text style={styles.googleText} >Iniciar sesión con Google</Text>
                     </View>
 
                     <View style={styles.lineSeparator} /> 
