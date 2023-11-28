@@ -34,6 +34,7 @@ export default LoginScreenUI = () => {
           } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
             // play services not available or outdated
           } else {
+            console.log({error});
             // some other error happened
           }
         }
