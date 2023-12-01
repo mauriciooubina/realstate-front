@@ -26,10 +26,10 @@ export default LoginScreenUI = () => {
     const handleLogin = async () => {
         setIsLoggingIn(true);
         try {
-            const googleToken = 'ya29.a0AfB_byClmbtUKe12JhNFZ8fVuVP29LRxtEiF2ErSme2vJoevyonYPcwRnZ6H8TX2uekNDPrSk0Zu8OQ_00aPlylShFedn7B70Bvidb1qL_TBUsgwlEnqB6ST6jKBpHki_BWMq9Jb1KFSNtgoM7Ww46_ZqEQc1AQlX8P9aCgYKAfISARESFQHGX2MiUMYLuJ24C_S-8McTg2S4TA0171';
+            const googleToken = 'ya29.a0AfB_byA9QpHN237xmX8YVR3d-FDfKN6B3B7sVLBWjznJCOe9erKgqsmtFQ2HpEsmoQIo26j_7Qcu1m1TTdbQtNkvnFsDjrjtJqylQH0NCiCKqx6asFAUHyrtg-Q_ZkzKXTciFtG2gHD4VYITo7mpYwL9CtFbDKXm5q-VaCgYKAYsSARESFQHGX2MiOCuaiCsujhIX40K6YEaRvQ0171';
             await AsyncStorage.setItem('googleToken', `${googleToken}`);
             const response = await loginWS.login(null,null, googleToken);
-            //await AsyncStorage.setItem('user', `${response.data}`);
+            await AsyncStorage.setItem('userId', `${response.data.id}`);
             navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } catch (error) {
             alert('Email o contraseña incorrectas. Inténtalo de nuevo.');

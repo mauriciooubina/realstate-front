@@ -19,6 +19,7 @@ import { Formik } from "formik";
 import Theme from "../../styles/Theme";
 import * as ImagePicker from "expo-image-picker";
 import propertiesWS from "../../../networking/api/endpoints/propertiesWS";
+import realstateWS from "../../../networking/api/endpoints/realstateWS";
 import DeleteProperty from "../../../components/DeleteProperty";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NavigatorConstants from "../../../navigation/NavigatorConstants";
@@ -38,7 +39,7 @@ const ViewPropertyScreenUI = () => {
   const [pictureIndex, setPictureIndex] = useState(0);
   const [property, setProperty] = useState();
   const [realStateId, setRealStateId] = useState();
-
+  const [realStateData, setRealStateData] = useState();
   const { additionaldetails, address, details } = property || {};
 
   const [pictures, setPictures] = useState([]);
@@ -50,6 +51,10 @@ const ViewPropertyScreenUI = () => {
       setRealStateId(realStateId);
       const response = await propertiesWS.get(id);
       setProperty(response.data[0]);
+      const contactId = response.data[0].realStateId.id;
+      await AsyncStorage.setItem('contactId', `${contactId}`);
+      const res = await realstateWS.get(response.data[0].realStateId.id);
+      setRealStateData(res.data[0])
       setPictures([
         response.data[0].additionaldetails?.urlPhoto1,
         response.data[0].additionaldetails?.urlPhoto2,
@@ -67,7 +72,8 @@ const ViewPropertyScreenUI = () => {
     fetchPropertyData();
   }, []);
 
-  const handleContact = () => {
+  const handleContact = async () => {
+    await AsyncStorage.setItem('contactId', `${property.realStateId.id}`);
     navigation.navigate(NavigatorConstants.USER_STACK.CONTACT);
   };
 
@@ -560,10 +566,10 @@ const ViewPropertyScreenUI = () => {
             <Text style={styles.titleText}>INMOBILIARIA</Text>
           </View>
           <View style={[styles.horizontalContainer]}>
-            <Text style={{marginLeft:7}}>Inmobiliaria fantasia </Text>
+            <Text style={{marginLeft:7}}>{realStateData.fantasyName}</Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialIcons name="star" size={20} color="#F6BE00" />
-              <Text> 4.3 </Text>
+              <Text> {!realStateData.qualification ? 0 : realStateData.qualification}</Text>
               <TouchableOpacity onPress={handleExperience}>
                 <MaterialIcons
                   name="info"
@@ -579,14 +585,12 @@ const ViewPropertyScreenUI = () => {
           <View style={styles.buttons}>
             <TouchableOpacity
               style={[styles.blueButton]}
-              onPress={handleContact}
-            >
+              onPress={handleContact}>
               <Text style={[styles.realStateText]}>Contactar</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.blueButton]}
-              onPress={handleReserve}
-            >
+              onPress={handleReserve}>
               <Text style={[styles.realStateText]}>Reservar </Text>
             </TouchableOpacity>
           </View>

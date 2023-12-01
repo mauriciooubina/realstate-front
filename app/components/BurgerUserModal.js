@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Rating } from "react-native-stock-star-rating";
 import DeleteAccount from "./DeleteAccount";
 import loginWS from "../networking/api/endpoints/loginWS";
+import userWS from "../networking/api/endpoints/userWS";
 import NavigatorConstants from "../navigation/NavigatorConstants";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -37,9 +38,10 @@ export default function BurgerUserModal({ onClose }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const googleToken = await AsyncStorage.getItem('googleToken');
-        const response = await loginWS.login(null,null, googleToken);
-        setUserData(response.data);
+        const id = await AsyncStorage.getItem('userId');
+        console.log('userId: ', id);
+        const response = await userWS.get(id);
+        setUserData(response.data[0]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -53,6 +55,7 @@ export default function BurgerUserModal({ onClose }) {
   const handleLogout = async () => {
     try {
       const response = await loginWS.logout();
+      AsyncStorage.clear();
       navigation.navigate(NavigatorConstants.NAVIGATOR.LOGIN);
     } catch (error) {
       console.log(error);

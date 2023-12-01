@@ -1,5 +1,5 @@
 import Theme from '../../styles/Theme';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
 import { Text, View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
@@ -10,7 +10,7 @@ import * as Location from 'expo-location';
 
 export default UserHomeScreenUI = () => {
   const navigation = useNavigation();
-  const [properties, setProperties] = useState(null);
+  const [properties, setProperties] = useState();
   const [loading, setLoading] = useState(true);
   const [location, setLocation] = useState(null);
 

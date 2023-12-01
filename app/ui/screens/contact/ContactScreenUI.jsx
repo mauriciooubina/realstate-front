@@ -14,7 +14,7 @@ import SendModal from '../../../components/SendModal';
 
 export default ContactScreenUI = () => {
     const navigation = useNavigation();
-    //const [userData, setUserData] = useState(null);
+    const [realStateData, setRealStateData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
     const [showSend, setShowSend] = useState(false);
@@ -22,11 +22,9 @@ export default ContactScreenUI = () => {
     useEffect(() => {
         const fetchRealEstateData = async () => {
             try {
-                {/*
-                const id = await AsyncStorage.getItem('realstateId');
+                const id = await AsyncStorage.getItem('contactId');
                 const response = await realstateWS.get(id);
-                setRealEstateData(response.data[0]);
-                */}
+                setRealStateData(response.data[0]);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -36,12 +34,6 @@ export default ContactScreenUI = () => {
 
         fetchRealEstateData();
     }, []);
-
-    const realstateData = {
-        fantasyName: 'Inmobiliaria Prueba',
-        qualification: 4,
-    };
-
     const handleSendQuestion = () => {
         setShowSend(true);
     };
@@ -61,10 +53,10 @@ export default ContactScreenUI = () => {
             ) : (
                 <View style={{ width: '90%', height: '90%' }}>
                     <View style={{ alignItems: 'left' }}>
-                        <Text style={styles.title}>{realstateData.fantasyName}</Text>
+                        <Text style={styles.title}>{realStateData.fantasyName}</Text>
                     </View>
                     <View style={styles.stars}>
-                        <Rating maxStars={5} size={35} stars={realstateData.qualification} />
+                        <Rating maxStars={5} size={35} stars={!realStateData.qualification ? 0 : realStateData.qualification} />
                     </View>
 
                     <View style={styles.contentContainer}>

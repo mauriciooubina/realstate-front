@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import realstateWS from '../../../networking/api/endpoints/realstateWS';
+import userWS from '../../../networking/api/endpoints/userWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../../../assets/images/photo.png';
 
@@ -16,29 +16,26 @@ export default EditProfileUserScreenUI = () => {
 
     useEffect(() => {
         const fetchUserData = async () => {
-          try {
-            const googleToken = await AsyncStorage.getItem('googleToken');
-            const response = await loginWS.login(null,null, googleToken);
-            setUserData(response.data);
-          } catch (error) {
-            console.log(error);
-          } finally {
-            setLoading(false);
-          }
+            try {
+                const id = await AsyncStorage.getItem('userId');
+                const response = await userWS.get(id);
+                setUserData(response.data[0]);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
         };
-    
+
         fetchUserData();
-      }, []);
+    }, []);
 
     const handleSaveProfile = async () => {
         setSaveEdit(true);
         try {
-            {/*}
-            console.log(password);
-            await realstateWS.put(realEstateData);
-            const id = await AsyncStorage.getItem('realstateId');
+            const id = await AsyncStorage.getItem('userId');
+            await userWS.put(userData);
             navigation.navigate(NavigatorConstants.USER_STACK.HOME);
-            */}
         } catch (error) {
             console.log(error);
         } finally {
@@ -57,8 +54,8 @@ export default EditProfileUserScreenUI = () => {
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.title}>Editar Perfil</Text>
                     </View>
-                    <View style={{alignItems: 'center'} }>
-                        <Image source={{uri:userData.profilePictureUrl}} style={styles.profilePic} />
+                    <View style={{ alignItems: 'center' }}>
+                        <Image source={{ uri: userData.profilePictureUrl }} style={styles.profilePic} />
                     </View>
                     <View style={{ width: '100%', height: '8%' }}>
                     </View>
@@ -88,7 +85,7 @@ export default EditProfileUserScreenUI = () => {
                         </View>
 
                         <View style={styles.buttons}>
-                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.navigate(NavigatorConstants.USER_STACK.HOME)}>
                                 <Text style={[styles.realStateText]}>  Cancelar  </Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
@@ -172,9 +169,9 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '13%'
     },
-    profilePic: { 
-        width: '40%', 
-        height: 140, 
+    profilePic: {
+        width: '40%',
+        height: 140,
         marginTop: 20,
         borderRadius: 100
     },
