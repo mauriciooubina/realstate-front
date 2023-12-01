@@ -37,7 +37,7 @@ export default propertiesWS = {
     });
   },
   search: async function (data) {
-    return await api.get("/properties/propertyBy", {
+    return await api.post("/properties/propertyBy", {
       ...data,
     });
   },

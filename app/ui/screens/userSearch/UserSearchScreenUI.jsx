@@ -64,9 +64,8 @@ const UserSearchScreenUI = () => {
           delete values.val;
         }
       }
-      console.log('values: ', values);
       const response = await propertiesWS.search(values);
-      console.log('responseMedia: ', responseMedia);
+      await AsyncStorage.setItem('search', JSON.stringify(response.data));
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);

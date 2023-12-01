@@ -17,15 +17,22 @@ export default UserHomeScreenUI = () => {
   const fetchProperties = async () => {
     setLoading(true);
     try {
+      {/*
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status === 'granted') {
         let location = await Location.getCurrentPositionAsync({});
         console.log('Latitud:', location.coords.latitude);
         console.log('Longitud:', location.coords.longitude);
         setLocation(location.coords);
+      */}
+      const search = await AsyncStorage.getItem('search');
+      console.log('search: ', search);
+      if (!search) {
+        const response = await propertiesWS.getAll();
+        setProperties(response.data);
+      } else {
+        setProperties(JSON.parse(search));
       }
-      const response = await propertiesWS.getAll();
-      setProperties(response.data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -68,7 +75,6 @@ export default UserHomeScreenUI = () => {
                       : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
                   </Text>
                 }
-
                 <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
                 <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
                 <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>

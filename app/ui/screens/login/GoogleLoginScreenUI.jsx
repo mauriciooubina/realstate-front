@@ -26,7 +26,7 @@ export default LoginScreenUI = () => {
     const handleLogin = async () => {
         setIsLoggingIn(true);
         try {
-            const googleToken = 'ya29.a0AfB_byA9QpHN237xmX8YVR3d-FDfKN6B3B7sVLBWjznJCOe9erKgqsmtFQ2HpEsmoQIo26j_7Qcu1m1TTdbQtNkvnFsDjrjtJqylQH0NCiCKqx6asFAUHyrtg-Q_ZkzKXTciFtG2gHD4VYITo7mpYwL9CtFbDKXm5q-VaCgYKAYsSARESFQHGX2MiOCuaiCsujhIX40K6YEaRvQ0171';
+            const googleToken = 'ya29.a0AfB_byCqNqb0CRWcs0jMDfaSxfpt_0d8wct26v73eGD4sT91YipKyg7OszjhcHi7bDhbaK_ca6Abbz_CwBV0TJbAAGDZxrl5ysEHIUtna2G8mlgK3TA5FQxTkPgqEWx9USfqaq4KEFzZ_7qd2k1etnuHuVj3saaEh5CJaCgYKAUQSARESFQHGX2Mi1judfz4arIn0hBWMd_qABg0171';
             await AsyncStorage.setItem('googleToken', `${googleToken}`);
             const response = await loginWS.login(null,null, googleToken);
             await AsyncStorage.setItem('userId', `${response.data.id}`);
