@@ -1,5 +1,4 @@
-import api from "../Api";
-import * as DocumentPicker from "expo-document-picker";
+import api, { getClientToken } from '../Api';
 
 export default propertiesWS = {
   post: async function (data) {
@@ -26,11 +25,14 @@ export default propertiesWS = {
         type: `image/${valor.substring(pos2 + 1)}`,
       });
     });
+    const token = getClientToken();
+    console.log('token: ', token);
     return await fetch('https://backend-myhome.onrender.com/myhome/properties/loadMultimedia', {
       method: 'POST',
       body: formData,
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization': `${token}`
       },
     });
   },
