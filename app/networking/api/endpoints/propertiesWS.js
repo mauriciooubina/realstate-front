@@ -47,6 +47,12 @@ export default propertiesWS = {
       ...data,
     });
   },
+  getNearest: async function (location) {
+    return await api.post("/properties/nearestProperties", {
+      latitude: location.latitude,
+      longitude: location.longitude,
+    });
+  },
   getCalles: async function (calle) {
     return await api.get(`/properties/calles/${calle}`);
   },
