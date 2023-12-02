@@ -8,11 +8,11 @@ export default propertiesWS = {
   },
   postMedia: async function (media, propertyId) {
     const token = getClientToken();
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "multipart/form-data");
-    myHeaders.append("Authorization", `${token}`);
+    const myHeaders = {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `${token}`,
+    };
     const formData = new FormData();
-    console.log("idProperty: ", propertyId);
     const json = {
       idProperty: propertyId,
     };
@@ -29,17 +29,14 @@ export default propertiesWS = {
         type: `image/${valor.substring(pos2 + 1)}`,
       });
     });
-
-    console.log("formData: ", formData);
     try {
-      const res = await fetch(
-        "https://backend-myhome.onrender.com/myhome/properties/loadMultimedia",
+      const res = await api.post(
+        "/properties/loadMultimedia",
+        formData,
         {
-          method: "POST",
-          body: formData,
           headers: myHeaders,
         }
-      );
+      );      
       console.log('response: ', res);
     } catch (error) {
       console.log('error: ',error);
