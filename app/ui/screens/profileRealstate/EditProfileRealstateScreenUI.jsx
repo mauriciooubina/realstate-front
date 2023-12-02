@@ -1,19 +1,25 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Modal } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import realstateWS from '../../../networking/api/endpoints/realstateWS';
 import passwordRecoveryWS from '../../../networking/api/endpoints/passwordRecoveryWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+
+import { Rating } from "react-native-stock-star-rating";
 export default EditProfileRealstateScreenUI = () => {
     const navigation = useNavigation();
     const [realEstateData, setRealEstateData] = useState(null);
     const [password, setPassword] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
+    const [rating, setRating] = useState(0);
+
+
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
@@ -48,7 +54,11 @@ export default EditProfileRealstateScreenUI = () => {
         }
     }
 
+
+
+
     return (
+
         <View style={styles.container}>
             {loading ? (
                 <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
@@ -113,6 +123,7 @@ export default EditProfileRealstateScreenUI = () => {
             )}
         </View>
     );
+
 };
 
 
@@ -127,15 +138,18 @@ const styles = StyleSheet.create({
     },
     title: {
         fontWeight: '400',
-        fontSize: 30,
+        //   fontSize: 30,
+        fontSize: 40,
         color: Theme.colors.clear.PRIMARY,
         marginBottom: '',
+        textAlign: 'center',
     },
     inputText: {
         color: '#000',
         fontSize: 14,
         fontWeight: '400',
     },
+
     input: {
         width: '95%',
         backgroundColor: '#F6F6F6',
@@ -145,6 +159,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 0.5,
     },
+
     blueButton: {
         display: 'flex',
         padding: 5,

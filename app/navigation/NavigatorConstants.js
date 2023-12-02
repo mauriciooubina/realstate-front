@@ -27,6 +27,8 @@ const NAVIGATOR = {
     CONTACT: 'CONTACT',
     RESERVE: 'RESERVE',
     EXPERIENCE: 'EXPERIENCE',
+    PAY: 'PAY',
+    SUCCESS: 'SUCCESS',
    };
    export default {
     NAVIGATOR,

@@ -7,7 +7,9 @@ import UserStackNavigator from './UserStackNavigator';
 import { StatusBar, setStatusBarHidden } from 'expo-status-bar';
 import Theme from "../../app/ui/styles/Theme";
 
+
 const Stack = createNativeStackNavigator();
+
 
 export default RootNavigator = () => {
  return (
