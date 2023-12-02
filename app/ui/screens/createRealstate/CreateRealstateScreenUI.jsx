@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: 200,
+    marginBottom: 70,
     marginTop: 20,
     marginLeft: 20,
   },

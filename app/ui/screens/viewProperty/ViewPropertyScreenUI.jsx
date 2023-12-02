@@ -82,7 +82,11 @@ const ViewPropertyScreenUI = () => {
   };
 
   const handleExperience = () => {
-    navigation.navigate(NavigatorConstants.USER_STACK.EXPERIENCE);
+    if(realStateId){
+      navigation.navigate(NavigatorConstants.REALSTATE_STACK.EXPERIENCE);
+    } else{
+      navigation.navigate(NavigatorConstants.USER_STACK.EXPERIENCE);
+    }
   };
 
   const handleFavs = () => {
@@ -568,12 +572,12 @@ const ViewPropertyScreenUI = () => {
           <View style={[styles.horizontalContainer]}>
             <Text style={{marginLeft:7}}>{realStateData.fantasyName}</Text>
             <View style={{ flexDirection: "row" }}>
-              <MaterialIcons name="star" size={20} color="#F6BE00" />
-              <Text> {!realStateData.qualification ? 0 : realStateData.qualification}</Text>
-              <TouchableOpacity onPress={handleExperience}>
+              <MaterialIcons name="star" size={22} color="#F6BE00" />
+              <Text style={{fontSize: 16}}> {!realStateData.qualification ? 0 : realStateData.qualification}</Text>
+              <TouchableOpacity style={{marginLeft:4}} onPress={handleExperience}>
                 <MaterialIcons
                   name="info"
-                  size={24}
+                  size={22}
                   color={Theme.colors.clear.PRIMARY}
                 />
               </TouchableOpacity>

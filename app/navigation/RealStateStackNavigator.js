@@ -8,6 +8,7 @@ import { LeftHeaderIcon, RightHeaderIcon } from "../components/HeaderComponent";
 import React from "react";
 import EditProfileRealstateScreen from "../ui/screens/profileRealstate/EditProfileRealstateScreen";
 import ViewPropertyScreen from "../ui/screens/viewProperty/ViewPropertyScreen";
+import ExperienceScreen from "../ui/screens/experience/ExperienceScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -85,6 +86,22 @@ export default RealStateStackNavigator = () => {
         component={ViewPropertyScreen}
         options={{
           headerTitle: "View",
+          headerTitleAlign: "center",
+          presentation: "containedModal",
+          headerStyle: {
+            backgroundColor: Theme.colors.clear.SECONDARY,
+          },
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontSize: 24,
+          },
+        }}
+      />
+      <Stack.Screen
+        name={NavigatorConstant.REALSTATE_STACK.EXPERIENCE}
+        component={ExperienceScreen}
+        options={{
+          headerTitle: "My Home",
           headerTitleAlign: "center",
           presentation: "containedModal",
           headerStyle: {

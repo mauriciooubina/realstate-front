@@ -18,6 +18,7 @@ const REALSTATE_STACK = {
   CREATE: "CREATE",
   EDIT: "EDIT",
   VIEW: "VIEW",
+  EXPERIENCE: "EXPERIENCE",
 };
 const USER_STACK = {
   HOME: "HOME",
