@@ -1,4 +1,4 @@
-import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextInput} from 'react-native';
+import { ImageBackground, Text, View, StyleSheet, TouchableOpacity, Image, TextInput,ActivityIndicator} from 'react-native';
 import Login from '../../../../assets/images/login.png';
 import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
@@ -6,14 +6,14 @@ import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
-import { Link } from 'react-router-dom';
-import ReserveScreenUI from '../reserve/ReserveScreenUI';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showError, setShowError] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
 
     useFocusEffect(
         React.useCallback(() => {
@@ -24,13 +24,17 @@ export default LoginScreenUI = () => {
       );
 
     const handleLogin = async () => {
-        console.log(email);
-        console.log(password);
+        setIsLoggingIn(true);
         try {
-            const response = await loginWS.login(email, password, 'token');
-            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            const googleToken = 'ya29.a0AfB_byCqNqb0CRWcs0jMDfaSxfpt_0d8wct26v73eGD4sT91YipKyg7OszjhcHi7bDhbaK_ca6Abbz_CwBV0TJbAAGDZxrl5ysEHIUtna2G8mlgK3TA5FQxTkPgqEWx9USfqaq4KEFzZ_7qd2k1etnuHuVj3saaEh5CJaCgYKAUQSARESFQHGX2Mi1judfz4arIn0hBWMd_qABg0171';
+            await AsyncStorage.setItem('googleToken', `${googleToken}`);
+            const response = await loginWS.login(null,null, googleToken);
+            await AsyncStorage.setItem('userId', `${response.data.id}`);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } catch (error) {
             alert('Email o contraseña incorrectas. Inténtalo de nuevo.');
+        } finally {
+            setIsLoggingIn(false);
         }
       };
 
@@ -72,8 +76,12 @@ export default LoginScreenUI = () => {
                         <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
                             <Text style={[styles.realStateText]}>Cancelar</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.blueButton]} onPress={() => {handleLogin}}>
-                            <Text style={[styles.realStateText]}>Continuar</Text>
+                        <TouchableOpacity style={[styles.blueButton]} onPress={handleLogin}>
+                        {isLoggingIn ? (
+                                <ActivityIndicator color="#fff" />
+                            ) : (
+                                <Text style={[styles.realStateText]}>Continuar</Text>
+                            )}
                         </TouchableOpacity>
                     </View>
                 </View>

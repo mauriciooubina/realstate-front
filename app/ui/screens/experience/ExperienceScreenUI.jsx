@@ -1,66 +1,40 @@
 import Theme from '../../styles/Theme';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import NavigatorConstants from '../../../navigation/NavigatorConstants';
+import { Text, View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import realstateWS from '../../../networking/api/endpoints/realstateWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Profile from '../../../../assets/images/photo.png';
 import { Rating } from "react-native-stock-star-rating";
-import CustomTextInput from "../../../components/TextInputComponent";
-import { FontAwesome } from '@expo/vector-icons';
 
 export default ExperienceScreenUI = () => {
     const navigation = useNavigation();
-    //const [userData, setUserData] = useState(null);
+    const [realStateData, setRealStateData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [saveEdit, setSaveEdit] = useState(false);
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
             try {
-                {/*
-                const id = await AsyncStorage.getItem('realstateId');
+                const id = await AsyncStorage.getItem('contactId');
                 const response = await realstateWS.get(id);
-                setRealEstateData(response.data[0]);
-                */}
+                setRealStateData(response.data[0]);
             } catch (error) {
                 console.log(error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchRealEstateData();
     }, []);
 
-    const handleSaveProfile = async () => {
-        setSaveEdit(true);
-        try {
-            {/*}
-            await realstateWS.put(realEstateData);
-            const id = await AsyncStorage.getItem('realstateId');
-            navigation.navigate(NavigatorConstants.USER_STACK.HOME);
-            */}
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setSaveEdit(false);
-        }
-    }
-    const realstateData = {
-        fantasyName: 'Inmobiliaria Prueba',
-        qualification: 4,
-    };
-
-    const handleSendQuestion = () => {
-
-    };
-
-    const handleVisit = () => {
-
-    };
+    const comments = [{
+        username: 'mauri',
+        comment: 'muy buena casa me encanto es increible super comoda para familia o amigos'
+    },
+    {
+        username: 'tato',
+        comment: 'muy buenaaaaaaaaaaaaaaaaassssssssssssaaaaaaaaaaa'
+    },
+    ]
 
     return (
         <View style={styles.container}>
@@ -69,15 +43,26 @@ export default ExperienceScreenUI = () => {
             ) : (
                 <View style={{ width: '90%', height: '90%' }}>
                     <View style={{ alignItems: 'left' }}>
-                        <Text style={styles.title}>{realstateData.fantasyName}</Text>
+                        <Text style={styles.title}>{realStateData.fantasyName}</Text>
                     </View>
                     <View style={styles.stars}>
-                        <Rating maxStars={5} size={35} stars={realstateData.qualification} />
+                        <Rating maxStars={5} size={35} stars={!realStateData.qualification ? 0 : realStateData.qualification} />
                     </View>
 
                     <View style={{ alignItems: 'left' }}>
-                        <Text style={styles.title}>EXPERIENCIAS</Text>
+                        <Text style={styles.title}>Experiencias</Text>
                     </View>
+                    <ScrollView style={{  marginTop: 10}}>
+                        {comments.map((comment, index) => (
+                            <View key={index} style={{ width: '90%'}}>
+                                <View style={{ flexDirection: 'row'}}>
+                                    <Text style={{textDecorationLine: 'underline', fontSize:17 }}>{`${comment.username}: `}</Text>
+                                    <Text style={ {fontSize:17} }>{comment.comment}</Text>
+                                </View>
+                                <View style={{ borderBottomWidth: 0.6, borderBottomColor: 'grey', marginVertical: 15 }} />
+                            </View>
+                        ))}
+                    </ScrollView>
                 </View>
             )}
         </View >

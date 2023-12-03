@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import NavigatorConstant from "./NavigatorConstants";
 import Theme from "../ui/styles/Theme";
 import UserHomeScreen from "../ui/screens/user/UserHomeScreen";
@@ -7,12 +7,11 @@ import EditProfileUserScreen from "../ui/screens/profileUser/EditProfileUserScre
 import UserSearchScreen from "../ui/screens/userSearch/UserSearchScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LeftUserIcon, RightSearchIcon } from "../components/HeaderComponent";
-import ViewPropertyScreen from '../ui/screens/viewProperty/ViewPropertyScreen';
-import ContactScreen from '../ui/screens/contact/ContactScreen';
-import ReserveScreen from '../ui/screens/reserve/ReserveScreen';
-import ExperienceScreen from '../ui/screens/experience/ExperienceScreen';
-import PaymentScreen from '../ui/screens/reserve/PaymentScreen';
-import SuccessScreen from '../ui/screens/reserve/SuccessScreen';
+import ViewPropertyScreen from "../ui/screens/viewProperty/ViewPropertyScreen";
+import ContactScreen from "../ui/screens/contact/ContactScreen";
+import ReserveScreen from "../ui/screens/reserve/ReserveScreen";
+import ExperienceScreen from "../ui/screens/experience/ExperienceScreen";
+import VisitScreen from '../ui/screens/visit/VisitScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,8 +32,8 @@ export default UserStackNavigator = () => {
           headerTitleStyle: {
             fontSize: 24,
           },
-          headerLeft: () => <LeftUserIcon/>,
-          headerRight: () => <RightSearchIcon/>,
+          headerLeft: () => <LeftUserIcon />,
+          headerRight: () => <RightSearchIcon />,
         }}
       />
       <Stack.Screen
@@ -51,7 +50,7 @@ export default UserStackNavigator = () => {
           headerTitleStyle: {
             fontSize: 24,
           },
-          headerRight: () => <RightSearchIcon/>,
+          headerRight: () => <RightSearchIcon />,
         }}
       />
       <Stack.Screen
@@ -150,25 +149,9 @@ export default UserStackNavigator = () => {
           },
         }}
       />
-       <Stack.Screen
-        name={NavigatorConstant.USER_STACK.PAY}
-        component={PaymentScreen}
-        options={{
-          headerTitle: "My Home",
-          headerTitleAlign: "center",
-          presentation: "containedModal",
-          headerStyle: {
-            backgroundColor: Theme.colors.clear.SECONDARY,
-          },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontSize: 24,
-          },
-        }}
-      />
-       <Stack.Screen
-        name={NavigatorConstant.USER_STACK.SUCCESS}
-        component={SuccessScreen}
+      <Stack.Screen
+        name={NavigatorConstant.USER_STACK.VISIT}
+        component={VisitScreen}
         options={{
           headerTitle: "My Home",
           headerTitleAlign: "center",

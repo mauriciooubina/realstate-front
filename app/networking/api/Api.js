@@ -20,6 +20,10 @@ function cleanClientToken() {
     axios.defaults.headers.common = {};
 }
 
-export {setClientToken, cleanClientToken};
+function getClientToken() {
+    return axios.defaults.headers.common.Authorization;
+}
+
+export {setClientToken, cleanClientToken, getClientToken};
 
 export default axios ;
