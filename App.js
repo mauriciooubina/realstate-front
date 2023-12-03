@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import RootNavigator from './app/navigation/RootNavigator.js';
+import NetInfo from '@react-native-community/netinfo';
+import {ToastAndroid } from 'react-native';
 
 import NetInfo from '@react-native-community/netinfo';
 import {ToastAndroid } from 'react-native';
