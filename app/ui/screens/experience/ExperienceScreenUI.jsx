@@ -9,6 +9,7 @@ import { Rating } from "react-native-stock-star-rating";
 export default ExperienceScreenUI = () => {
     const navigation = useNavigation();
     const [realStateData, setRealStateData] = useState(null);
+    const [comments, setComments] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -17,6 +18,8 @@ export default ExperienceScreenUI = () => {
                 const id = await AsyncStorage.getItem('contactId');
                 const response = await realstateWS.get(id);
                 setRealStateData(response.data[0]);
+                const res = await realstateWS.getComment(id);
+                setComments(res.data)
             } catch (error) {
                 console.log(error);
             } finally {
@@ -25,16 +28,6 @@ export default ExperienceScreenUI = () => {
         };
         fetchRealEstateData();
     }, []);
-
-    const comments = [{
-        username: 'mauri',
-        comment: 'muy buena casa me encanto es increible super comoda para familia o amigos'
-    },
-    {
-        username: 'tato',
-        comment: 'muy buenaaaaaaaaaaaaaaaaassssssssssssaaaaaaaaaaa'
-    },
-    ]
 
     return (
         <View style={styles.container}>
@@ -52,17 +45,29 @@ export default ExperienceScreenUI = () => {
                     <View style={{ alignItems: 'left' }}>
                         <Text style={styles.title}>Experiencias</Text>
                     </View>
-                    <ScrollView style={{  marginTop: 10}}>
-                        {comments.map((comment, index) => (
-                            <View key={index} style={{ width: '90%'}}>
-                                <View style={{ flexDirection: 'row'}}>
-                                    <Text style={{textDecorationLine: 'underline', fontSize:17 }}>{`${comment.username}: `}</Text>
-                                    <Text style={ {fontSize:17} }>{comment.comment}</Text>
+                    <ScrollView style={{ marginTop: 10 }}>
+                        {comments ? (
+                            comments.map((comment, index) => (
+                                <View key={index} style={{ width: '90%' }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Text style={{ textDecorationLine: 'underline', fontSize: 17 }}>
+                                            {`${comment.username}: `}
+                                        </Text>
+                                        <Text style={{ fontSize: 17 }}>{comment.comment}</Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            borderBottomWidth: 0.6,
+                                            borderBottomColor: 'grey',
+                                            marginVertical: 15,
+                                        }}
+                                    />
                                 </View>
-                                <View style={{ borderBottomWidth: 0.6, borderBottomColor: 'grey', marginVertical: 15 }} />
-                            </View>
-                        ))}
+                            ))
+                        ) : (null
+                        )}
                     </ScrollView>
+
                 </View>
             )}
         </View >

@@ -42,6 +42,18 @@ export default propertiesWS = {
       console.log('error: ',error);
     }
   },
+  getFav: async function (id) {
+    return await api.get(`/properties/${id}/favorites`);
+  },
+  addFav: async function (userId, propertyId) {
+    return await api.post("/properties/addFavorites", {
+      userId,
+      propertyId,
+  });
+  },
+  deleteFav: async function (userId, propertyId) {
+    return await api.delete(`/properties/${userId}/${propertyId}/deleteFavorites`);
+  },
   search: async function (data) {
     return await api.post("/properties/propertyBy", {
       ...data,

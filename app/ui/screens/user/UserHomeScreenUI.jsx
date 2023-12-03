@@ -85,7 +85,7 @@ export default UserHomeScreenUI = () => {
           <View style={styles.loadingContainer}>
             <View style={styles.noPropertiesBox}>
               <View style={styles.noProperties}>
-                <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
+                <Text style={styles.title}>Actualmente no existen propiedades</Text>
               </View>
             </View>
           </View>

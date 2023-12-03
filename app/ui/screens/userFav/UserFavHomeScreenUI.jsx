@@ -4,23 +4,21 @@ import { Text, View, ScrollView, SafeAreaView, StyleSheet, TouchableOpacity, Ima
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import React, { useState, useEffect } from 'react';
-import userWS from '../../../networking/api/endpoints/userWS';
+import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Rating } from "react-native-stock-star-rating";
 
 export default UserFavHomeScreenUI = () => {
     const navigation = useNavigation();
     const [loading, setLoading] = useState(false);
-    //const [favProperties, setFavProperties] = useState(null);
+    const [favProperties, setFavProperties] = useState(null);
 
     const fetchProperties = async () => {
         setLoading(true);
         try {
-            {/*
-            const id = await AsyncStorage.getItem('realstateId');
-            const response = await userWS.getProperties(id);
+            const id = await AsyncStorage.getItem('userId');
+            const response = await propertiesWS.getFav(id);
             setFavProperties(response.data);
-            */}
         } catch (error) {
             console.log(error);
         } finally {
@@ -38,50 +36,12 @@ export default UserFavHomeScreenUI = () => {
         fetchProperties();
     }, []);
 
-    const handleViewProperty = async ({ property }) => {
-        //await AsyncStorage.setItem('propertyId', `${property.id}`);
+    const handleViewProperty = async (id) => {
+        console.log('property: ', id);
+        await AsyncStorage.setItem('propertyId', `${id}`);
         navigation.navigate(NavigatorConstants.USER_STACK.VIEW);
-    };
-
-    const favProperties = [
-        {
-            id: 4,
-            address: {
-                street: 'Avenida Favorita',
-                streetNumber: '101',
-                floor: null,
-                department: null,
-                locality: 'Ciudad de Ensueño',
-            },
-            additionaldetails: {
-                urlPhoto1: 'https://example.com/photo4.jpg',
-                state: 'Excelente',
-                price: 400000,
-            },
-            details: {
-                rooms: 5,
-            },
-        },
-        {
-            id: 5,
-            address: {
-                street: 'Calle de Sueños',
-                streetNumber: '202',
-                floor: '3',
-                department: 'C',
-                locality: 'Ciudad de Ensueño',
-            },
-            additionaldetails: {
-                urlPhoto1: 'https://example.com/photo5.jpg',
-                state: 'Impecable',
-                price: 250000,
-            },
-            details: {
-                rooms: 3,
-            },
-        },
-    ];
-
+      };
+    
 
     return (
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
@@ -92,7 +52,7 @@ export default UserFavHomeScreenUI = () => {
             ) : favProperties ? (
                 favProperties.length > 0 ? (
                     favProperties.map((property, index) => (
-                        <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property)}>
+                        <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property.id)}>
                             <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
                             <View style={styles.textContainer}>
                                 {
@@ -118,7 +78,7 @@ export default UserFavHomeScreenUI = () => {
                     <View style={styles.loadingContainer}>
                         <View style={styles.noPropertiesBox}>
                             <View style={styles.noProperties}>
-                                <Text style={styles.title}>Actualmente no tienes propiedades asociadas ¡Comienza creando una!</Text>
+                                <Text style={styles.title}>Actualmente no tienes propiedades en favoritos ¡Comienza agregando una!</Text>
                             </View>
                         </View>
                     </View>

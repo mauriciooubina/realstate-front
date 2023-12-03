@@ -25,7 +25,7 @@ const UserSearchScreenUI = () => {
   const [provincias, setProvincias] = useState([]);
   const [localidades, setLocalidades] = useState([]);
   const [barrios, setBarrios] = useState([]);
-  const [comprarBtn, setComprarBtn] = useState(true);
+  const [comprarBtn, setComprarBtn] = useState(false);
   const [alquilarBtn, setAlquilarBtn] = useState(false);
 
   useEffect(() => {
@@ -93,13 +93,19 @@ const UserSearchScreenUI = () => {
             <View style={styles.buttonsProperty}>
             <TouchableOpacity
                 style={comprarBtn ? styles.selectedButton : styles.unselectedButton}
-                onPress={() => handleSelectedButton('Comprar')}>
+                onPress={() => {
+                  handleSelectedButton('Comprar')
+                  setFieldValue("accion", 'Comprar');
+                  }}>
                   <Text style={comprarBtn ? styles.selectedText : styles.unselectedText}> Comprar</Text>
                 </TouchableOpacity>
                 <View style={{ marginHorizontal: 30 }}></View>
                 <TouchableOpacity
                 style={alquilarBtn ? styles.selectedButton : styles.unselectedButton}
-                onPress={() => handleSelectedButton('Alquilar')}>
+                onPress={() => {
+                  handleSelectedButton('Alquilar')
+                  setFieldValue("accion", 'Alquilar');
+                  }}>
                   <Text style={alquilarBtn ? styles.selectedText : styles.unselectedText}> Alquilar</Text>
                 </TouchableOpacity>
             </View>
@@ -115,9 +121,9 @@ const UserSearchScreenUI = () => {
               <View style={styles.itemTitleView}>
                 <Text style={styles.titleText}>DIRECCIÓN</Text>
               </View>
-              <DropdownComponent title="Provincia" data={provincias} name="provincia" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent title="Provincia" data={provincias} name="province" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
               <DropdownComponent title="Localidad" data={localidades} name="localidad" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
-              <DropdownComponent title="Barrio" data={barrios} name="barrio" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+              <DropdownComponent title="Barrio" data={barrios} name="district" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
             </View>
 
             <View style={styles.itemTitleView}>
@@ -130,6 +136,7 @@ const UserSearchScreenUI = () => {
                       title="PrecioMin"
                       name="lowerPriceRange"
                       placeholder="Ingrese precio mínimo"
+                      type="numeric"
                       onChange={(text) => {
                         handleChange("lowerPriceRange", text);
                         setFieldValue("lowerPriceRange", text);
@@ -141,6 +148,7 @@ const UserSearchScreenUI = () => {
                       title="PrecioMax"
                       name="topPriceRange"
                       placeholder="Ingrese precio máximo"
+                      type="numeric"
                       onChange={(text) => {
                         handleChange("topPriceRange", text);
                         setFieldValue("topPriceRange", text);
@@ -157,17 +165,17 @@ const UserSearchScreenUI = () => {
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <DropdownComponent title="Minimo" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Minimo" data={contador} name="lowerEnvironmentsRange" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Maximo" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Maximo" data={contador} name="topEnvironmentsRange" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>
               <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <DropdownComponent title="Cuartos" data={contador} name="rooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Cuartos" data={contador} name="bedrooms" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
 
                   </View>
                   <View style={{ flex: 1 }}>
@@ -183,10 +191,10 @@ const UserSearchScreenUI = () => {
             <View style={styles.horizontalContainer}>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ flex: 1, paddingRight: 10 }}>
-                    <DropdownComponent title="Minimo" data={contador} name="antigmin" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Minimo" data={contador} name="lowerHowOldRange" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <DropdownComponent title="Maximo" data={contador} name="antigmax" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
+                    <DropdownComponent title="Maximo" data={contador} name="topHowOldRange" onChange={(fieldName, selectedValue) => { setFieldValue(fieldName, selectedValue.value); }} />
                   </View>
                 </View>
               </View>

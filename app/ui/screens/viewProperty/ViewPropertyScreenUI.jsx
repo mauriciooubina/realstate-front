@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
   Share,
+  Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
@@ -41,12 +42,19 @@ const ViewPropertyScreenUI = () => {
   const [realStateId, setRealStateId] = useState();
   const [realStateData, setRealStateData] = useState();
   const { additionaldetails, address, details } = property || {};
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [pictures, setPictures] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const fetchPropertyData = async () => {
     try {
+      const userId = await AsyncStorage.getItem("userId");
       const id = await AsyncStorage.getItem("propertyId");
+      const resFavs = await propertiesWS.getFav(userId);
+      if(resFavs.data.find(p => p.id === parseInt(id,10))){
+        setIsFavorite(true);
+      }
       const realStateId = await AsyncStorage.getItem("realstateId");
       setRealStateId(realStateId);
       const response = await propertiesWS.get(id);
@@ -82,15 +90,35 @@ const ViewPropertyScreenUI = () => {
   };
 
   const handleExperience = () => {
-    if(realStateId){
+    if (realStateId) {
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.EXPERIENCE);
-    } else{
+    } else {
       navigation.navigate(NavigatorConstants.USER_STACK.EXPERIENCE);
     }
   };
 
-  const handleFavs = () => {
-    navigation.navigate(NavigatorConstants.USER_STACK.HOME_FAV);
+  const handleFavs = async () => {
+    try {
+      if(isFavorite){
+        setModalMessage('Propiedad eliminada de favoritos exitosamente!');
+        setIsFavorite(false);
+        setModalVisible(true);
+        const userId = await AsyncStorage.getItem("userId");
+        const propertyId = await AsyncStorage.getItem("propertyId");
+        const response = await propertiesWS.deleteFav(userId, propertyId);
+      } else{
+        setModalMessage('Propiedad agregada a favoritos exitosamente!');
+        setIsFavorite(true);
+        setModalVisible(true);
+        const userId = await AsyncStorage.getItem("userId");
+        const propertyId = await AsyncStorage.getItem("propertyId");
+        const response = await propertiesWS.addFav(userId, propertyId);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setModalVisible(false);
+    }
   };
 
   const handleShare = async () => {
@@ -115,7 +143,7 @@ const ViewPropertyScreenUI = () => {
 
   return loading ? (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color={Theme.colors.clear.BLACK} />
+      <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
@@ -154,7 +182,7 @@ const ViewPropertyScreenUI = () => {
               }}
               onPress={handleFavs}
             >
-              <MaterialCommunityIcons name="star" size={24} color={"#F6BE00"} />
+              <MaterialCommunityIcons name="star" size={24} color={isFavorite ? "#F6BE00" : "gray"} />
             </Pressable>
           </View>
         )}
@@ -225,15 +253,13 @@ const ViewPropertyScreenUI = () => {
           <View
             style={[
               styles.horizontalContainer,
-              { justifyContent: "flex-start", paddingVertical: 10,marginLeft:7 },
+              { justifyContent: "flex-start", paddingVertical: 10, marginLeft: 7 },
             ]}
           >
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${
-              additionaldetails ? additionaldetails?.price : "0"
-            } + `}</Text>
-            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${
-              additionaldetails ? additionaldetails?.expensePrice : "0"
-            } `}</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${additionaldetails ? additionaldetails?.price : "0"
+              } + `}</Text>
+            <Text style={{ fontSize: 18, fontWeight: "bold" }}>{`$${additionaldetails ? additionaldetails?.expensePrice : "0"
+              } `}</Text>
           </View>
 
           <View
@@ -243,7 +269,7 @@ const ViewPropertyScreenUI = () => {
                 justifyContent: "flex-start",
                 flexWrap: "wrap",
                 alignContent: "space-between",
-                marginLeft:7,
+                marginLeft: 7,
               },
             ]}
           >
@@ -539,7 +565,7 @@ const ViewPropertyScreenUI = () => {
           <View style={styles.itemTitleView}>
             <Text style={styles.titleText}>DESCRIPCION</Text>
           </View>
-          <View style={{marginLeft:7}}>
+          <View style={{ marginLeft: 7 }}>
             <Text>{additionaldetails?.description}</Text>
           </View>
         </View>
@@ -547,7 +573,7 @@ const ViewPropertyScreenUI = () => {
           <View style={styles.itemTitleView}>
             <Text style={styles.titleText}>AMENITIES</Text>
           </View>
-          <View style={{marginLeft:7}}>
+          <View style={{ marginLeft: 7 }}>
             {additionaldetails?.amenities.map((amenity, index) => {
               return (
                 <View
@@ -570,11 +596,11 @@ const ViewPropertyScreenUI = () => {
             <Text style={styles.titleText}>INMOBILIARIA</Text>
           </View>
           <View style={[styles.horizontalContainer]}>
-            <Text style={{marginLeft:7}}>{realStateData.fantasyName}</Text>
+            <Text style={{ marginLeft: 7 }}>{realStateData.fantasyName}</Text>
             <View style={{ flexDirection: "row" }}>
               <MaterialIcons name="star" size={22} color="#F6BE00" />
-              <Text style={{fontSize: 16}}> {!realStateData.qualification ? 0 : realStateData.qualification}</Text>
-              <TouchableOpacity style={{marginLeft:4}} onPress={handleExperience}>
+              <Text style={{ fontSize: 16 }}> {!realStateData.qualification ? 0 : realStateData.qualification}</Text>
+              <TouchableOpacity style={{ marginLeft: 4 }} onPress={handleExperience}>
                 <MaterialIcons
                   name="info"
                   size={22}
@@ -598,6 +624,17 @@ const ViewPropertyScreenUI = () => {
               <Text style={[styles.realStateText]}>Reservar </Text>
             </TouchableOpacity>
           </View>
+        )}
+        {modalVisible && (
+          <Modal animationType="slide" transparent={true} >
+            <View style={styles.modalBackGround}>
+              <View style={[styles.modalContainer]}>
+                <Text style={styles.title}>
+                  {modalMessage}
+                </Text>
+              </View>
+            </View>
+          </Modal>
         )}
       </ScrollView>
     </SafeAreaView>
@@ -761,5 +798,28 @@ const styles = StyleSheet.create({
   realStateText: {
     color: "white",
     fontSize: 14,
+  },
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  modalContainer: {
+    width: "80%",
+    height: "25%",
+    backgroundColor: "white",
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    borderRadius: 10,
+    eleation: 20,
+  },
+  title: {
+    fontWeight: "400",
+    fontSize: 25,
+    color: Theme.colors.clear.PRIMARY,
+    textAlign: "center",
+    lineHeight: 50,
   },
 });
