@@ -189,8 +189,7 @@ const EditRealstateScreenUI = () => {
       }
       console.log('newValues: ',newValues);
       const response = await propertiesWS.put(newValues);
-      //const responseMedia = await propertiesWS.postMedia(pictures, values.id); 
-      //console.log('responseMedia: ',responseMedia);
+      const responseMedia = await propertiesWS.postMedia(pictures, values.id); 
       navigation.navigate(NavigatorConstants.REALSTATE_STACK.HOME);
     } catch (error) {
       console.log(error);
@@ -693,7 +692,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     flexDirection: 'row',
-    marginBottom: 200,
+    marginBottom: 70,
     marginTop: 20,
     justifyContent: "center",
   },

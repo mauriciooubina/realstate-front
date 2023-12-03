@@ -4,24 +4,22 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, TextInput, ActivityIndicator, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
-import realstateWS from '../../../networking/api/endpoints/realstateWS';
+import userWS from '../../../networking/api/endpoints/userWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from '../../../../assets/images/photo.png';
 
 export default EditProfileUserScreenUI = () => {
     const navigation = useNavigation();
-    //const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
 
     useEffect(() => {
-        const fetchRealEstateData = async () => {
+        const fetchUserData = async () => {
             try {
-                {/*
-                const id = await AsyncStorage.getItem('realstateId');
-                const response = await realstateWS.get(id);
-                setRealEstateData(response.data[0]);
-                */}
+                const id = await AsyncStorage.getItem('userId');
+                const response = await userWS.get(id);
+                setUserData(response.data[0]);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -29,29 +27,21 @@ export default EditProfileUserScreenUI = () => {
             }
         };
 
-        fetchRealEstateData();
+        fetchUserData();
     }, []);
 
     const handleSaveProfile = async () => {
         setSaveEdit(true);
         try {
-            {/*}
-            console.log(password);
-            await realstateWS.put(realEstateData);
-            const id = await AsyncStorage.getItem('realstateId');
+            const id = await AsyncStorage.getItem('userId');
+            await userWS.put(userData);
             navigation.navigate(NavigatorConstants.USER_STACK.HOME);
-            */}
         } catch (error) {
             console.log(error);
         } finally {
             setSaveEdit(false);
         }
     }
-    const userData = {
-        picture: 'https://example.com/photo1.jpg',
-        email: 'camila_ponce@hotmail.com',
-        name: 'Camila Ponce',
-    };
 
     return (
         <View style={styles.container}>
@@ -64,8 +54,8 @@ export default EditProfileUserScreenUI = () => {
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.title}>Editar Perfil</Text>
                     </View>
-                    <View style={{alignItems: 'center'} }>
-                        <Image source={Profile} style={{ width: 150, height: 140, marginTop: 20 }} />
+                    <View style={{ alignItems: 'center' }}>
+                        <Image source={{ uri: userData.profilePictureUrl }} style={styles.profilePic} />
                     </View>
                     <View style={{ width: '100%', height: '8%' }}>
                     </View>
@@ -85,7 +75,7 @@ export default EditProfileUserScreenUI = () => {
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <TextInput
                                 style={styles.input}
-                                value={userData.name}
+                                value={userData.fullName}
                                 onChangeText={(text) => setRealEstateData((prevData) => ({
                                     ...prevData,
                                     name: text,
@@ -95,7 +85,7 @@ export default EditProfileUserScreenUI = () => {
                         </View>
 
                         <View style={styles.buttons}>
-                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()}>
+                            <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.navigate(NavigatorConstants.USER_STACK.HOME)}>
                                 <Text style={[styles.realStateText]}>  Cancelar  </Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={[styles.blueButton]} onPress={handleSaveProfile}>
@@ -179,6 +169,10 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '13%'
     },
-
-
+    profilePic: {
+        width: '40%',
+        height: 140,
+        marginTop: 20,
+        borderRadius: 100
+    },
 });

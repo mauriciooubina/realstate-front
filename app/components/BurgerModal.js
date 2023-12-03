@@ -58,6 +58,7 @@ export default function BurgerModal({ onClose }) {
   const handleLogout = async () => {
     try {
       const response = await loginWS.logout();
+      AsyncStorage.clear();
       navigation.navigate(NavigatorConstants.NAVIGATOR.LOGIN);
     } catch (error) {
       console.log(error);

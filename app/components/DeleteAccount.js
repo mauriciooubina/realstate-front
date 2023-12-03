@@ -8,13 +8,20 @@ export default DeleteAccount = ({ closeDeleteAccount }) => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   
   const handleDeleteAccount = async () => {
-    console.log('Delete account');
+    setIsLoggingIn(true);
     try {
-      const id = await AsyncStorage.getItem('realstateId');
-      const response = await realstateWS.delete(id);
+      const realstateId = await AsyncStorage.getItem('realstateId');
+      const userId = await AsyncStorage.getItem('userId');
+      if(!realstateId ){
+        const response = await userWS.delete(userId);  
+      }else {
+        const response = await realstateWS.delete(realstateId);
+      }
       navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoggingIn(false);
     }
   }
 
