@@ -1,5 +1,6 @@
 const NAVIGATOR = {
 <<<<<<< HEAD
+<<<<<<< HEAD
     START: 'NAVIGATOR_START',
     LOGIN: 'NAVIGATOR_LOGIN',
     REALSTATE: 'NAVIGATOR_REALSTATE',
@@ -38,6 +39,8 @@ const NAVIGATOR = {
     USER_STACK,
    };
 =======
+=======
+>>>>>>> master
   START: "NAVIGATOR_START",
   LOGIN: "NAVIGATOR_LOGIN",
   REALSTATE: "NAVIGATOR_REALSTATE",
@@ -76,4 +79,7 @@ export default {
   REALSTATE_STACK,
   USER_STACK,
 };
+<<<<<<< HEAD
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+>>>>>>> master

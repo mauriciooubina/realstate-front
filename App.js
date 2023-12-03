@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react';
 import RootNavigator from './app/navigation/RootNavigator.js';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React from 'react';
 =======
 import NetInfo from '@react-native-community/netinfo';
 import {ToastAndroid } from 'react-native';
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+import NetInfo from '@react-native-community/netinfo';
+import {ToastAndroid } from 'react-native';
+
+import NetInfo from '@react-native-community/netinfo';
+import {ToastAndroid } from 'react-native';
+>>>>>>> master
 
 export default function App() {
   useEffect(() => {

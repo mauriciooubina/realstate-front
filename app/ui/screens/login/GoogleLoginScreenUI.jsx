@@ -7,11 +7,15 @@ import NavigatorConstants  from '../../../navigation/NavigatorConstants';
 import React, { useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
 import ReserveScreenUI from '../reserve/ReserveScreenUI';
 =======
 import AsyncStorage from '@react-native-async-storage/async-storage';
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+import AsyncStorage from '@react-native-async-storage/async-storage';
+>>>>>>> master
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();

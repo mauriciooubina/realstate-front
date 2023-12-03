@@ -37,15 +37,21 @@
     "react-native-screens": "~3.22.0",
     "react-native-select-dropdown": "^3.4.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
     "react-native-star-rating": "^1.1.0",
     "react-native-stock-star-rating": "^1.0.6",
     "react-router-dom": "^6.20.0"
 =======
+=======
+>>>>>>> master
     "react-native-share": "^10.0.1",
     "react-native-stock-star-rating": "^1.0.6",
     "react-native-toast-message": "^2.1.7",
     "expo-file-system": "~15.4.5"
+<<<<<<< HEAD
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+>>>>>>> master
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

@@ -8,6 +8,7 @@ import UserSearchScreen from "../ui/screens/userSearch/UserSearchScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { LeftUserIcon, RightSearchIcon } from "../components/HeaderComponent";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ViewPropertyScreen from '../ui/screens/viewProperty/ViewPropertyScreen';
 import ContactScreen from '../ui/screens/contact/ContactScreen';
 import ReserveScreen from '../ui/screens/reserve/ReserveScreen';
@@ -15,12 +16,17 @@ import ExperienceScreen from '../ui/screens/experience/ExperienceScreen';
 import PaymentScreen from '../ui/screens/reserve/PaymentScreen';
 import SuccessScreen from '../ui/screens/reserve/SuccessScreen';
 =======
+=======
+>>>>>>> master
 import ViewPropertyScreen from "../ui/screens/viewProperty/ViewPropertyScreen";
 import ContactScreen from "../ui/screens/contact/ContactScreen";
 import ReserveScreen from "../ui/screens/reserve/ReserveScreen";
 import ExperienceScreen from "../ui/screens/experience/ExperienceScreen";
 import VisitScreen from '../ui/screens/visit/VisitScreen';
+<<<<<<< HEAD
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+>>>>>>> master
 
 const Stack = createNativeStackNavigator();
 
@@ -159,6 +165,7 @@ export default UserStackNavigator = () => {
         }}
       />
 <<<<<<< HEAD
+<<<<<<< HEAD
        <Stack.Screen
         name={NavigatorConstant.USER_STACK.PAY}
         component={PaymentScreen}
@@ -183,6 +190,11 @@ export default UserStackNavigator = () => {
         name={NavigatorConstant.USER_STACK.VISIT}
         component={VisitScreen}
 >>>>>>> 90356b4fe79a479170382b004391cb5da150200f
+=======
+      <Stack.Screen
+        name={NavigatorConstant.USER_STACK.VISIT}
+        component={VisitScreen}
+>>>>>>> master
         options={{
           headerTitle: "My Home",
           headerTitleAlign: "center",
