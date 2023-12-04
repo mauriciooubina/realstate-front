@@ -8,12 +8,13 @@ export default realstateWS = {
         return await api.get(`/real-state/${id}`);
     },
     getComment: async function (id) {
-        return await api.get(`/real-state/${id}/comments`);
+        return await api.get(`/realstate/${id}/comments`);
     },
-    postComment: async function (text, idUser,id) {
-        return await api.post(`/real-state/${id}/comments`, {
+    postComment: async function (id, text, idUser, calificacion) {
+        return await api.post(`/realstate/${id}/comments`, {
             text,
             idUser,
+            calificacion,
         });
     },
     put: async function (data) {

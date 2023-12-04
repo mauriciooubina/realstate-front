@@ -6,42 +6,30 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import realstateWS from '../../../networking/api/endpoints/realstateWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Profile from '../../../../assets/images/photo.png';
-import { Rating } from "react-native-stock-star-rating";
-import CustomTextInput from "../../../components/TextInputComponent";
-import { FontAwesome } from '@expo/vector-icons';
 
 export default ReserveScreenUI = () => {
     const navigation = useNavigation();
-    //const [userData, setUserData] = useState(null);
+    const [propertyData, setPropertyData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [saveEdit, setSaveEdit] = useState(false);
 
     useEffect(() => {
         const fetchRealEstateData = async () => {
             try {
-                {/*
-                const id = await AsyncStorage.getItem('realstateId');
-                const response = await realstateWS.get(id);
-                setRealEstateData(response.data[0]);
-                */}
+                const id = await AsyncStorage.getItem("propertyId");
+                const response = await propertiesWS.get(id);
+                setPropertyData(response.data[0]);
             } catch (error) {
                 console.log(error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchRealEstateData();
     }, []);
 
-    const realstateData = {
-        fantasyName: 'Inmobiliaria Prueba',
-        qualification: 4,
-    };
-
     const handlePay = () => {
-
+        navigation.navigate(NavigatorConstants.USER_STACK.PAY);
     };
 
     return (
@@ -53,7 +41,9 @@ export default ReserveScreenUI = () => {
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.title}>Realizar reserva</Text>
                     </View>
-
+                    <View style={{alignItems:'center'}}>
+                        <Image source={{ uri: propertyData.additionaldetails.urlPhoto1 }} style={{ marginVertical: 15, width: '80%', aspectRatio:1 }} />
+                    </View>
                     <View style={styles.contentContainer}>
                         <View style={styles.itemTitleView}>
                             <Text style={styles.titleText}>Recuerda que para realizar una reserva deber depositar el 50% del total</Text>
@@ -62,10 +52,11 @@ export default ReserveScreenUI = () => {
 
                     <View style={{ alignItems: 'center' }}>
                         <Text style={styles.title}>Monto a depostiar</Text>
+                        <Text style={styles.subtitle}>{` $${parseInt(propertyData.additionaldetails.price)/2}`}</Text>
                     </View>
 
                     <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()} >
+                        <TouchableOpacity style={[styles.blueButton]} onPress={() => navigation.goBack()} >
                             <Text style={[styles.realStateText]}>  Cancelar  </Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={[styles.blueButton]} onPress={handlePay} >
@@ -140,27 +131,5 @@ const styles = StyleSheet.create({
         fontSize: 20,
         fontWeight: '400',
         justifyContent: 'center',
-    },
-    header: {
-        backgroundColor: 'red',
-        width: '100%',
-        height: '13%'
-    },
-    stars: {
-        marginBottom: 20,
-    },
-    whiteButton: {
-        display: 'flex',
-        padding: 5,
-        paddingHorizontal: 20,
-        marginHorizontal: 20,
-        borderRadius: 30,
-        borderColor: Theme.colors.clear.PRIMARY,
-        borderWidth: 2,
-
-    },
-    whiteText: {
-        color: Theme.colors.clear.PRIMARY,
-        fontSize: 14,
     },
 });

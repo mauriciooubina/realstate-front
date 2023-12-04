@@ -85,7 +85,8 @@ const ViewPropertyScreenUI = () => {
     navigation.navigate(NavigatorConstants.USER_STACK.CONTACT);
   };
 
-  const handleReserve = () => {
+  const handleReserve = async () => {
+    await AsyncStorage.setItem('contactId', `${property.realStateId.id}`);
     navigation.navigate(NavigatorConstants.USER_STACK.RESERVE);
   };
 

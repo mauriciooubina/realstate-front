@@ -30,6 +30,8 @@ const USER_STACK = {
   RESERVE: "RESERVE",
   EXPERIENCE: "EXPERIENCE",
   VISIT: "VISIT",
+  PAY: "PAY",
+  PAY_SUCCESS: "PAY_SUCCESS",
 };
 export default {
   NAVIGATOR,
