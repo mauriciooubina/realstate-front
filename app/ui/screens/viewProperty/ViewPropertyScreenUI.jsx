@@ -248,7 +248,7 @@ const ViewPropertyScreenUI = () => {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.itemTitleView}>
-            <Text style={styles.titleText}>ALQUILER - DEPARTAMENTO</Text>
+            <Text style={styles.titleText}>{additionaldetails.state} - {details.propertyType}</Text>
           </View>
 
           <View

@@ -20,6 +20,7 @@ import userWS from "../networking/api/endpoints/userWS";
 import NavigatorConstants from "../navigation/NavigatorConstants";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
 export default function BurgerUserModal({ onClose }) {
   const navigation = useNavigation();
@@ -56,6 +57,8 @@ export default function BurgerUserModal({ onClose }) {
     try {
       const response = await loginWS.logout();
       AsyncStorage.clear();
+      //await GoogleSignin.revokeAccess();
+      await GoogleSignin.signOut();
       navigation.navigate(NavigatorConstants.NAVIGATOR.LOGIN);
     } catch (error) {
       console.log(error);
