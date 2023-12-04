@@ -5,6 +5,7 @@ import Google from '../../../../assets/images/google.png';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import {useNavigation} from '@react-navigation/native';
 import aliveWS from '../../../networking/api/endpoints/aliveWS';
+import loginWS from '../../../networking/api/endpoints/loginWS';
 import React, {useEffect, useState} from 'react';
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
@@ -15,7 +16,7 @@ export default LoginScreenUI = () => {
     const [showLoading, setShowLoading] = useState(true);
 
     GoogleSignin.configure({
-        // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+        scopes: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'openid'],
         webClientId: '273233604040-qj1fvtk8887njppd2bt4i0ned9qbhfne.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
         offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
     });
@@ -24,7 +25,10 @@ export default LoginScreenUI = () => {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            await loginWS.login(null, null, userInfo.idToken);
+            console.log('userInfo: ',userInfo)
+            const getTokens = await GoogleSignin.getTokens();
+            console.log('getTokens: ',getTokens);
+            await loginWS.login(null, null, getTokens.accessToken);
             navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
         } catch (error) {
             console.log({error});
