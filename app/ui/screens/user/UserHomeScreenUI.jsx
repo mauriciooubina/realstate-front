@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import propertiesWS from '../../../networking/api/endpoints/propertiesWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Location from 'expo-location';
+import HomePhoto from '../../../../assets/images/noPhoto.jpeg'
 
 export default UserHomeScreenUI = () => {
   const navigation = useNavigation();
@@ -18,16 +19,20 @@ export default UserHomeScreenUI = () => {
     setLoading(true);
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
+      let lat = '';
+      let long = '';
       if (status === 'granted') {
         let loc = await Location.getCurrentPositionAsync({});
         console.log('Latitud:', loc.coords.latitude);
         console.log('Longitud:', loc.coords.longitude);
+        lat = loc.coords.latitude;
+        long = loc.coords.longitude;
         setLocation(loc.coords);
       }
       const search = await AsyncStorage.getItem('search');
       console.log('search: ', search);
       if (!search) {
-        const response = await propertiesWS.getNearest(location);
+        const response = await propertiesWS.getNearest(lat, long);
         setProperties(response.data);
       } else {
         setProperties(JSON.parse(search));
@@ -65,7 +70,11 @@ return (
       properties.length > 0 ? (
         properties.map((property, index) => (
           <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property.id)}>
-            <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
+            <Image source={
+                    property?.additionaldetails?.urlPhoto1
+                      ? { uri: property.additionaldetails.urlPhoto1 }
+                      : HomePhoto
+                  } style={styles.imageContainer} />
             <View style={styles.textContainer}>
               {
                 <Text style={styles.text}>

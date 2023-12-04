@@ -7,6 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import aliveWS from '../../../networking/api/endpoints/aliveWS';
 import loginWS from '../../../networking/api/endpoints/loginWS';
 import React, {useEffect, useState} from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
 // Android client id: 273233604040-uh81p8hpsfncn92j4dor2tj7jlve5d32.apps.googleusercontent.com
@@ -25,11 +26,11 @@ export default LoginScreenUI = () => {
         try {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
-            console.log('userInfo: ',userInfo)
             const getTokens = await GoogleSignin.getTokens();
-            console.log('getTokens: ',getTokens);
-            await loginWS.login(null, null, getTokens.accessToken);
-            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+            await AsyncStorage.setItem('googleToken', `${getTokens.accessToken}`);
+            const res = await loginWS.login(null, null, getTokens.accessToken);
+            await AsyncStorage.setItem('userId', `${res.data.id}`);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.USER);
         } catch (error) {
             console.log({error});
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {

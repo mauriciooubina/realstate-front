@@ -59,10 +59,10 @@ export default propertiesWS = {
       ...data,
     });
   },
-  getNearest: async function (location) {
+  getNearest: async function (latitude, longitude) {
     return await api.post("/properties/nearestProperties", {
-      latitude: location.latitude,
-      longitude: location.longitude,
+      latitude,
+      longitude,
     });
   },
   getCalles: async function (calle) {

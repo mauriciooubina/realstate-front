@@ -43,6 +43,7 @@ export default function BurgerUserModal({ onClose }) {
         console.log('userId: ', id);
         const response = await userWS.get(id);
         setUserData(response.data[0]);
+        console.log(response.data[0])
       } catch (error) {
         console.log(error);
       } finally {
