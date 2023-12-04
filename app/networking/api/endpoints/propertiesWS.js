@@ -1,4 +1,6 @@
 import api, { getClientToken } from "../Api";
+import * as FileSystem from "expo-file-system";
+import axios from 'axios';
 
 export default propertiesWS = {
   post: async function (data) {
@@ -8,38 +10,26 @@ export default propertiesWS = {
   },
   postMedia: async function (media, propertyId) {
     const token = getClientToken();
-    const myHeaders = {
-      'Content-Type': 'multipart/form-data',
-      'Authorization': `${token}`,
-    };
     const formData = new FormData();
-    const json = {
-      idProperty: propertyId,
-    };
-    formData.append("propertyInDTO", JSON.stringify(json));
     media.forEach((valor) => {
       const pos1 = valor.lastIndexOf("/");
-      const pos2 = valor.lastIndexOf(".");
-      console.log("uri: ", valor);
-      console.log("name: ", valor.substring(pos1 + 1));
-      console.log("type: ", `image/${valor.substring(pos2 + 1)}`);
+      const fileName = valor.substring(pos1 + 1);
       formData.append("photos", {
         uri: valor,
-        name: valor.substring(pos1 + 1),
-        type: `image/${valor.substring(pos2 + 1)}`,
+        name: fileName,
+        type: `image/${fileName.split(".")[1]}`,
       });
     });
+  
     try {
-      const res = await api.post(
-        "/properties/loadMultimedia",
-        formData,
-        {
-          headers: myHeaders,
-        }
-      );      
-      console.log('response: ', res);
+      const res = await axios.post(`/properties/${propertyId}/loadMultimedia`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `${token}`,
+        },
+      });
     } catch (error) {
-      console.log('error: ',error);
+      console.log("Error caught:", error);
     }
   },
   getFav: async function (id) {
@@ -49,10 +39,12 @@ export default propertiesWS = {
     return await api.post("/properties/addFavorites", {
       userId,
       propertyId,
-  });
+    });
   },
   deleteFav: async function (userId, propertyId) {
-    return await api.delete(`/properties/${userId}/${propertyId}/deleteFavorites`);
+    return await api.delete(
+      `/properties/${userId}/${propertyId}/deleteFavorites`
+    );
   },
   search: async function (data) {
     return await api.post("/properties/propertyBy", {
