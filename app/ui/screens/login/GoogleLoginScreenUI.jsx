@@ -4,7 +4,7 @@ import Theme from '../../styles/Theme';
 import Google from '../../../../assets/images/google.png';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import NavigatorConstants  from '../../../navigation/NavigatorConstants';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import loginWS from '../../../networking/api/endpoints/loginWS';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -44,7 +44,7 @@ export default LoginScreenUI = () => {
                 <View style={styles.graySquare}>
                     <View style={styles.google}> 
                         <Image source={Google} style={styles.googleImage} />
-                        <Text style={styles.googleText}>Iniciar sesión con Google</Text>
+                        <Text style={styles.googleText} >Iniciar sesión con Google</Text>
                     </View>
 
                     <View style={styles.lineSeparator} /> 

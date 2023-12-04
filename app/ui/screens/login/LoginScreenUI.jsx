@@ -5,11 +5,44 @@ import Google from '../../../../assets/images/google.png';
 import NavigatorConstants from '../../../navigation/NavigatorConstants';
 import {useNavigation} from '@react-navigation/native';
 import aliveWS from '../../../networking/api/endpoints/aliveWS';
+import loginWS from '../../../networking/api/endpoints/loginWS';
 import React, {useEffect, useState} from 'react';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+
+// Android client id: 273233604040-uh81p8hpsfncn92j4dor2tj7jlve5d32.apps.googleusercontent.com
 
 export default LoginScreenUI = () => {
     const navigation = useNavigation();
     const [showLoading, setShowLoading] = useState(true);
+
+    GoogleSignin.configure({
+        scopes: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email', 'openid'],
+        webClientId: '273233604040-qj1fvtk8887njppd2bt4i0ned9qbhfne.apps.googleusercontent.com', // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+        offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+    });
+
+    const signIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
+            console.log('userInfo: ',userInfo)
+            const getTokens = await GoogleSignin.getTokens();
+            console.log('getTokens: ',getTokens);
+            await loginWS.login(null, null, getTokens.accessToken);
+            navigation.navigate(NavigatorConstants.NAVIGATOR.REALSTATE);
+        } catch (error) {
+            console.log({error});
+            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+            // user cancelled the login flow
+          } else if (error.code === statusCodes.IN_PROGRESS) {
+            // operation (e.g. sign in) is in progress already
+          } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+            // play services not available or outdated
+          } else {
+            // some other error happened
+          }
+        }
+      };
 
     useEffect(() => {
         const getBackendUp = async () => {
@@ -30,10 +63,14 @@ export default LoginScreenUI = () => {
             <View style={styles.container}>
                 <View style={styles.graySquare}>
                     <Text style={styles.title}>Bienvenido</Text>
-                    <TouchableOpacity style={styles.googleButton} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.GOOGLE_LOGIN)}>
+                    
+                    {/* onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.GOOGLE_LOGIN)} */}
+                    <TouchableOpacity style={styles.googleButton} onPress={signIn}>
                         <Image source={Google} style={styles.googleImage} />
                         <Text style={styles.googleText}>Iniciar sesión con Google</Text>
                     </TouchableOpacity>
+
+
                     <TouchableOpacity style={[styles.realStateButton, styles.blueButton]} onPress={() => navigation.push(NavigatorConstants.LOGIN_STACK.REALSTATE_LOGIN)}>
                         <Text style={[styles.realStateText]}>Soy Inmobiliario</Text>
                     </TouchableOpacity>

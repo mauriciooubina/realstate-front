@@ -190,3 +190,5 @@ docs/pages/versions/*/react-native/*.diff
 /ios/build
 **/ios/.xcode.env.local
 /ios/versioned-react-native/*/ReactNative/sdks/hermes-engine/destroot
+# File: android sdk route
+# realstate-front/android/local.properties
