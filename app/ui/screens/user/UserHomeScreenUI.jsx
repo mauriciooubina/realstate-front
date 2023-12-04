@@ -23,75 +23,75 @@ export default UserHomeScreenUI = () => {
         console.log('Latitud:', location.coords.latitude);
         console.log('Longitud:', location.coords.longitude);
         setLocation(location.coords);
-        const search = await AsyncStorage.getItem('search');
-        console.log('search: ', search);
-        if (!search) {
-          const response = await propertiesWS.getAll();
-          setProperties(response.data);
-        } else {
-          setProperties(JSON.parse(search));
-        }
       }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+      const search = await AsyncStorage.getItem('search');
+      console.log('search: ', search);
+      if (!search) {
+        const response = await propertiesWS.getAll();
+        setProperties(response.data);
+      } else {
+        setProperties(JSON.parse(search));
+      }
+    }catch (error) {
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
-  useFocusEffect(
-    React.useCallback(() => {
-      fetchProperties();
-    }, [])
-  );
-
-  useEffect(() => {
+useFocusEffect(
+  React.useCallback(() => {
     fetchProperties();
-  }, []);
+  }, [])
+);
 
-  const handleViewProperty = async (id) => {
-    console.log('property: ', id);
-    await AsyncStorage.setItem('propertyId', `${id}`);
-    navigation.navigate(NavigatorConstants.USER_STACK.VIEW);
-  };
+useEffect(() => {
+  fetchProperties();
+}, []);
 
-  return (
-    <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
-      {loading ? (
+const handleViewProperty = async (id) => {
+  console.log('property: ', id);
+  await AsyncStorage.setItem('propertyId', `${id}`);
+  navigation.navigate(NavigatorConstants.USER_STACK.VIEW);
+};
+
+return (
+  <ScrollView style={styles.scrollView} contentContainerStyle={styles.container}>
+    {loading ? (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
+      </View>
+    ) : properties ? (
+      properties.length > 0 ? (
+        properties.map((property, index) => (
+          <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property.id)}>
+            <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
+            <View style={styles.textContainer}>
+              {
+                <Text style={styles.text}>
+                  {property.address.floor === null && property.address.department === null
+                    ? `${property.address.street} ${property.address.streetNumber}`
+                    : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
+                </Text>
+              }
+              <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
+              <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
+              <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={Theme.colors.clear.PRIMARY} />
-        </View>
-      ) : properties ? (
-        properties.length > 0 ? (
-          properties.map((property, index) => (
-            <TouchableOpacity key={index} style={styles.box} onPress={() => handleViewProperty(property.id)}>
-              <Image source={{ uri: property?.additionaldetails?.urlPhoto1 }} style={styles.imageContainer} />
-              <View style={styles.textContainer}>
-                {
-                  <Text style={styles.text}>
-                    {property.address.floor === null && property.address.department === null
-                      ? `${property.address.street} ${property.address.streetNumber}`
-                      : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
-                  </Text>
-                }
-                <Text style={styles.subtext}>{`${property.additionaldetails.state} - ${property.address.locality}`}</Text>
-                <Text style={styles.subtext}>{`${property.details.rooms} Amb`}</Text>
-                <Text style={styles.subtext}>{`$ ${property.additionaldetails.price}`}</Text>
-              </View>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <View style={styles.loadingContainer}>
-            <View style={styles.noPropertiesBox}>
-              <View style={styles.noProperties}>
-                <Text style={styles.title}>Actualmente no existen propiedades</Text>
-              </View>
+          <View style={styles.noPropertiesBox}>
+            <View style={styles.noProperties}>
+              <Text style={styles.title}>Actualmente no existen propiedades</Text>
             </View>
           </View>
-        )
-      ) : null}
-    </ScrollView>
-  );
+        </View>
+      )
+    ) : null}
+  </ScrollView>
+);
 };
 
 
