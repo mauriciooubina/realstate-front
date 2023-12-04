@@ -51,9 +51,11 @@ const ViewPropertyScreenUI = () => {
     try {
       const userId = await AsyncStorage.getItem("userId");
       const id = await AsyncStorage.getItem("propertyId");
-      const resFavs = await propertiesWS.getFav(userId);
-      if(resFavs.data.find(p => p.id === parseInt(id,10))){
-        setIsFavorite(true);
+      if(userId){
+        const resFavs = await propertiesWS.getFav(userId);
+        if(resFavs.data.find(p => p.id === parseInt(id,10))){
+          setIsFavorite(true);
+        } 
       }
       const realStateId = await AsyncStorage.getItem("realstateId");
       setRealStateId(realStateId);
@@ -100,21 +102,23 @@ const ViewPropertyScreenUI = () => {
 
   const handleFavs = async () => {
     try {
-      if(isFavorite){
-        setModalMessage('Propiedad eliminada de favoritos exitosamente!');
-        setIsFavorite(false);
-        setModalVisible(true);
-        const userId = await AsyncStorage.getItem("userId");
-        const propertyId = await AsyncStorage.getItem("propertyId");
-        const response = await propertiesWS.deleteFav(userId, propertyId);
-      } else{
-        setModalMessage('Propiedad agregada a favoritos exitosamente!');
-        setIsFavorite(true);
-        setModalVisible(true);
-        const userId = await AsyncStorage.getItem("userId");
-        const propertyId = await AsyncStorage.getItem("propertyId");
-        const response = await propertiesWS.addFav(userId, propertyId);
-      }
+      if(await AsyncStorage.getItem("userId")){
+        if(isFavorite){
+          setModalMessage('Propiedad eliminada de favoritos exitosamente!');
+          setIsFavorite(false);
+          setModalVisible(true);
+          const userId = await AsyncStorage.getItem("userId");
+          const propertyId = await AsyncStorage.getItem("propertyId");
+          const response = await propertiesWS.deleteFav(userId, propertyId);
+        } else{
+          setModalMessage('Propiedad agregada a favoritos exitosamente!');
+          setIsFavorite(true);
+          setModalVisible(true);
+          const userId = await AsyncStorage.getItem("userId");
+          const propertyId = await AsyncStorage.getItem("propertyId");
+          const response = await propertiesWS.addFav(userId, propertyId);
+        }
+    }
     } catch (error) {
       console.log(error);
     } finally {
@@ -248,7 +252,7 @@ const ViewPropertyScreenUI = () => {
         </View>
         <View style={styles.contentContainer}>
           <View style={styles.itemTitleView}>
-            <Text style={styles.titleText}>{additionaldetails.state} - {details.propertyType}</Text>
+            <Text style={styles.titleText}>{`${additionaldetails?.state} - ${details?.propertyType}`}</Text>
           </View>
 
           <View
