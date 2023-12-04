@@ -1,4 +1,5 @@
-import api from "../Api";
+import api, { getClientToken } from "../Api";
+import axios from 'axios';
 
 export default userWS = {
   get: async function (id) {
@@ -7,26 +8,22 @@ export default userWS = {
   put: async function (data) {
     const { id, fullName, profilePictureUrl } = data;
     const formData = new FormData();
-    const json = {
-      userId: id,
-      name: fullName
-    };
-    formData.append("userRequestIn", JSON.stringify(json));
     formData.append("photo", {
         uri: profilePictureUrl,
         name: 'profilePicture',
         type: `image/jpg`,
       });
     const token = getClientToken();
-    console.log('token: ', token);
-    return await fetch('https://backend-myhome.onrender.com/myhome/users', {
-      method: 'PUT',
-      body: formData,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `${token}`
-      },
-    });
+    try {
+      const res = await axios.put(`/users/${id}/${fullName}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `${token}`,
+        },
+      });
+    } catch (error) {
+      console.log("Error caught:", error);
+    }
   },
   delete: async function (id) {
     return await api.delete(`/users/${id}`);

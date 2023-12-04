@@ -64,7 +64,7 @@ export default EditProfileUserScreenUI = () => {
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
                             <TextInput style={styles.input}
                                 value={userData.email}
-                                onChangeText={(text) => setRealEstateData((prevData) => ({
+                                onChangeText={(text) => setUserData((prevData) => ({
                                     ...prevData,
                                     email: text,
                                 }))}>
@@ -73,12 +73,11 @@ export default EditProfileUserScreenUI = () => {
                         </View>
                         <Text style={styles.inputText}>Nombre de usuario</Text>
                         <View style={{ display: 'flex', flexDirection: 'row' }}>
-                            <TextInput
-                                style={styles.input}
+                            <TextInput style={styles.input}
                                 value={userData.fullName}
-                                onChangeText={(text) => setRealEstateData((prevData) => ({
+                                onChangeText={(text) => setUserData((prevData) => ({
                                     ...prevData,
-                                    name: text,
+                                    fullName: text,
                                 }))}>
                             </TextInput>
                             <MaterialCommunityIcons name="wrench" size={24} color={Theme.colors.clear.PRIMARY} />
