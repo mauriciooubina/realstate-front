@@ -19,15 +19,15 @@ export default UserHomeScreenUI = () => {
     try {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status === 'granted') {
-        let location = await Location.getCurrentPositionAsync({});
-        console.log('Latitud:', location.coords.latitude);
-        console.log('Longitud:', location.coords.longitude);
-        setLocation(location.coords);
+        let loc = await Location.getCurrentPositionAsync({});
+        console.log('Latitud:', loc.coords.latitude);
+        console.log('Longitud:', loc.coords.longitude);
+        setLocation(loc.coords);
       }
       const search = await AsyncStorage.getItem('search');
       console.log('search: ', search);
       if (!search) {
-        const response = await propertiesWS.getAll();
+        const response = await propertiesWS.getNearest(location);
         setProperties(response.data);
       } else {
         setProperties(JSON.parse(search));

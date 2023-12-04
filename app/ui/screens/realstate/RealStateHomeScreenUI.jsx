@@ -16,6 +16,7 @@ import NavigatorConstants from "../../../navigation/NavigatorConstants";
 import React, { useState, useEffect } from "react";
 import propertiesWS from "../../../networking/api/endpoints/propertiesWS";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import HomePhoto from '../../../../assets/images/noPhoto.jpeg'
 
 export default RealStateHomeScreenUI = () => {
   const navigation = useNavigation();
@@ -73,15 +74,20 @@ export default RealStateHomeScreenUI = () => {
                 style={styles.imageContainer}
               >
                 <Image
-                  source={{ uri: property?.additionaldetails?.urlPhoto1 }}
+                  source={
+                    property?.additionaldetails?.urlPhoto1
+                      ? { uri: property.additionaldetails.urlPhoto1 }
+                      : HomePhoto
+                  }
                   style={{ width: "100%", height: "100%" }}
                 />
+
               </Pressable>
               <View style={styles.textContainer}>
                 {
                   <Text style={styles.text}>
                     {property.address.floor === null &&
-                    property.address.department === null
+                      property.address.department === null
                       ? `${property.address.street} ${property.address.streetNumber}`
                       : `${property.address.street} ${property.address.streetNumber}, ${property.address.floor} ${property.address.department}`}
                   </Text>
